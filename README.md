@@ -31,7 +31,7 @@
 
 ## 计算机基础
 
-- 计算机网络
+- [计算机网络](https://github.com/Jack-wen-Java/ZJW-Summary/blob/main/notes-md/Computer/%E6%88%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%20-%20%E4%BC%A0%E8%BE%93%E5%B1%82.md)
 - 计算机操作系统
 - Linux 系统与命令
 - HTTP 协议
