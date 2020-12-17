@@ -91,6 +91,6 @@ public LinkedHashMap(int initialCapacity,
 
 
 
-##### 了解更多
+##### 参考资料
 
 LinkedHashMap https://www.cnblogs.com/xiaoxi/p/6170590.html
