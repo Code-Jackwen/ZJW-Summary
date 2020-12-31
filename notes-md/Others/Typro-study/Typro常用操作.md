@@ -4,6 +4,11 @@
 
 ---
 
+git md 教学	5k
+https://github.com/guodongxiaren/README#%E6%A0%87%E9%A2%98
+
+----
+
 详细教程： https://sspai.com/post/54912 
 
 ---
@@ -37,7 +42,7 @@ https://www.jianshu.com/p/847b56e28d50?utm_campaign=maleskine&utm_content=note&u
 
 ----
 
-这个未总结
+这个还没总结，Typora for Markdown 语法
 
 https://www.jianshu.com/p/847b56e28d50?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
 
