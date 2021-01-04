@@ -2,10 +2,9 @@
 
 ## 教程链接（2级标题）
 
----
+typora 跨借鉴 win 和 ios
 
-git md 教学	5k
-https://github.com/guodongxiaren/README#%E6%A0%87%E9%A2%98
+https://www.cnblogs.com/hongdada/p/9776547.html
 
 ----
 
@@ -84,6 +83,12 @@ shift+alt+5。
 
 ~~例如：删除线~~
 
+5.设置内引用
+
+ctrl+shift+`
+
+例如：`abc内引用`
+
 ### 3.引用
 
 1.使用>
@@ -96,9 +101,15 @@ shift+alt+5。
 
 ### 4.分割线
 
-1.三个杠-，然后回车就是一个分割线,或三个星号
+1、三个杠- 然后回车
 
 ---
+
+2、四个-
+
+----
+
+2、三个*
 
 ***
 
@@ -137,13 +148,13 @@ shift+alt+5。
 
  ### 8.代码
 
- tab键上的键，即点，按三次,选择语言回车 
+ tab 键上的键 `即点，按三次然后回车
 
 ``` java
 右下角是模糊查询，让你写输入的语言。
 ```
 
-
+代码块：ctrl+alt+f 但是会和 TIM QQ 的快速文字识别冲突
 
 ### 9、自写目录分层 
 
@@ -155,7 +166,9 @@ shift+alt+5。
 
 
 
-### 10、在Markdown中实现内容及代码块折叠操作
+### 10、代码块折叠操作
+
+在Markdown中实现代码块内容折叠
 
   <details>   <summary>点击展开</summary>   展开的内容.... </details>  
 ### 11、Typro侧边栏展开 支持
@@ -184,3 +197,72 @@ https://blog.csdn.net/tian_ci/article/details/85257667
 > >
 > > > 第二层嵌套：三个>
 
+### 14、表格
+
+ctrl+t
+
+|      |      |      |
+| ---- | ---- | ---- |
+|      |      |      |
+|      |      |      |
+|      |      |      |
+
+### 15、快速选中
+
+选中当前行：ctrl+l
+
+asdsdaads
+
+
+
+选中单词：ctrl+d
+
+dasasdasd
+
+
+
+### 16、跳转
+
+跳转到文章开头：ctrl+home
+
+跳转到文章结尾：ctrl+end
+
+
+
+### 17、搜索域替换
+
+搜索：ctrl+f	
+
+替换：ctrl+h	或者 ctrl+f 再点向下的小箭头
+
+
+
+### 18、插入图片、链接、表情
+
+插入图片：直接拖动到指定位置即可或者ctrl+shift+i
+
+插入链接：ctrl + k
+
+插入表情，直接来这网址复制，https://emojikeyboard.org/ 
+
+
+
+### 18、上下标以及高亮
+
+需要在 typora 偏好设置中Markdown扩展里面勾选设置才可以
+
+下标：2的前后加上 ~
+
+H~2~O
+
+上标：2的前后加上 ^
+
+X^2^ 
+
+高亮：highlight 前后加上 ==
+
+==highlight== 
+
+### 19、关闭窗口
+
+实际是 win 的快捷键 ：ctrl+w
