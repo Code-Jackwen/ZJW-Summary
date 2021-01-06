@@ -197,29 +197,35 @@ https://github.com/Jack-wen-Java/ZJW-Summary.git
 
 更换主题
 
-主题推荐的博客https://www.bilibili.com/read/cv4499195/
+主题推荐的专栏博客https://www.bilibili.com/read/cv4499195/
 
-结果：Butterfly 感觉还可以
+专栏作者的博客 http://www.rwyqboy.top/
 
-效果图 http://www.rwyqboy.top/
+结果：Butterfly 感觉还可以 https://github.com/jerryc127/hexo-theme-butterfly	1.8k
 
-https://github.com/jerryc127/hexo-theme-butterfly	1.8k
-
-
+Butterfly 的作者博客，效果图  https://jerryc.me/ 
 
 
 
 
 
-matery 3k		功能多，复杂点。
+比较华丽的 matery 
+
+主题matery 3k		功能多，复杂点。
 
 https://github.com/blinkfox/hexo-theme-matery
 
 效果 https://blinkfox.github.io/
 
+
+
+
+
+掘金博客
+
 来自 https://juejin.cn/post/6844904074140205069
 
-全部文章都是关于博客搭建的。很吊
+全部文章都是关于博客搭建的。
 
 文章推荐优秀搭建效果人
 
@@ -237,11 +243,29 @@ https://github.com/blinkfox/hexo-theme-matery
 
 博客里的教程 https://yafine66.gitee.io/categories/Hexo%E5%8D%9A%E5%AE%A2/
 
-
-
 # ---------------------------------------------------------------------
 
 
+
+
+
+
+
+hexo-theme-butterfly 作者基于  [hexo-theme-melody](https://github.com/Molunerfinn/hexo-theme-melody) 主题
+
+hexo-theme-melody 仓库https://github.com/Molunerfinn/hexo-theme-melody 有很多搭建好的参考，不是太合我口味
+
+
+
+这俩不要安装
+
+cnpm install --save hexo-inject
+
+cnpm install hexo-neat --save
+
+但是需要下载
+
+cnpm install hexo-renderer-pug hexo-renderer-stylus --save
 
 
 
