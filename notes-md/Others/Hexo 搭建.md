@@ -1,6 +1,6 @@
+## 一、Hexo 基础搭建
+
 这里的前提是有 node.js 环境，本地安装过 git 。
-
-
 
 Hexo 博客的好处：
 
@@ -91,7 +91,7 @@ hexo 常用命令官方文档：https://hexo.io/zh-cn/docs/commands.html
 
 
 
-
+#### 与 Git Hub 关联
 
 创建 github 仓库名字：
 
@@ -185,65 +185,103 @@ Branch 'master' set up to track remote branch 'master' from 'https://github.com/
 
 
 
-Civili-Summary
 
 
+## 二、博客主题相关
 
-暂时没用
-
-https://github.com/Jack-wen-Java/ZJW-Summary.git
-
+下边是更换主题相关的。
 
 
-更换主题
 
 主题推荐的专栏博客https://www.bilibili.com/read/cv4499195/
 
-专栏作者的博客 http://www.rwyqboy.top/
-
-结果：Butterfly 感觉还可以 https://github.com/jerryc127/hexo-theme-butterfly	1.8k
-
-Butterfly 的作者博客，效果图  https://jerryc.me/ 
 
 
+总结：
 
+##### Butterfly 
 
+做技术博客不错，不过分华丽。
 
-比较华丽的 matery 
+仓库：https://github.com/jerryc127/hexo-theme-butterfly	1.8k
 
-主题matery 3k		功能多，复杂点。
+Butterfly 作者博客 jerryc：https://jerryc.me/ 
 
-https://github.com/blinkfox/hexo-theme-matery
-
-效果 https://blinkfox.github.io/
+BF的学习文档：https://butterfly.js.org/posts/21cfbf15/
 
 
 
+##### Matery 
+
+功能多，复杂点。
+
+https://github.com/blinkfox/hexo-theme-matery   3k		
+
+Matery 作者博客 blinkfox：https://blinkfox.github.io/
 
 
-掘金博客
+
+作者官方教程：https://github.com/blinkfox/hexo-theme-matery/blob/develop/README_CN.md
+
+
+
+
+
+##### Next
+
+仓库钝悟，南大硕士 https://dunwu.github.io/blog/tags/  
+
+钝悟仓库：https://github.com/dunwu
+
+来自洪卫 Git  的仓库。仓库里的10年技术化繁为简、**大道至简，知易行难**的博客 
+
+
+
+
+
+##### 掘金博客
 
 来自 https://juejin.cn/post/6844904074140205069
 
 全部文章都是关于博客搭建的。
 
-文章推荐优秀搭建效果人
+博客推荐的三个人。
 
-[闪烁之狐](https://blinkfox.github.io/)	是matery主题原版的作者
+[闪烁之狐](https://blinkfox.github.io/)	是matery主题原版的作者	作者样板展示：https://blinkfox.github.io/about/	友情链接不错的很多
+
+
+
+
 
 [洪卫@博客](https://sunhwee.com/)	是matery   	他的仓库，https://github.com/shw2018
 
-推荐的也是很优秀 https://godweiyang.com/about/
-
-仓库里的10年技术化繁为简、**大道至简，知易行难**的博客 https://dunwu.github.io/blog/tags/ 仓库 钝悟
+推荐的韦阳也是很优秀 https://godweiyang.com/about/
 
 
 
-[过客-砺](https://yafine-blog.cn/)	是 matery 的更改，类似了 Butterfly 	
+
+
+[过客-砺](https://yafine-blog.cn/)
 
 博客里的教程 https://yafine66.gitee.io/categories/Hexo%E5%8D%9A%E5%AE%A2/
 
-# ---------------------------------------------------------------------
+
+
+##### docsify
+
+制作 Github Pages，一个神奇的文档网站生成器。
+
+docsify仓库： https://docsify.js.org/#/zh-cn/?id=docsify  	16k
+
+案例展示：https://github.com/docsifyjs/awesome-docsify#showcase
+
+中文使用文档：https://docsify.js.org/#/zh-cn/	
+
+
+
+功能：[Vuepress-阅读量统计](https://heshiyu1996.github.io/tool/vuepress-stat/#vuepress-阅读量统计) 
+
+Heshiyu前端仓库：https://heshiyu1996.github.io/tool/vuepress-stat/
 
 
 
@@ -251,9 +289,121 @@ https://github.com/blinkfox/hexo-theme-matery
 
 
 
-hexo-theme-butterfly 作者基于  [hexo-theme-melody](https://github.com/Molunerfinn/hexo-theme-melody) 主题
+图床相关：
 
-hexo-theme-melody 仓库https://github.com/Molunerfinn/hexo-theme-melody 有很多搭建好的参考，不是太合我口味
+如何使用七牛云做为图床？：https://www.jianshu.com/p/6dce6094bf61
+
+如何用七牛和picGO设置免费图床：https://www.jianshu.com/p/0997d0d15e55
+
+## 参考
+
+建议参考主题博主的，以及在博主友链里找些做比较成功的做参考。
+
+总结：
+
+##### BF 
+
+sitoi：https://sitoi.cn/
+
+过客-砺 ：https://yafine-blog.cn/
+
+码酱，罗康源：http://luokangyuan.com/
+
+B站专栏写主题推荐博客作者的：http://www.rwyqboy.top/
+
+
+
+Email的学习Java的：https://blog.hvnobug.com/	他的友链未看
+
+他的统计github资料的文章，不过有中文社区了 https://blog.hvnobug.com/post/github-learning.html
+
+
+
+Sanarous	https://bestzuo.cn/ 菊厂的前端，一级词条很多。
+
+
+
+##### MA
+
+洪卫：https://sunhwee.com/
+
+https://www.a2data.cn/
+
+
+
+Mr.wang：https://www.kingcrown.top/ 可以参考样式，不偏技术。
+
+Mx 过客～铭む 	https://mx142.cn/friends/	 二级标签较花。	来自南玖
+
+
+
+
+
+##### 其他
+
+YFun在校生：https://www.yfun.top/archives/	文章：免费图床推荐、CloudFlare 加速网站
+
+YFun的站点监控：https://www.yfun.top/status/
+
+
+
+体育特招生：https://www.a2data.cn/
+
+frankfeekr：https://www.frankfeekr.cn/author/	
+
+南开的阿杜蚂蚁金服非 hexo ：http://www.javaadu.online/
+
+
+
+4ark：https://4ark.me/ 本站基于 Hexo + GitHub Page 搭建，采用 [Polar Bear](https://github.com/frostfan/hexo-theme-polarbear) 主题 ，比较简洁。来自星空无限友链
+
+南玖：https://ztongyang.cn/  黑色画风，功能多。内容杂。
+
+[Hugo](https://gohugo.io/) & [Mogege](https://github.com/Mogeko/Mogege) 来自https://todebug.com/posts/  白色背景，比较简洁。
+
+
+
+Mashiro：https://2heng.xin/friends/ 样式花，主题好看。来自洪卫友链
+
+codesheep：https://www.codesheep.cn/	来自Sanarous，世界很小。
+
+美团：https://tech.meituan.com/	来自Sanarous
+
+
+
+鑫斌网络传媒创始人  刘禹宁99年 ，鑫斌是它品牌 ：https://www.xbwlcm.com/about.html	网站很特别花。
+
+
+
+TRHX的博客中图床搭建：https://www.itrhx.com/2019/08/01/A27-image-hosting/ 来自韦阳
+
+
+
+功能总结：
+
+有首页接广告的：https://www.fivecc.cn/
+
+
+
+NlP算法工程师，刘训灼，电子科技大：https://liuxunzhuo.tech/
+
+
+
+友链看完的：
+
+星空无限、洪卫
+
+## 换新主题报错---------------
+
+别人新的博客报错重来，在空的博客文件夹下执行
+
+cnpm install -g hexo-cli
+
+cnpm install
+
+显示样式：cnpm install hexo-renderer-pug hexo-renderer-stylus --save
+
+
 
 
 
@@ -262,12 +412,6 @@ hexo-theme-melody 仓库https://github.com/Molunerfinn/hexo-theme-melody 有很�
 cnpm install --save hexo-inject
 
 cnpm install hexo-neat --save
-
-但是需要下载
-
-cnpm install hexo-renderer-pug hexo-renderer-stylus --save
-
-
 
 
 
