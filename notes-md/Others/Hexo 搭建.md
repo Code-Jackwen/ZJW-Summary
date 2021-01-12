@@ -375,7 +375,7 @@ codesheep：https://www.codesheep.cn/	来自Sanarous，世界很小。
 
 
 
-TRHX的博客中图床搭建：https://www.itrhx.com/2019/08/01/A27-image-hosting/ 来自韦阳
+TRHX的博客中**图床搭建**：https://www.itrhx.com/2019/08/01/A27-image-hosting/ 来自韦阳
 
 
 
@@ -392,6 +392,18 @@ NlP算法工程师，刘训灼，电子科技大：https://liuxunzhuo.tech/
 友链看完的：
 
 星空无限、洪卫
+
+
+
+
+
+域名的购买： 
+
+套路云买的、 续费是69一年 
+
+良心云也行
+
+
 
 ## 换新主题报错---------------
 
