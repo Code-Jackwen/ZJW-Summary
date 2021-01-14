@@ -341,6 +341,8 @@ Mx 过客～铭む 	https://mx142.cn/friends/	 二级标签较花。	来自南�
 
 ##### 其他
 
+有他qq，让它帮我搭，后放弃。：https://hesifan.top/about/
+
 YFun在校生：https://www.yfun.top/archives/	文章：免费图床推荐、CloudFlare 加速网站
 
 YFun的站点监控：https://www.yfun.top/status/
@@ -427,3 +429,14 @@ cnpm install hexo-neat --save
 
 
 
+
+
+
+
+Hexo 七牛插件安装与使用
+
+https://juejin.cn/post/6844903555342532615
+
+七牛云插件配置
+
+chrome-extension://lpdellhjncaloeogibenafbdiaklnhdc/options.html
