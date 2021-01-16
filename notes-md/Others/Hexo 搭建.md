@@ -327,7 +327,7 @@ Sanarous	https://bestzuo.cn/ 菊厂的前端，一级词条很多。
 
 洪卫：https://sunhwee.com/
 
-https://www.a2data.cn/
+Dot：https://www.a2data.cn/
 
 
 
@@ -426,8 +426,6 @@ cnpm install
 cnpm install --save hexo-inject
 
 cnpm install hexo-neat --save
-
-
 
 
 
