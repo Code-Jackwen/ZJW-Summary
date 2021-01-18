@@ -2,7 +2,9 @@
 
 网址：http://resume.github.io/ 
 
-校招的时候，个人信息那里就放了一个在线的 Github 简历 
+校招的时候，个人信息那里就放了一个在线的 Github 简历 	
+
+比如：输入用户名后，访问：https://resume.github.io/?Code-Jackwen
 
 ## 2、个性化 Github 首页
 

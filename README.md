@@ -1,74 +1,78 @@
-仓库介绍：此仓力在打造全面的 Java 知识体系，力在将知识总结（Summary）为简单易懂的大白话。
+# :church:
 
-持续排版、持续更新ing
+此仓力在打造全面的 Java 知识体系，力在将知识总结得通俗易懂，容易阅读。持续排版、持续更新 ing  :hugs: 
 
-----
+首先浏览本仓库时候，容易出现国内访问 GitHub 图片经常显示不出来的问题，导致阅览效果差，[点击解决]()。
 
-## Java
+<br>
 
-- Java 基础知识
-- Java 集合框架
-- Java I/O
-- JUC
-- JVM
-- JDK 
+<div>
+<p align="center">
+    <a href="https://github.com/Code-Jackwen" target="_blank" rel="noopener noreferrer">
+        <img src="https://github.com/Code-Jackwen/OtherPictures/blob/main/pic/5.jpg" alt="logo" width="450px" />
+    </a>
+</p>
+</div>
 
-## 算法关
+<br>
 
-- 剑指 Offer 
-- 数据结构与算法
-- 力扣
+---
 
-## 数据库
+## :coffee:  Java	
 
-- [MySQL 优化]()
-- MySQL 基础
-- 数据库系统原理
-- SQL 语法基础
-- SQL 题目与答案
-- Redis
-- Elasticsearch
+- [Java 基础知识 ]()| [Java 集合框架]() | [Java 虚拟机]()| [Java I/O  知识]() | [Java 并发编程]() | [JDK 新特性]()
 
-## 计算机基础
 
-- [计算机网络](https://github.com/Jack-wen-Java/ZJW-Summary/blob/main/notes-md/Computer/%E6%88%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%20-%20%E4%BC%A0%E8%BE%93%E5%B1%82.md)
-- 计算机操作系统
-- Linux 系统与命令
-- HTTP 协议
-- Socket 详解
 
-## SSM框架
+## 📝  数据结构 | 算法题
 
-- Spring
-- Spring Mvc
-- Mybatis
+- [剑指 Offer]() | [Leetcode 精选]()
 
-## 项目设计 
 
-- 系统设计基础
-- Dubbo
-- Zookeeper
-- 分布式与集群
-- 消息队列
 
-## 代码设计
+## :date:  数据库 
 
-- 设计模式
-- 代码规约
+- [数据库系统原理]() | [ MySQL 基础]() | [SQL 语法基础]() | [SQL 精选题解]() | [MySQL 优化]() | [Redis]() | [Elasticsearch]()
 
-## 常用工具 
 
-- Idea 
-- Git
-- Docker
-- Maven
 
-## 其他
+## :computer:  ​计算机
 
-- 正则表达式
-- 前端知识
+- [计算机网络](https://github.com/Jack-wen-Java/ZJW-Summary/blob/main/notes-md/Computer/%E6%88%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%20-%20%E4%BC%A0%E8%BE%93%E5%B1%82.md) | [计算机操作系统 ]()| [Linux ]()| [HTTP ]() | [Socket ]()
+
+
+
+## :european_castle:  SSM框架  
+
+- [Spring ]()| [Spring Mvc]() | [Mybatis]()
+
+
+
+## :straight_ruler:  项目设计   
+
+- [系统设计]() | [消息队列]() |[ 分布式与集群]() | [Dubbo]() | [Zookeeper ]()
+
+
+
+## :scissors:  代码设计
+
+- [代码规约]() | [设计模式]()
+
+
+
+## :wrench:  常用工具 
+
+- [Idea ]()| [Git ]()| [Maven ]()| [Docker]()
+
+
+
+## :strawberry:  ​其他
+
+- [正则表达式]() | [前端知识]()
+
+
 
 ## 鸣谢
 
-首先先感谢 Java 界各大优秀前辈们对知识的先前总结，本仓有个人对知识的理解和总结，也有对前辈知识的引用，有声明，如有版权侵权烦请告知。
+本仓主要是个人对知识的理解和总结，来源于书籍、官方文档资料，部分有对前辈知识的引用，有链接地址声明，并对 Java 界各大相关优秀前辈表示感谢，如有版权侵权烦请告知。在您引用本仓库内容或者对内容进行修改演绎时，请署名并以相同方式共享，感激不尽。
 
