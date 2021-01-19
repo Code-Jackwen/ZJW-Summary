@@ -1,6 +1,6 @@
 # :church:
 
-此仓力在打造全面的 Java 知识体系，力在将知识总结得通俗易懂，容易阅读。持续排版、持续更新 ing  :hugs: 
+此仓力在打造全面的 Java 知识体系，力在将知识总结得通俗易懂，容易阅读。干货不断、持续更新 ing  :hugs: 
 
 首先浏览本仓库时候，容易出现国内访问 GitHub 图片经常显示不出来的问题，导致阅览效果差，[点击解决](https://github.com/Code-Jackwen/ZJW-Summary/blob/main/notes-md/Git/Git%20Hub%20%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%87%BA%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3.md)。
 

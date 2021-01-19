@@ -1,6 +1,6 @@
-# 结论：
+# 解决方法：
 
-直接说解决方法，在修改自己电脑上的 hosts 文件，添加下边的地址映射，都加，解决多种图片显示问题。添加后刷新下网页就可以了。
+下边有详细的解决过程，这里直接说解决方法，修改自己电脑上的 hosts 文件，添加下边的地址映射，都加，解决 GitHub 多种图片显示问题。添加后刷新下网页就可以了。
 
 如果是 Windows
 
@@ -95,7 +95,7 @@ https://avatars2.githubusercontent.com/u/15832957?s=60&v=4
 
 本人使用的是 `windows` 系统，所以打开：`C:\Windows\System32\drivers\etc\hosts`
 
-在文件末尾添加如下映射，这个映射更新日期：**2020年03月28日**
+在文件末尾添加如下映射，这个映射更新日期：**2020年06月20日**
 
 ```shell
 # GitHub Start 
@@ -169,10 +169,11 @@ ipconfig /renew # 重请从DHCP服务器获得IP
 
 ### 五、书写格式
 
-README.md 关联图片的图片地址的规范格式： 
+README.md 关联图片的图片地址的参考格式： 
 
 ````
-https://github.com/用户名/repository仓库名/raw/分支名master/图片文件夹名称/***.png or***.jpg 
+https://github.com/用户名/repository仓库名/blob/分支名master/图片文件夹名称/***.png or***.jpg 
+具体可能会有些许不一致，但会差不多。
 ````
 
 相对路径的参考格式：
