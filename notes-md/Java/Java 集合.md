@@ -1,6 +1,6 @@
-# Java 容器
+# Java 集合
 <!-- GFM-TOC -->
-* [Java 容器](#java-容器)
+* [Java 集合](#java-集合)
     * [一、概览](#一概览)
         * [Collection](#collection)
         * [Map](#map)
@@ -27,7 +27,6 @@
 ### Collection
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191208220948084.png"/> </div><br>
-
 #### 1. Set
 
 - TreeSet：基于红黑树实现，支持有序性操作，例如根据一个范围查找元素的操作。但是查找效率不如 HashSet，HashSet 查找的时间复杂度为 O(1)，TreeSet 则为 O(logN)。
@@ -53,7 +52,6 @@
 ### Map
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20201101234335837.png"/> </div><br>
-
 - TreeMap：基于红黑树实现。
 
 - HashMap：基于哈希表实现。
@@ -68,7 +66,6 @@
 ### 迭代器模式
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191208225301973.png"/> </div><br>
-
 Collection 继承了 Iterable 接口，其中的 iterator() 方法能够产生一个 Iterator 对象，通过这个对象就可以迭代遍历 Collection 中的元素。
 
 从 JDK 1.5 之后可以使用 foreach 方法来遍历实现了 Iterable 接口的聚合对象。
@@ -129,7 +126,6 @@ private static final int DEFAULT_CAPACITY = 10;
 ```
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191208232221265.png"/> </div><br>
-
 #### 2. 扩容
 
 添加元素时使用 ensureCapacityInternal() 方法来保证容量足够，如果不够时，需要使用 grow() 方法进行扩容，新容量的大小为 `oldCapacity + (oldCapacity >> 1)`，即 oldCapacity+oldCapacity/2。其中 oldCapacity >> 1 需要取整，所以新容量大约是旧容量的 1.5 倍左右。（oldCapacity 为偶数就是 1.5 倍，为奇数就是 1.5 倍-0.5）
@@ -413,7 +409,6 @@ transient Node<E> last;
 ```
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191208233940066.png"/> </div><br>
-
 #### 2. 与 ArrayList 的比较
 
 ArrayList 基于动态数组实现，LinkedList 基于双向链表实现。ArrayList 和 LinkedList 的区别可以归结为数组和链表的区别：
@@ -430,7 +425,6 @@ ArrayList 基于动态数组实现，LinkedList 基于双向链表实现。Array
 内部包含了一个 Entry 类型的数组 table。Entry 存储着键值对。它包含了四个字段，从 next 字段我们可以看出 Entry 是一个链表。即数组中的每个位置被当成一个桶，一个桶存放一个链表。HashMap 使用拉链法来解决冲突，同一个链表中存放哈希值和散列桶取模运算结果相同的 Entry。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191208234948205.png"/> </div><br>
-
 ```java
 transient Entry[] table;
 ```
@@ -510,7 +504,6 @@ map.put("K3", "V3");
 - 在链表上顺序查找，时间复杂度显然和链表的长度成正比。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191208235258643.png"/> </div><br>
-
 #### 3. put 操作
 
 ```java
@@ -803,7 +796,6 @@ static final int tableSizeFor(int cap) {
 #### 1. 存储结构
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191209001038024.png"/> </div><br>
-
 ```java
 static final class HashEntry<K,V> {
     final int hash;
