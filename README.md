@@ -30,7 +30,7 @@
 
 # :computer:  ​计算机
 
-- [计算机网络原理](note-md/Computer/计算机网络%20-%20目录.md) | [计算机操作系统 ](note-md/Computer/计算机操作系统%20-%20目录.md)| [Linux ](note-md/Computer/Linux.md)| [HTTP ](note-md/Computer/HTTP.md) | [Socket ](note-md/Computer/Socket.md)
+- [计算机网络原理](note-md/Computer/计算机网络%20-%20目录.md) | [计算机操作系统 ](note-md/Computer/计算机操作系统%20-%20目录.md)| [Linux ](note-md/Computer/Linux.md)| [HTTP ](note-md/Computer/HTTP.md) | [Socket ](note-md/Computer/Socket.md) 
 
 # :european_castle: 开源框架  
 
@@ -52,25 +52,19 @@
 
 - [正则表达式](note-md/Front/正则表达式.md) | [前端知识](note-md/)
 
-#  :smiley: 面试题
+# :smiley: 面试题
 
 - [关于面试](note-md/Interview/关于面试.md) | [Java 200+ 道](note-md/Interview/Java%20200+%20道.md) | [并发控制](note-md/Interview/并发控制.md) | [集合](note-md/Interview/集合.md) | [Web 页面请求过程](note-md/Interview/Web%20页面请求过程.md)
 
 # :game_die: 扩展
 
-- [扫描二维码登录过程](notes-md/Extend/扫描二维码登录过程.md) | [Redis 论坛设计](notes-md/Extend/Redis%20论坛设计.md) | [攻击技术](notes-md/Extend/攻击技术.md) 
+- [扫描二维码登录过程](notes-md/Extend/扫描二维码登录过程.md) | [Redis 论坛设计](notes-md/Extend/Redis%20论坛设计.md) | [攻击技术](notes-md/Extend/攻击技术.md) | [Win 10 常用快捷键](notes-md/Extend/Win%2010%20常用快捷键.md)
 
-
+<br>
 
 # 后记
 
 路漫漫，其修远兮。 在学习这条路上难免会有很多盲点和学不完的知识。有道无术，术尚可求， 欢迎有更多的技术爱好者参与仓库的维护共同建设，欢迎 Pr ，Issues 也都会看。
-
-
-
-
-
-
 
 
 
