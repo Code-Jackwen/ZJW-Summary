@@ -22,7 +22,7 @@
 
 # 📝  数据结构 | 算法题解
 
-- [数据结构与算法](notes-md/Algorithm/数据结构%20-%20目录.md) | [剑指 Offer](To%20offer/剑指%20Offer%20-%20目录.md) | [Leetcode 精选](notes-md/) 
+- [数据结构与算法](notes-md/Algorithm/数据结构%20-%20目录.md) | [剑指 Offer](notes-md/To%20offer/剑指%20Offer%20-%20目录.md) | [Leetcode 精选](notes-md/) 
 
 # :date:  数据库 
 
