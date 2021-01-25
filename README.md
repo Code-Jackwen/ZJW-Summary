@@ -58,7 +58,7 @@
 
 # :game_die: 扩展
 
-- [扫描二维码登录过程](notes-md/Extend/扫描二维码登录过程.md) | [Redis 论坛设计](notes-md/Extend/Redis%20论坛设计.md) | [攻击技术](notes-md/Extend/攻击技术.md) | [Win 10 常用快捷键](notes-md/Extend/Win%2010%20常用快捷键.md)
+- [扫描二维码登录过程](notes-md/Extend/扫描二维码登录过程.md) | [Redis 论坛设计](notes-md/Extend/Redis%20论坛设计.md) | [攻击技术](notes-md/Extend/攻击技术.md) | [Win 10 快捷键](notes-md/Extend/Win%2010%20常用快捷键.md)
 
 <br>
 
