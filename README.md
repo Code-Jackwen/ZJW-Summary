@@ -18,55 +18,69 @@
 
 ## :coffee:  Java	
 
-- [Java 基础知识 ]()| [Java 集合框架]() | [Java 虚拟机]()| [Java I/O  知识]() | [Java 并发编程]() | [JDK 新特性]()
+- [Java 基础知识 ](note-md/Java/Java%20基础.md) | [Java 集合](note-md/Java/Java%20容器.md) | [Java 虚拟机](note-md/Java%20虚拟机.md)| [Java IO](note-md/Java/Java%20IO.md) | [Java 并发](note-md/Java/Java%20并发.md) | [JDK 特性](note-md/Java/Jdk%20特性.md)
 
 
 
-## 📝  数据结构 | 算法题
+## 📝  数据结构 | 算法题解
 
-- [数据结构]() | [剑指 Offer](https://github.com/Code-Jackwen/ZJW-Summary/blob/main/notes-md/To%20offer/%E5%89%91%E6%8C%87%20Offer%20-%20%20%E7%9B%AE%E5%BD%95.md) | [Leetcode 精选]() 
+- [数据结构与算法](note-md/Algorithm/数据结构%20-%20目录.md) | [剑指 Offer](To%20offer/剑指%20Offer%20-%20目录.md) | [Leetcode 精选](note-md/) 
 
 
 
 ## :date:  数据库 
 
-- [数据库系统原理]() | [ MySQL 基础]() | [SQL 语法基础]() | [SQL 精选题解]() | [MySQL 优化]() | [Redis]() | [Elasticsearch]()
+- [数据库系统原理](note-md/Database/数据库系统原理.md) | [ MySQL](note-md/Database/MySQL.md) | [SQL 语法基础](note-md/Database/SQL%20语法.md) | [SQL 精选题解](note-md/) | [MySQL 优化](note-md/) | [Redis](note-md/Database/Redis.md) 
 
 
 
 ## :computer:  ​计算机
 
-- [计算机网络](https://github.com/Jack-wen-Java/ZJW-Summary/blob/main/notes-md/Computer/%E6%88%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%20-%20%E4%BC%A0%E8%BE%93%E5%B1%82.md) | [计算机操作系统 ]()| [Linux ]()| [HTTP ]() | [Socket ]()
+- [计算机网络原理](note-md/Computer/计算机网络%20-%20目录.md) | [计算机操作系统 ](note-md/Computer/计算机操作系统%20-%20目录.md)| [Linux ](note-md/Computer/Linux.md)| [HTTP ](note-md/Computer/HTTP.md) | [Socket ](note-md/Computer/Socket.md)
 
 
 
-## :european_castle:  SSM框架  
+## :european_castle: 开源框架  
 
-- [Spring ]()| [Spring Mvc]() | [Mybatis]()
+- [Spring ](note-md/Framework)| [Spring Mvc](note-md/Framework) | [Mybatis](note-md/Framework) | [Dubbo](note-md/Framework) | [Zookeeper ](note-md/Framework) | [Oauth](note-md/Framework)
 
 
 
 ## :straight_ruler:  项目设计   
 
-- [系统设计]() | [消息队列]() |[ 分布式与集群]() | [Dubbo]() | [Zookeeper ]()
+- [系统设计](note-md/Project/系统设计基础.md) | [消息队列](note-md/Project/消息队列.md) | [ 分布式](note-md/Project/分布式.md) | [集群](note-md/Project/集群.md) | [缓存](note-md/Project/缓存.md) | [限流](note-md/Project/限流.md) | [Rabbit MQ](note-md/Project/Rabbit MQ.md)
 
 
 
 ## :scissors:  代码设计
 
-- [代码规约]() | [设计模式]()
+-  [面向对象思想](note-md/Code/面向对象思想.md) | [设计模式](note-md/DesignPattern设计模式%20-%20目录.md) | [代码可读性](note-md/Code/代码可读性.md) 
 
 
 
 ## :wrench:  常用工具 
 
-- [Idea ]()| [Git ]()| [Maven ]()| [Docker]()
+- [Idea ](note-md/Tools/IDEA.md)| [Git ](note-md/Tools/Git.md)| [Maven ](note-md/Tools/Maven.md)| [Docker](note-md/Tools/Docker.md)
 
 
 
 ## :strawberry:  ​前端相关
 
-- [正则表达式]() | [前端知识]()
+- [正则表达式](note-md/Front/正则表达式.md) | [前端知识](note-md/)
+
+
+
+##  :smiley: 面试题
+
+- [关于面试](note-md/Interview/关于面试.md) | [Java 200+ 道](note-md/Interview/Java%20200+%20道.md) | [并发控制](note-md/Interview/并发控制.md) | [集合](note-md/Interview/集合.md) | [Web 页面请求过程](note-md/Interview/Web%20页面请求过程.md)
+
+
+
+## :game_die: 扩展
+
+- [扫描二维码登录过程](notes-md/Extend/扫描二维码登录过程.md) | [Redis 论坛设计](notes-md/Extend/Redis%20论坛设计.md) | [攻击技术](notes-md/Extend/攻击技术.md) 
+
+
 
 
 
@@ -78,5 +92,5 @@
 
 # 鸣谢
 
-本仓主要是个人对知识的理解和总结，来源于书籍、官方文档资料，部分有对前辈知识的引用，有链接地址声明，并对 Java 界各大相关优秀前辈表示感谢，如有版权侵权烦请告知。在您引用本仓库内容或者对内容进行修改演绎时，请署名并以相同方式共享，感激不尽。
+本仓主要是个人对知识的理解和总结，来源于书籍、官方文档资料，部分有对前辈知识的引用，有链接地址声明，并对 Java 界各大相关优秀前辈表示感谢，手动感谢 [CS-Notes](https://github.com/CyC2018/CS-Notes) 的大力支持，如有版权侵权烦请告知。在您引用本仓库内容或者对内容进行修改演绎时，请署名并以相同方式共享，感激不尽。
 

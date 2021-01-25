@@ -45,7 +45,6 @@ B+ Tree 是基于 B Tree 和叶子节点顺序访问指针进行实现，它具�
 在 B+ Tree 中，一个节点中的 key 从左到右非递减排列，如果某个指针的左右相邻 key 分别是 key<sub>i</sub> 和 key<sub>i+1</sub>，且不为 null，则该指针指向节点的所有 key 大于等于 key<sub>i</sub> 且小于等于 key<sub>i+1</sub>。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/33576849-9275-47bb-ada7-8ded5f5e7c73.png" width="350px"> </div><br>
-
 #### 2. 操作
 
 进行查找操作时，首先在根节点进行二分查找，找到一个 key 所在的指针，然后递归地在指针所指向的节点进行查找。直到查找到叶子节点，然后在叶子节点上进行二分查找，找出 key 所对应的 data。
@@ -80,7 +79,7 @@ B+ Tree 是基于 B Tree 和叶子节点顺序访问指针进行实现，它具�
 
 因为不再需要进行全表扫描，只需要对树进行搜索即可，所以查找速度快很多。
 
-因为 B+ Tree 的有序性，所以除了用于查找，还可以用于排序和分组。
+因为 B+ Tree 的有序性，所以除了用于查找，还可以用于排序和分组。 
 
 可以指定多个列作为索引列，多个索引列共同组成键。
 
@@ -89,11 +88,9 @@ B+ Tree 是基于 B Tree 和叶子节点顺序访问指针进行实现，它具�
 InnoDB 的 B+Tree 索引分为主索引和辅助索引。主索引的叶子节点 data 域记录着完整的数据记录，这种索引方式被称为聚簇索引。因为无法把数据行存放在两个不同的地方，所以一个表只能有一个聚簇索引。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/45016e98-6879-4709-8569-262b2d6d60b9.png" width="350px"> </div><br>
-
 辅助索引的叶子节点的 data 域记录着主键的值，因此在使用辅助索引进行查找时，需要先查找到主键值，然后再到主索引中进行查找。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/7c349b91-050b-4d72-a7f8-ec86320307ea.png" width="350px"> </div><br>
-
 #### 2. 哈希索引
 
 哈希索引能以 O(1) 时间进行查找，但是失去了有序性：
@@ -355,7 +352,6 @@ MySQL 提供了 FROM_UNIXTIME() 函数把 UNIX 时间戳转换为日期，并提
 当一个表的数据不断增多时，Sharding 是必然的选择，它可以将数据分布到集群的不同节点上，从而缓存单个数据库的压力。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/63c2909f-0c5f-496f-9fe5-ee9176b31aba.jpg" width=""> </div><br>
-
 ### 垂直切分
 
 垂直切分是将一张表按列切分成多个表，通常是按照列的关系密集程度进行切分，也可以利用垂直切分将经常被使用的列和不经常被使用的列切分到不同的表中。
@@ -363,7 +359,6 @@ MySQL 提供了 FROM_UNIXTIME() 函数把 UNIX 时间戳转换为日期，并提
 在数据库的层面使用垂直切分将按数据库中表的密集程度部署到不同的库中，例如将原来的电商数据库垂直切分成商品数据库、用户数据库等。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/e130e5b8-b19a-4f1e-b860-223040525cf6.jpg" width=""> </div><br>
-
 ### Sharding 策略
 
 - 哈希取模：hash(key) % N；
@@ -397,7 +392,6 @@ MySQL 提供了 FROM_UNIXTIME() 函数把 UNIX 时间戳转换为日期，并提
 -   **SQL 线程**  ：负责读取中继日志，解析出主服务器已经执行的数据更改并在从服务器中重放（Replay）。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/master-slave.png" width=""> </div><br>
-
 ### 读写分离
 
 主服务器处理写操作以及实时性要求比较高的读操作，而从服务器处理读操作。
@@ -411,6 +405,52 @@ MySQL 提供了 FROM_UNIXTIME() 函数把 UNIX 时间戳转换为日期，并提
 读写分离常用代理方式来实现，代理服务器接收应用层传来的读写请求，然后决定转发到哪个服务器。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/master-slave-proxy.png" width=""> </div><br>
+## 七、大表优化与分库分表
+
+[Mysql 大表优化](https://mp.weixin.qq.com/s/BMQC2oJlhLoeBDtveXgHpw)
+
+[数据库分库分表那些事](https://www.sohu.com/a/276591312_505779)
+
+
+
+## 八、视图
+
+# 1. 是什么
+
+视图是虚拟的表，本身不包含数据，数据都存储在原始表中。
+
+# 2. 创建视图
+
+```sql
+CREATE VIEW myview AS
+SELECT C1, Concat(C2, C3)
+FROM mytable
+WHERE C1 <= 2;
+```
+
+
+
+<img src="../../assets/1609657477060.png" alt="1609657477060" style="zoom: 50%;" />
+
+
+
+# 3. 有什么用
+
+- 简化复杂的查询，比如复杂的连接查询；
+- 只使用实际表的一部分数据；
+- 通过只给用户访问视图的权限，保证数据的安全性；
+
+# 4. 何时可以更新
+
+因为视图不存储数据，所以更新视图需要去更新原始表。如果视图定义只依赖于一个原始表，就很容易进行更新操作。但如果视图定义中有以下操作，那么就不能进行视图的更新：
+
+- 分组查询
+- 连接查询
+- 子查询
+- Union
+- 聚集函数
+- DISTINCT
+- 计算字段
 
 ## 参考资料
 
