@@ -1,8 +1,24 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1、一键生成 Github 简历](#1%E4%B8%80%E9%94%AE%E7%94%9F%E6%88%90-github-%E7%AE%80%E5%8E%86)
+- [2、个性化 Github 首页](#2%E4%B8%AA%E6%80%A7%E5%8C%96-github-%E9%A6%96%E9%A1%B5)
+- [3、自定义项目徽章](#3%E8%87%AA%E5%AE%9A%E4%B9%89%E9%A1%B9%E7%9B%AE%E5%BE%BD%E7%AB%A0)
+- [4、Github 表情](#4github-%E8%A1%A8%E6%83%85)
+- [5、高效阅读 Github 项目的源代码](#5%E9%AB%98%E6%95%88%E9%98%85%E8%AF%BB-github-%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%BA%90%E4%BB%A3%E7%A0%81)
+- [6、一键开启 Github 夜间模式](#6%E4%B8%80%E9%94%AE%E5%BC%80%E5%90%AF-github-%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F)
+- [7、扩展 Github 的功能](#7%E6%89%A9%E5%B1%95-github-%E7%9A%84%E5%8A%9F%E8%83%BD)
+- [8、自动为 Markdown 文件生成目录](#8%E8%87%AA%E5%8A%A8%E4%B8%BA-markdown-%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90%E7%9B%AE%E5%BD%95)
+- [9、 Github 搜索](#9-github-%E6%90%9C%E7%B4%A2)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 1、一键生成 Github 简历
 
 网址：http://resume.github.io/ 
 
-校招的时候，个人信息那里就放了一个在线的 Github 简历 	
+个人信息那里可以放了一个在线的 Github 的简历 	
 
 比如：输入用户名后，访问：https://resume.github.io/?Code-Jackwen
 
