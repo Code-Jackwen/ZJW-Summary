@@ -20,61 +20,41 @@
 
 - [Java 基础知识 ](note-md/Java/Java%20基础.md) | [Java 集合](note-md/Java/Java%20容器.md) | [Java 虚拟机](note-md/Java%20虚拟机.md)| [Java IO](note-md/Java/Java%20IO.md) | [Java 并发](note-md/Java/Java%20并发.md) | [JDK 特性](note-md/Java/Jdk%20特性.md)
 
-<br>
-
 # 📝  数据结构 | 算法题解
 
 - [数据结构与算法](note-md/Algorithm/数据结构%20-%20目录.md) | [剑指 Offer](To%20offer/剑指%20Offer%20-%20目录.md) | [Leetcode 精选](note-md/) 
-
-<br>
 
 # :date:  数据库 
 
 - [数据库系统原理](note-md/Database/数据库系统原理.md) | [ MySQL](note-md/Database/MySQL.md) | [SQL 语法基础](note-md/Database/SQL%20语法.md) | [SQL 精选题解](note-md/) | [MySQL 优化](note-md/) | [Redis](note-md/Database/Redis.md) 
 
-<br>
-
 # :computer:  ​计算机
 
 - [计算机网络原理](note-md/Computer/计算机网络%20-%20目录.md) | [计算机操作系统 ](note-md/Computer/计算机操作系统%20-%20目录.md)| [Linux ](note-md/Computer/Linux.md)| [HTTP ](note-md/Computer/HTTP.md) | [Socket ](note-md/Computer/Socket.md)
-
-<br>
 
 # :european_castle: 开源框架  
 
 - [Spring ](note-md/Framework)| [Spring Mvc](note-md/Framework) | [Mybatis](note-md/Framework) | [Dubbo](note-md/Framework) | [Zookeeper ](note-md/Framework) | [Oauth](note-md/Framework)
 
-<br>
-
 # :straight_ruler:  项目设计   
 
 - [系统设计](note-md/Project/系统设计基础.md) | [消息队列](note-md/Project/消息队列.md) | [ 分布式](note-md/Project/分布式.md) | [集群](note-md/Project/集群.md) | [缓存](note-md/Project/缓存.md) | [限流](note-md/Project/限流.md) | [Rabbit MQ](note-md/Project/Rabbit%20MQ.md)
-
-<br>
 
 # :scissors:  代码设计
 
 -  [面向对象思想](note-md/Code/面向对象思想.md) | [设计模式](note-md/DesignPattern设计模式%20-%20目录.md) | [代码可读性](note-md/Code/代码可读性.md) 
 
-<br>
-
 # :wrench:  常用工具 
 
 - [Idea ](note-md/Tools/IDEA.md)| [Git ](note-md/Tools/Git.md)| [Maven ](note-md/Tools/Maven.md)| [Docker](note-md/Tools/Docker.md)
-
-<br>
 
 # :strawberry:  ​前端相关
 
 - [正则表达式](note-md/Front/正则表达式.md) | [前端知识](note-md/)
 
-
-
 #  :smiley: 面试题
 
 - [关于面试](note-md/Interview/关于面试.md) | [Java 200+ 道](note-md/Interview/Java%20200+%20道.md) | [并发控制](note-md/Interview/并发控制.md) | [集合](note-md/Interview/集合.md) | [Web 页面请求过程](note-md/Interview/Web%20页面请求过程.md)
-
-
 
 # :game_die: 扩展
 
