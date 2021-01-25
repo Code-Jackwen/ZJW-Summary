@@ -18,7 +18,7 @@
 
 # :coffee:  Java	
 
-- [Java 基础知识 ](notes-md/Java/Java%20基础.md) | [Java 集合](notes-md/Java/Java%20容器.md) | [Java 虚拟机](notes-md/Java%20虚拟机.md)| [Java IO](notes-md/Java/Java%20IO.md) | [Java 并发](notes-md/Java/Java%20并发.md) | [JDK 特性](notes-md/Java/Jdk%20特性.md)
+- [Java 基础知识 ](notes-md/Java/Java%20基础.md) | [Java 集合](notes-md/Java/Java%20容器.md) | [Java 虚拟机](notes-md/Java/Java%20虚拟机.md)| [Java IO](notes-md/Java/Java%20IO.md) | [Java 并发](notes-md/Java/Java%20并发.md) | [JDK 特性](notes-md/Java/Jdk%20特性.md)
 
 # 📝  数据结构 | 算法题解
 
@@ -42,7 +42,7 @@
 
 # :scissors:  代码设计
 
--  [面向对象思想](notes-md/Code/面向对象思想.md) | [设计模式](notes-md/DesignPattern设计模式%20-%20目录.md) | [代码可读性](notes-md/Code/代码可读性.md) 
+-  [面向对象思想](notes-md/Code/面向对象思想.md) | [设计模式](notes-md/DesignPattern/设计模式%20-%20目录.md) | [代码可读性](notes-md/Code/代码可读性.md) 
 
 # :wrench:  常用工具 
 
