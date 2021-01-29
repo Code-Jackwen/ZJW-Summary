@@ -70,7 +70,7 @@ LinkHashMap面试中如果明确不给用。 使用队列和HashMap 可以，或
 
 
 
-## 牛客原题题解：LinkHashMap
+## 牛客原题题解：LinkHashMap（推荐）
 
 ````java
 import java.util.*;
@@ -128,7 +128,7 @@ public class Solution {
 
 
 
-## 牛客题解备用：队列 + HashMap
+## 牛客题解备用：队列 + HashMap（推荐）
 
 ````java
 import java.util.*;
@@ -195,7 +195,7 @@ public class Solution {
 
 
 
-# 解法总结
+# 力扣解法总结
 
 ## 解法一：
 
