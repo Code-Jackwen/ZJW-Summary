@@ -2,6 +2,8 @@ https://www.nowcoder.com/practice/9cf027bf54714ad889d4f30ff0ae5481?tpId=117&&tqI
 
 
 
+
+
 分类：二分、动态规划
 
 
@@ -68,7 +70,7 @@ public class Solution {
 
 力扣中等
 
-#### [300. 最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
+[300. 最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
 
 力扣只是输出序列长度。
 
