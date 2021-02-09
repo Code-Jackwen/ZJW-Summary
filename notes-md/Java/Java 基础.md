@@ -196,7 +196,6 @@ value 数组被声明为 final，这意味着 value 数组初始化之后就不�
 如果一个 String 对象已经被创建过了，那么就会从 String Pool 中取得引用。只有 String 是不可变的，才可能使用 String Pool。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191210004132894.png"/> </div><br>
-
 **3. 安全性**  
 
 String 经常作为参数，String 不可变性可以保证参数不可变。例如在作为网络连接参数的情况下如果 String 是可变的，那么在网络连接过程中，String 被改变，改变 String 的那一方以为现在连接的是其它主机，而实际情况却不一定是。
@@ -476,6 +475,8 @@ private 方法隐式地被指定为 final，如果在子类中定义的方法和
 **3. 类**  
 
 声明类不允许被继承。
+
+[final修饰的对象，有几种初始化方式](https://www.cnblogs.com/lwhsummer/p/11148985.html)
 
 ### static
 
@@ -1385,7 +1386,6 @@ Throwable 可以用来表示任何可以作为异常抛出的类，分为两种�
 -   **非受检异常**  ：是程序运行时错误，例如除 0 会引发 Arithmetic Exception，此时程序崩溃并且无法恢复。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/PPjwP.png" width="600"/> </div><br>
-
 - [Java 入门之异常处理](https://www.cnblogs.com/Blue-Keroro/p/8875898.html)
 - [Java Exception Interview Questions and Answers](https://www.journaldev.com/2167/java-exception-interview-questions-and-answersl)
 
