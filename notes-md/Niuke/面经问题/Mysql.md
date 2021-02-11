@@ -1,6 +1,87 @@
-聚簇索引、辅助索引、覆盖索引、联合索引
+# 事务
+
+脏读:指读到了其他事务未提交的数据
+
+不可重复读: 读到了其他事务已提交的数据
+
+不可重复读与幻读都是读到其他事务已提交的数据，但是它们针对点不同
+
+不可重复读：update
+幻读：delete，insert
+
+# 隔离级别
+
+未提交读 （READ UNCOMMITTED） ：不允许同时进行写操作，但允许其他事务读此行数据 
+
+已提交读（READ COMMITTED）：允许其他事务继续访问该行数据，但是未提交的写事务将会禁止其他事务访问该行，会对该写锁一直保持直到到事务提交. 
+
+可重复读（REPEATABLE READS）： InnoDb的默认隔离级别 
+
+可串行化（Serializable ）：最高的隔离级别，它求在选定对象上的读锁和写锁保持直到事务结束后才能释放，所以能防住上诉所有问题，但因为是串行化的，所以效率较低. 
+
+## MVCC
+
+MVCC：多版本并发控制。MySQL、ORACLE、PostgreSQL等都是使用了以乐观锁为理论基础的MVCC（多版本并发控制）来避免不可重复读和幻读。MVCC的实现没有固定的规范，每个数据库都会有不同的实现方式，这里讨论的是InnoDB的MVCC。 
+
+在InnoDB中，会在每行数据后添加两个额外的隐藏的值来实现MVCC，这两个值一个记录这行数据何时被创建，另外一个记录这行数据何时过期（或者被删除）。在实际操作中，存储的并不是时间，而是事务的版本号，每开启一个新事务，事务的版本号就会递增。 在可重读Repeatable reads事务隔离级别下：
+
+- SELECT时，读取创建版本号<=当前事务版本号，删除版本号为空或  >  当前事务版本号。
+- INSERT时，保存当前事务版本号为行的创建版本号
+- DELETE时，保存当前事务版本号为行的删除版本号
+- UPDATE时，插入一条新纪录，保存当前事务版本号为行创建版本号，同时保存当前事务版本号到原来删除的行
+
+## Next-Key锁
+
+![1612934828092](../../../assets/1612934828092.png)
+
+B+树的所有数据存储在叶子节点上,当有一个新的叫`秦寿生`的数据进来,一定是排在在这条id=34的数据前面或者后面的,我们如果对前后这个范围进行加锁了,那当然新的`秦寿生`就插不进来了.
+
+那如果有一个新的`范统`要插进行呢? 因为`范统`的前后并没有被锁住,是能成功插入的,这样就极大地提高了数据库的并发能力.
+
+
+
+InnoDB的行锁锁定的是索引，而不是记录本身，这一点也需要有清晰的认识。故某索引相同的记录都会被加锁，会造成索引竞争，这就需要我们严格设计业务sql，尽可能的使用主键或唯一索引对记录加锁。索引映射的记录如果存在，加行锁，如果不存在，则会加 next-key lock / gap 锁 / 间隙锁，故InnoDB可以实现事务对某记录的预先占用，如果记录存在，它就是本事务的，如果记录不存在，那它也将是本是无的，只要本是无还在，其他事务就别想占有它。 
+
+
+
+### 快照读
+
+我们平时只用使用select就是快照读,这样可以减少加锁所带来的开销.
+
+````
+select * from table ....
+````
+
+### 当前读
+
+对于会对数据修改的操作(update、insert、delete)都是采用当前读的模式。在执行这几个操作时会读取最新的记录，即使是别的事务提交的数据也可以查询到。假设要update一条记录，但是在另一个事务中已经delete掉这条数据并且commit了，如果update就会产生冲突，所以在update的时候需要知道最新的数据。读取的是最新的数据，需要加锁。以下第一个语句需要加共享锁，其它都需要加排它锁。
+
+````
+select * from table where ? lock in share mode; 
+select * from table where ? for update; 
+insert; 
+update; 
+delete;
+````
+
+
+
+为什么说可重复读防不住幻读？
+
+RR 级别作为 mysql 事务默认隔离级别，是事务安全与性能的折中，可能也符合二八定律（20%的事务存在幻读的可能，80%的事务没有幻读的风险），我们在正确认识幻读后，便可以根据场景灵活的防止幻读的发生。 
+
+RR级别幻读例子：
+
+1、a事务先select，b事务insert确实会加一个gap锁，但是如果b事务commit，这个gap锁就会释放（释放后a事务可以随意操作）
+2、a事务再select出来的结果在MVCC下还和第一次select一样
+3、接着a事务不加条件地update，这个update会作用在所有行上（包括b事务新加的）
+4、a事务再次select就会出现b事务中的新行，并且这个新行已经被update修改了
+
+Mysql官方给的幻读解释是：只要在一个事务中，第二次select多出了row就算幻读， 所以这个场景下，算出现幻读了。
 
 # 索引
+
+300w记录的7字段左右表，根据没有索引的列查一条记录，9秒左右。创建完索引，1秒以内。
 
 ## 聚簇索引
 
@@ -82,9 +163,9 @@ CREATE TABLE `student` (
   `name` varchar(255) NOT NULL,
   `age` varchar(255) NOT NULL,
   `school` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_name` (`name`),
-  KEY `idx_school_age` (`school`,`age`)
+  PRIMARY KEY (`id`)，
+  KEY `idx_name` (`name`)，
+  KEY `idx_school_age` (`school`，`age`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ````
 
@@ -104,13 +185,13 @@ CREATE TABLE `student` (
 
 例2：
 
-执行： select *  from student where age > 10 and age < 15 
+执行： select *  from student where age   >   10 and age < 15 
 
 因为联合索引idx_school_age的字段顺序是先school再age，按照age做条件查询，结果通常不走索引： 
 
 但是，如果保持条件不变，查询所有字段改为查询条目数： 
 
-执行： select count(*) from student where age > 10 and age < 15 
+执行： select count(*) from student where age   >   10 and age < 15 
 
 优化器会选择这个联合索引： 
 
@@ -218,16 +299,6 @@ b+树，是b树的一种变体，查询性能更好。m阶的b+树的特征：
 
 
 
-b+树相比于b树的**查询优势**：
-
-
-
-
-
-
-
-
-
 B树和B+树的区别：
 
 1、B+树中只有叶子节点会带有指向记录的指针（ROWID），一个块中可以容纳更多的索引项，磁盘页能容纳更多节点元素，更“矮胖”，可以降低树的高度；而B树则所有节点都带有，在内部节点出现的索引项不会再出现在叶子节点中。
@@ -252,9 +323,179 @@ B树的优点：
 
 
 
-参考：
 
-https://blog.csdn.net/login_sonata/article/details/75268075
+
+
+
+# 索引失效
+
+##### 最左前缀法则
+
+如果索引了多列，要遵守最左前缀法则。指的是查询从索引的最左前列开始，并且不跳过索引中的列。
+
+1、违反最左前缀法则
+
+对a、b、c列建立联合索引，where里是b and c 不走、where里是b 不走。
+
+而where里是a、c 的话走只 a 的那一段索引长度。
+
+而where里是=a、>b、=c 的话走只 a和b 的那一段索引长度，c的就不走了。
+
+2、不要在索引列上进行运算操作，索引将失。
+
+比如 where substring(a, 3 , 2 ) ='索引'
+
+3、字符串不加单引号，造成索引失效。没有对字符串类型的值加单引号，MySQL的查询优化器，会自动的进行类型转换，造成索引失效。
+
+4、用or分割开的条件，如果or前的条件中的列有索引，而后面的列中没有索引，那么涉及的索引都不会被用到。
+
+比如：a or b	a有索引，b没有建索引，不加其他sql关键字的话sql整体不走索引。
+
+5、模糊查询，以%开头的Like模糊查询，索引失效。
+
+这里说的都是 查询的 多字段，非覆盖索引查询。
+
+如果仅仅是尾部模糊匹配，索引不会失效（开头%）。如果是头部模糊匹配（%开头），索引失效。
+
+解决：
+
+使用覆盖索引查询，随便模糊都走索引。
+
+6、in 走索引， not in 索引失效。
+
+7、is NULL ， is NOT NULL 有时索引失效，看评估。
+
+8、如果MySQL评估使用索引比全表更慢，则不使用索引。看列值的区别度大不大。
+
+
+
+# SQL优化
+
+##### Explain 结果含义
+
+type：显示的是访问类型:
+
+system > const > eq_ref > ref > fulltext > ref_or_null > index_merge > unique_subquery  > index_subquery > range > index > ALL
+
+Extra 含义：
+
+using index：使用覆盖索引的时候就会出现
+
+using where：在查找使用索引的情况下，需要回表去查询所需的数据
+
+using index condition：查找使用了索引，但是需要回表查询数据
+
+using index、using where：查找使用了索引，但是需要的数据都在索引列中能找到，所以不需要回表查询数据
+
+
+
+
+
+##### 插入
+
+MySQL一条语句如何写？插入1000条？
+
+1、插入语句常用写法1：插入一条的SQL语句
+
+INSERT INTO 
+
+items(name,city,price,number,picture)  
+
+VALUES
+
+('耐克运动鞋','广州',500,1000,'003.jpg');
+
+2、插入语句常用写法2：插入多条的SQL语句，两者都是建立一个连接。
+
+INSERT INTO 
+
+items(name,city,price,number,picture) 
+
+VALUES
+
+('耐克运动鞋','广州',500,1000,'003.jpg'),
+
+('耐克运动鞋2','广州2',500,1000,'002.jpg');
+
+3、其他优化
+
+- 对于InnoDB，按照主键顺序插入，因为InnoDB类型的表是按照主键的顺序保存。
+
+- 关闭唯一性校验
+
+- 手动提交事务
+
+##### 排序
+
+所有不是通过索引直接返回排序结果的排序都叫 FileSort 排序。
+
+通过有序索引顺序扫描直接返回有序数据为 using index，不需要额外排序，操作效率高。这里说的是explain结果中的 Extra 列。
+
+总结：
+
+1、通过加索引，where 条件和Order by 使用相同的索引，并且Order By 的顺序和索引顺序相同（多字段排序也要最左前缀的意思）。
+
+Order by 的字段都是升序，或者都是降序。否则肯定需要额外的操作，这样就会出现FileSort。
+
+2、索引优化不掉的FileSort，可以适当提高 sort_buffer_size 和 max_length_for_sort_data 系统变量，来增大排序区的大小，提高排序的效率。或者视情况提示sql直接FileSort 不再先内存排序再转FileSort 。
+
+##### 优化 group by
+
+不需要排序的 order by null 禁止排序。需要排序的视情况加索引。
+
+##### 优化子查询
+
+多数情况下，子查询是可以被更高效的连接（JOIN）替代，是因为MySQL不需要在内存中创建临时表来完成这个逻辑上需要两个步骤的查询工作。少了步骤，而且explain中的Extra列也会是NULL或者其他更好的情况。
+
+##### 优化OR条件
+
+1、OR之间的每个条件列都必须用到索引，而且不能使用到复合索引；如果没有索引，则应该考虑增加索引。
+
+2、SQL改写：
+
+建议使用 union 替换 or，UNION 要优于 OR 。
+
+UNION 语句的 type 值为 ref，OR 语句的 type 值为 range，可以看到这是一个很明显的差距
+
+UNION 语句的 ref 值为 const，OR 语句的 type 值为 null，const 表示是常量值引用。
+
+##### 优化分页查询
+
+利用索引上完成排序分页操作，最后根据主键关联回原表查询所需要的其他列内容。
+
+SELECT * 
+
+FROM student AS stu ,
+
+​		  (SELECT id FROM student order by id limit 2000000,10)  AS a 
+
+where a.id =stu.id
+
+##### SQL提示
+
+1、IGNORE INDEX
+
+如果用户只是单纯的想让MySQL忽略一个或者多个索引，则可以使用 ignore index
+
+select*fromtb_sellerignoreindex(idx_seller_name)wherename='小米科技';
+
+
+
+2、FORCE INDEX
+
+为强制MySQL使用一个特定的索引，可在查询中使用 force index 
+
+SELECT *  FROM student AS stu force index  (idx_a_b)  where ....
+
+
+
+3、USE INDEX
+
+在查询语句中表名的后面，添加 use index 来提供希望MySQL去参考的索引列表，就可以让MySQL不再考虑其他可用的索引，适用于索引有多种选择的情况。
+
+
+
+
 
 # 数据类型：
 
@@ -269,6 +510,8 @@ varchar(100)，指的是100字节，如果存放UTF8汉字时，只能存33个�
 5.0版本以上：
 
 varchar(100)，指的是100个字符，无论存放的是数字、字母还是UTF8汉字（每个汉字3字节），都可以存放100个。MySQL的varchar(n)可以存储的中文字符数和英文字符数是一致的，都是n个字符， INSERT的value字符数超过就报错。 [Err] 1406 - Data too long for column’string’ at row x 
+
+
 
 
 
@@ -357,3 +600,7 @@ https://www.cnblogs.com/wy123/p/8365234.html
 [《MySQL技术内幕 InnoDB存储引擎》学习笔记](https://blog.csdn.net/u012006689/article/details/73195837)
 
 https://www.runoob.com/mysql/mysql-data-types.html
+
+https://www.cnblogs.com/CoderAyu/p/11525408.html
+
+https://blog.csdn.net/login_sonata/article/details/75268075
