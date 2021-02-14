@@ -60,6 +60,8 @@
 
 ## 一 、基础概念
 
+**HTTP 协议是基于 TCP/IP 的应用层协议。** 
+
 ### 请求和响应报文
 
 客户端发送一个请求报文给服务器，服务器根据请求报文中的信息进行处理，并将处理结果放入响应报文中返回给客户端。
@@ -127,7 +129,6 @@ X-Cache: HIT
 HTTP 使用 URL（ **U** niform **R**esource **L**ocator，统一资源定位符）来定位资源，它是  URI（**U**niform **R**esource **I**dentifier，统一资源标识符）的子集，URL 在 URI 的基础上增加了定位能力。URI 除了包含 URL，还包含 URN（Uniform Resource Name，统一资源名称），它只是用来定义一个资源的名称，并不具备定位该资源的能力。例如 urn:isbn:0451450523 用来定义一个书籍名称，但是却没有表示怎么找到这本书。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/8441b2c4-dca7-4d6b-8efb-f22efccaf331.png" width="500px"> </div><br>
-
 - [wikipedia：统一资源标志符](https://zh.wikipedia.org/wiki/统一资源标志符)
 - [wikipedia: URL](https://en.wikipedia.org/wiki/URL)
 - [rfc2616：3.2.2 http URL](https://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.2.2)
@@ -219,7 +220,6 @@ CONNECT www.example.com:443 HTTP/1.1
 ```
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/dc00f70e-c5c8-4d20-baf1-2d70014a97e3.jpg" width=""/> </div><br>
-
 ### TRACE
 
 > 追踪路径
@@ -364,7 +364,6 @@ CONNECT www.example.com:443 HTTP/1.1
 ### 连接管理
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/HTTP1_x_Connections.png" width="800"/> </div><br>
-
 #### 1. 短连接与长连接
 
 当浏览器访问一个包含多张图片的 HTML 页面时，除了请求访问的 HTML 页面资源，还会请求图片资源。如果每进行一次 HTTP 通信就要新建一个 TCP 连接，那么开销会很大。
@@ -378,7 +377,7 @@ CONNECT www.example.com:443 HTTP/1.1
 
 默认情况下，HTTP 请求是按顺序发出的，下一个请求只有在当前请求收到响应之后才会被发出。由于受到网络延迟和带宽的限制，在下一个请求被发送到服务器之前，可能需要等待很长时间。
 
-流水线是在同一条长连接上连续发出请求，而不用等待响应返回，这样可以减少延迟。
+流水线是在同一条长连接上连续发出请求，而不用等待响应返回，**流水线就是异步发送请求**，这样可以减少延迟。
 
 ### Cookie
 
@@ -529,9 +528,9 @@ Cache-Control: public
 
 **3.4 缓存过期机制**  
 
-max-age 指令出现在请求报文，并且缓存资源的缓存时间小于该指令指定的时间，那么就能接受该缓存。
+**max-age 指令出现在请求报文，并且缓存资源的缓存时间小于该指令指定的时间，那么就能接受该缓存。**
 
-max-age 指令出现在响应报文，表示缓存资源在缓存服务器中保存的时间。
+**max-age 指令出现在响应报文，表示缓存资源在缓存服务器中保存的时间。**
 
 ```html
 Cache-Control: max-age=31536000
@@ -543,7 +542,7 @@ Expires 首部字段也可以用于告知缓存服务器该资源什么时候会
 Expires: Wed, 04 Jul 2012 08:26:05 GMT
 ```
 
-- 在 HTTP/1.1 中，会优先处理 max-age 指令；
+- **在 HTTP/1.1 中，会优先处理 max-age 指令；**
 - 在 HTTP/1.0 中，max-age 指令会被忽略掉。
 
 #### 4. 缓存验证
@@ -648,7 +647,7 @@ Accept-Ranges: bytes
 
 ### 分块传输编码
 
-Chunked Transfer Encoding，可以把数据分割成多块，让浏览器逐步显示页面。
+Chunked Transfer Encoding，可以把**数据分割成多块，让浏览器逐步显示页面。**
 
 ### 多部分对象集合
 
@@ -673,7 +672,7 @@ Content-Type: text/plain
 
 ### 虚拟主机
 
-HTTP/1.1 使用虚拟主机技术，使得一台服务器拥有多个域名，并且在逻辑上可以看成多个服务器。
+HTTP/1.1 使用虚拟主机技术，**使得一台服务器拥有多个域名**，并且在逻辑上可以看成多个服务器。
 
 ### 通信数据转发
 
@@ -693,11 +692,9 @@ HTTP/1.1 使用虚拟主机技术，使得一台服务器拥有多个域名，�
 - 用户察觉得到正向代理的存在。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/a314bb79-5b18-4e63-a976-3448bffa6f1b.png" width=""/> </div><br>
-
 - 而反向代理一般位于内部网络中，用户察觉不到。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/2d09a847-b854-439c-9198-b29c65810944.png" width=""/> </div><br>
-
 #### 2. 网关
 
 与代理服务器不同的是，网关服务器会将 HTTP 转化为其它协议进行通信，从而请求其它非 HTTP 服务器的服务。
@@ -708,18 +705,44 @@ HTTP/1.1 使用虚拟主机技术，使得一台服务器拥有多个域名，�
 
 ## 六、HTTPS
 
+HTTPS 建立连接的详细过程：https://cloud.tencent.com/developer/article/1017988
+
+### 简介
+
+HTTPS 是在 HTTP 的基础上和 SSL/TLS 证书结合起来的一种协议，很好的解决了 http 的三个缺点（被监听、被篡改、身份被伪装）。
+
 HTTP 有以下安全性问题：
 
-- 使用明文进行通信，内容可能会被窃听；
-- 不验证通信方的身份，通信方的身份有可能遭遇伪装；
-- 无法证明报文的完整性，报文有可能遭篡改。
+- 明文通信，内容可能会被窃听；
+- 不验证身份，身份有可能遭遇伪装；
+- 报文有可能遭篡改。
+
+### 建立连接
+
+- 当客户在浏览器中输入网址的并且按下回车,浏览器会在浏览器中查找的DNS缓存,**本地DNS缓存**,和**Hosts**中寻找对应的记录,如果没有获取到则会**请求DNS服务**来获取对应的ip
+- 当获取到ip后,tcp连接会进行**三次握手**建立连接
+
+
+
+![1613311029778](../../assets/1613311029778.png)
+
+**客户端使用根证书验证证书合法性**
 
 HTTPS 并不是新协议，而是让 HTTP 先和 SSL（Secure Sockets Layer）通信，再由 SSL 和 TCP 通信，也就是说 HTTPS 使用了隧道进行通信。
 
 通过使用 SSL，HTTPS 具有了加密（防窃听）、认证（防伪装）和完整性保护（防篡改）。
 
-<div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/ssl-offloading.jpg" width="700"/> </div><br>
+##### SSL
 
+SSL(Secure Sockets Layer 安全套接层)是为网络通信提供安全及数据完整性的一种安全协议。 
+
+##### TLS
+
+安全传输层协议（TLS：Transport Layer Security）用于在两个通信应用程序之间提供保密性和数据完整性。该协议由两层组成： TLS 记录协议（TLS Record）和 TLS 握手协议（TLS Handshake），是更新、更安全的SSL版本。 
+
+TLS和SSL协议理论上属于**传输层**，在应用层实现，所以我们可以在浏览器中设置是否使用此协议，使用哪一版本的协议。 
+
+<div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/ssl-offloading.jpg" width="700"/> </div><br>
 ### 加密
 
 #### 1. 对称密钥加密
@@ -730,7 +753,6 @@ HTTPS 并不是新协议，而是让 HTTP 先和 SSL（Secure Sockets Layer）�
 - 缺点：无法安全地将密钥传输给通信方。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/7fffa4b8-b36d-471f-ad0c-a88ee763bb76.png" width="600"/> </div><br>
-
 #### 2.非对称密钥加密
 
 非对称密钥加密，又称公开密钥加密（Public-Key Encryption），加密和解密使用不同的密钥。
@@ -743,7 +765,6 @@ HTTPS 并不是新协议，而是让 HTTP 先和 SSL（Secure Sockets Layer）�
 - 缺点：运算速度慢。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/39ccb299-ee99-4dd1-b8b4-2f9ec9495cb4.png" width="600"/> </div><br>
-
 #### 3. HTTPS 采用的加密方式
 
 上面提到对称密钥加密方式的传输效率更高，但是无法安全地将密钥 Secret Key 传输给通信方。而非对称密钥加密方式可以保证传输的安全性，因此我们可以利用非对称密钥加密方式将 Secret Key  传输给通信方。HTTPS 采用混合的加密机制，正是利用了上面提到的方案：
@@ -752,26 +773,26 @@ HTTPS 并不是新协议，而是让 HTTP 先和 SSL（Secure Sockets Layer）�
 - 获取到 Secret Key 后，再使用对称密钥加密方式进行通信，从而保证效率。（下图中的 Session Key 就是 Secret Key）
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/How-HTTPS-Works.png" width="600"/> </div><br>
-
 ### 认证
 
-通过使用   **证书**   来对通信方进行认证。
+通过使用   **证书**   来对**通信方**进行认证。
 
-数字证书认证机构（CA，Certificate Authority）是客户端与服务器双方都可信赖的第三方机构。
+**数字证书认证机构**（CA，Certificate Authority）是客户端与服务器双方都可信赖的第三方机构。
 
-服务器的运营人员向 CA 提出公开密钥的申请，CA 在判明提出申请者的身份之后，会对已申请的公开密钥做数字签名，然后分配这个已签名的公开密钥，并将该公开密钥放入公开密钥证书后绑定在一起。
+服务器的运营人员向 CA 提出公开密钥的申请，CA 在判明提出申请者的身份之后，会对**已申请的公开密钥**做数字**签名**，然后分配这个已签名的公开密钥，**并将该公开密钥放入公开密钥证书后绑定在一起**。
 
-进行 HTTPS 通信时，服务器会把证书发送给客户端。客户端取得其中的公开密钥之后，先使用数字签名进行验证，如果验证通过，就可以开始通信了。
+**在验证证书的时候，浏览器会调用系统的证书管理器接口对证书路径中的所有证书一级一级的进行验证，只有路径中所有的证书都是受信的，整个验证的结果才是受信。** 
+
+**进行 HTTPS 通信时，服务器会把证书发送给客户端。客户端取得其中的公开密钥之后，先使用数字签名进行验证，如果验证通过，就可以开始通信了。**
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/2017-06-11-ca.png" width=""/> </div><br>
-
 ### 完整性保护
 
 SSL 提供报文摘要功能来进行完整性保护。
 
-HTTP 也提供了 MD5 报文摘要功能，但不是安全的。例如报文内容被篡改之后，同时重新计算 MD5 的值，通信接收方是无法意识到发生了篡改。
+HTTP 也提供了 **MD5 报文摘要功能**，但不是安全的。例如报文内容被篡改之后，同时重新计算 MD5 的值，通信接收方是无法意识到发生了篡改。
 
-HTTPS 的报文摘要功能之所以安全，是因为它结合了加密和认证这两个操作。试想一下，加密之后的报文，遭到篡改之后，也很难重新计算报文摘要，因为无法轻易获取明文。
+HTTPS 的报文摘要功能之所以安全，是因为它结合了加密和认证这两个操作。试想一下，**加密之后的报文，遭到篡改之后，也很难重新计算报文摘要，因为无法轻易获取明文。**
 
 ### HTTPS 的缺点
 
@@ -793,44 +814,78 @@ HTTP/1.x 实现简单是以牺牲性能为代价的：
 HTTP/2.0 将报文分成 HEADERS 帧和 DATA 帧，它们都是二进制格式的。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/86e6a91d-a285-447a-9345-c5484b8d0c47.png" width="400"/> </div><br>
-
-在通信过程中，只会有一个 TCP 连接存在，它承载了任意数量的双向数据流（Stream）。
+在通信过程中，**只会有一个 TCP 连接存在**，它承载了任意数量的双向数据流（Stream）。
 
 - 一个数据流（Stream）都有一个唯一标识符和可选的优先级信息，用于承载双向信息。
 - 消息（Message）是与逻辑请求或响应对应的完整的一系列帧。
-- 帧（Frame）是最小的通信单位，来自不同数据流的帧可以交错发送，然后再根据每个帧头的数据流标识符重新组装。
+- **帧（Frame）是最小的通信单位**，来自不同数据流的帧可以交错发送，然后再根据每个帧头的数据流标识符重新组装。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/af198da1-2480-4043-b07f-a3b91a88b815.png" width="600"/> </div><br>
-
 ### 服务端推送
 
 HTTP/2.0 在客户端请求一个资源时，会把相关的资源一起发送给客户端，客户端就不需要再次发起请求了。例如客户端请求 page.html 页面，服务端就把 script.js 和 style.css 等与之相关的资源一起发给客户端。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/e3f1657c-80fc-4dfa-9643-bf51abd201c6.png" width="800"/> </div><br>
-
 ### 首部压缩
 
 HTTP/1.1 的首部带有大量信息，而且每次都要重复发送。
 
-HTTP/2.0 要求客户端和服务器同时维护和更新一个包含之前见过的首部字段表，从而避免了重复传输。
+**HTTP/2.0 要求客户端和服务器同时维护和更新一个包含之前见过的首部字段表，从而避免了重复传输。**
 
-不仅如此，HTTP/2.0 也使用 Huffman 编码对首部字段进行压缩。
+不仅如此，HTTP/2.0 也使用 Huffman 编码对首部字段进行**压缩。**
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/_u4E0B_u8F7D.png" width="600"/> </div><br>
-
 ## 八、HTTP/1.1 新特性
 
 详细内容请见上文
 
 - 默认是长连接
-- 支持流水线
+- 支持**流水线**
 - 支持同时打开多个 TCP 连接
-- 支持虚拟主机
+- 支持**虚拟主机**
 - 新增状态码 100
-- 支持分块传输编码
-- 新增缓存处理指令 max-age
+- 支持**分块传输编码**
+- 新增**缓存处理指令** max-age
 
 ## 九、GET 和 POST 比较
+
+**GET 和 POST 方法基本是没实质区别**，只是报文格式不同。 
+
+传输上：
+
+GET 和 POST 只是 HTTP 协议中两种请求方式，而 HTTP 协议是基于 TCP/IP 的应用层协议，无论 GET 还是 POST，用的都是同一个传输层协议，所以在传输上，没有区别。 
+
+报文格式：
+
+不带参数时，最大区别就是第一行方法名不同 
+
+
+
+简单区别：
+
+1、后退刷新按钮：Get 无害，而 Post 数据会被重新提交（浏览器应该告知用户数据会被重新提交）。
+
+2、字符：Get 只允许 ASCII 字符。 而 Post 没有限制。也允许二进制数据。 
+
+3、 其他：Get 幂等，且可缓存 ，而Post 非幂等，不可缓存。
+
+#### GET 方法的长度有限？
+
+当发送数据时，GET 方法向 URL 添加数据；URL 的长度是受限制的（URL 的最大长度是 2048 个字符）。 
+
+但是，HTTP 协议没有 Body 和 URL 的长度限制，对 URL 限制的大多是浏览器和服务器的原因。 
+
+浏览器原因就不说了，服务器是因为处理长 URL 要消耗比较多的资源，为了性能和安全（防止恶意构造长 URL 来攻击）考虑，会给 URL 长度加限制。 
+
+#### POST 方法会产生两个 TCP 数据包？
+
+有些文章中提到，post 会将 header 和 body 分开发送，先发送 header，服务端返回 100 状态码再发送 body。 
+
+HTTP 协议中没有明确说明 POST 会产生两个 TCP 数据包，而且实际测试(Chrome)发现，header 和 body 不会分开发送。 
+
+header 和 body 分开发送是部分浏览器或框架的请求方法，不属于 post 必然行为。 
+
+
 
 ### 作用
 
@@ -840,7 +895,7 @@ GET 用于获取资源，而 POST 用于传输实体主体。
 
 GET 和 POST 的请求都能使用额外的参数，但是 GET 的参数是以查询字符串出现在 URL 中，而 POST 的参数存储在实体主体中。不能因为 POST 参数存储在实体主体中就认为它的安全性更高，因为照样可以通过一些抓包工具（Fiddler）查看。
 
-因为 URL 只支持 ASCII 码，因此 GET 的参数中如果存在中文等字符就需要先进行编码。例如 `中文` 会转换为 `%E4%B8%AD%E6%96%87`，而空格会转换为 `%20`。POST 参数支持标准字符集。
+因为 **URL 只支持 ASCII 码**，因此 GET 的参数中**如果存在中文等字符就需要先进行编码**。例如 `中文` 会转换为 `%E4%B8%AD%E6%96%87`，而空格会转换为 `%20`。POST 参数支持标准字符集。
 
 ```
 GET /test/demo_form.asp?name1=value1&name2=value2 HTTP/1.1
@@ -870,7 +925,7 @@ GET 方法是安全的，而 POST 却不是，因为 POST 的目的是传送实�
 
 在正确实现的条件下，GET，HEAD，PUT 和 DELETE 等方法都是幂等的，而 POST 方法不是。
 
-GET /pageX HTTP/1.1 是幂等的，连续调用多次，客户端接收到的结果都是一样的：
+**GET** /pageX HTTP/1.1 是**幂等**的，连续调用多次，客户端接收到的结果都是一样的：
 
 ```
 GET /pageX HTTP/1.1
@@ -887,7 +942,7 @@ POST /add_row HTTP/1.1   -> Adds a 2nd row
 POST /add_row HTTP/1.1   -> Adds a 3rd row
 ```
 
-DELETE /idX/delete HTTP/1.1 是幂等的，即使不同的请求接收到的状态码不一样：
+**DELETE** /idX/delete HTTP/1.1 是**幂等**的，即使不同的请求接收到的状态码不一样：
 
 ```
 DELETE /idX/delete HTTP/1.1   -> Returns 200 if idX exists
@@ -911,6 +966,12 @@ DELETE /idX/delete HTTP/1.1   -> Returns 404
 
 - 在使用 XMLHttpRequest 的 POST 方法时，浏览器会先发送 Header 再发送 Data。但并不是所有浏览器会这么做，例如火狐就不会。
 - 而 GET 方法 Header 和 Data 会一起发送。
+
+## Http 3.0
+
+todo
+
+
 
 ## 参考资料
 
