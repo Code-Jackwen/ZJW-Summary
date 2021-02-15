@@ -126,7 +126,9 @@ X-Cache: HIT
 
 ### URL
 
-HTTP 使用 URL（ **U** niform **R**esource **L**ocator，统一资源定位符）来定位资源，它是  URI（**U**niform **R**esource **I**dentifier，统一资源标识符）的子集，URL 在 URI 的基础上增加了定位能力。URI 除了包含 URL，还包含 URN（Uniform Resource Name，统一资源名称），它只是用来定义一个资源的名称，并不具备定位该资源的能力。例如 urn:isbn:0451450523 用来定义一个书籍名称，但是却没有表示怎么找到这本书。
+HTTP 使用 URL（ **U** niform **R**esource **L**ocator，统一资源定位符）来定位资源，它是  URI（**U**niform **R**esource **I**dentifier，统一资源标识符）的子集，URL 在 URI 的基础上**增加了定位能力**。URI 除了包含 URL，还包含 URN（Uniform Resource Name，统一资源名称），它只是用来定义一个资源的名称，并不具备定位该资源的能力。例如 urn:isbn:0451450523 用来定义一个书籍名称，但是却没有表示怎么找到这本书。
+
+URI： 在术语中是一个用于标识某一互联网资源名称的字符串。 
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/8441b2c4-dca7-4d6b-8efb-f22efccaf331.png" width="500px"> </div><br>
 - [wikipedia：统一资源标志符](https://zh.wikipedia.org/wiki/统一资源标志符)
@@ -480,6 +482,12 @@ Session 可以存储在服务器上的文件、数据库或者内存中。也可
 - Cookie 存储在浏览器中，容易被恶意查看。如果非要将一些隐私数据存在 Cookie 中，可以将 Cookie 值进行加密，然后在服务器进行解密；
 - 对于大型网站，如果用户所有的信息都存储在 Session 中，那么开销是非常大的，因此不建议将所有的用户信息都存储到 Session 中。
 
+#### 11. Cookie 大小
+
+`cookie`标准还是做了一些限制的：每个域名下的cookie 的大小最大为4KB，每个域名下的`cookie`数量最多为20个。
+
+- [聊一聊 cookie](https://segmentfault.com/a/1190000004556040)
+
 ### 缓存
 
 #### 1. 优点
@@ -738,7 +746,7 @@ SSL(Secure Sockets Layer 安全套接层)是为网络通信提供安全及数据
 
 ##### TLS
 
-安全传输层协议（TLS：Transport Layer Security）用于在两个通信应用程序之间提供保密性和数据完整性。该协议由两层组成： TLS 记录协议（TLS Record）和 TLS 握手协议（TLS Handshake），是更新、更安全的SSL版本。 
+安全**传输层协议**（TLS：Transport Layer Security）用于在两个通信应用程序之间提供保密性和数据完整性。该协议由两层组成： TLS 记录协议（TLS Record）和 TLS 握手协议（TLS Handshake），是更新、更安全的SSL版本。 
 
 TLS和SSL协议理论上属于**传输层**，在应用层实现，所以我们可以在浏览器中设置是否使用此协议，使用哪一版本的协议。 
 
@@ -851,11 +859,11 @@ HTTP/1.1 的首部带有大量信息，而且每次都要重复发送。
 
 **GET 和 POST 方法基本是没实质区别**，只是报文格式不同。 
 
-传输上：
+1、传输上：
 
 GET 和 POST 只是 HTTP 协议中两种请求方式，而 HTTP 协议是基于 TCP/IP 的应用层协议，无论 GET 还是 POST，用的都是同一个传输层协议，所以在传输上，没有区别。 
 
-报文格式：
+2、报文格式：
 
 不带参数时，最大区别就是第一行方法名不同 
 
