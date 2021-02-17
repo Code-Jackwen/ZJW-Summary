@@ -139,12 +139,6 @@ InnoDB 主键使用的是聚簇索引，MyISAM 不管是主键索引，还是二
 
 
 
-
-
-
-
-
-
 ## 覆盖索引
 
 覆盖索引（Covering index），只是特定于具体select语录而言的联合索引。而不再需要回表查询啦，就称该联合索引覆盖了这条select语句。 覆盖索引是联合索引之中的更优表现。也就是InnoDB存储引擎支持覆盖索引，即从辅助索引中就可以得到查询的记录，而不需要查询聚簇索引中的记录。 
@@ -494,6 +488,104 @@ SELECT *  FROM student AS stu force index  (idx_a_b)  where ....
 在查询语句中表名的后面，添加 use index 来提供希望MySQL去参考的索引列表，就可以让MySQL不再考虑其他可用的索引，适用于索引有多种选择的情况。
 
 
+
+
+
+## MyISAM和InnoDB区别
+
+1、是否⽀持**⾏级锁** : MyISAM 只有表级锁(table-level locking)，⽽InnoDB ⽀持⾏级锁(rowlevel locking)和表级锁,默认为⾏级锁。
+
+2、是否⽀持**事务和崩溃后的安全恢复**： MyISAM强调的是性能，每次查询具有原⼦性,其执⾏速度⽐InnoDB类型更快，但是不提供事务⽀持。但是InnoDB提供事务⽀持事务，外部键等⾼级数据库功能。具有事务(commit)、回滚(rollback)和崩溃修复能⼒(crash recoverycapabilities)的事务安全(transaction-safe (ACID compliant))型表。
+
+3、 是否⽀持**外键**： MyISAM不⽀持，⽽InnoDB⽀持。
+
+4、是否⽀持**MVCC**：仅 InnoDB ⽀持。应对⾼并发事务, MVCC⽐单纯的加锁更⾼效;**MVCC只在READ COMMITTED和REPEATABLE READ两个隔离级别下⼯作**;MVCC可以使⽤乐观(optimistic)锁和悲观(pessimistic)锁来实现;各数据库中MVCC实现并不统⼀。推荐阅读：MySQL-InnoDB-MVCC多版本并发控制https://segmentfault.com/a/1190000012650596
+
+5、索引：两引擎都是B+树，但是实现不同。
+
+MyISAM: B+Tree叶节点的data域存放的是**数据记录的地址**。为“**⾮聚簇索引**”。
+
+InnoDB: 其数据⽂件本身就是索引⽂件。相⽐MyISAM，索引⽂件和数据⽂件是**分离**的，其表数据⽂件本身就是按B+Tree组织的⼀个索引结构，**树的叶节点data域保存了完整的数据记录。**这个索引的key是数据表的主键，因此InnoDB表数据⽂件本身就是主索引。这被称为“**聚簇索引**（或聚集索引）”。⽽其余的索引都作为**辅助索引**，辅助索引的data域存储相应记录主键的值⽽不是地址，这也是和MyISAM不同的地⽅。
+
+
+
+## ⼤表优化
+
+**读/写分离**
+
+经典的数据库拆分⽅案，主库负责写，从库负责读；
+
+**垂直分区**
+
+根据数据库⾥⾯数据表的相关性进⾏拆分。
+
+
+
+**客户端代理**： 分⽚逻辑在应⽤端，封装在jar包中，通过修改或者封装JDBC层来实现。当当⽹的Sharding-JDBC、阿⾥的TDDL是两种⽐᫾常⽤的实现。
+
+**中间件代理**：在应⽤和数据中间加了⼀个代理层。分⽚逻辑统⼀维护在中间件服务中。我们现在谈的Mycat、360的Atlas、⽹易的DDB等等都是这种架构的实现。
+
+
+
+大表优化参考：https://segmentfault.com/a/1190000006158186
+
+
+
+## SQL语句执⾏流程
+
+MySQL 主要分为 Server 层和引擎层。
+
+**Server 层**主要包括连接器、查询缓存、分析器、优化器、执行器。
+
+**日志模块**（binlog），这个日志模块所有执行引擎都可以共用,redolog 只有 InnoDB 有。
+
+**引擎层**是插件式的，目前主要包括，MyISAM,InnoDB,Memory 等。
+
+
+
+SQL 等执行过程分为两类，一类对于**查询**等过程如下：
+
+权限校验---》查询缓存---》分析器---》优化器---》权限校验---》执行器---》引擎
+
+对于**更新**等语句执行流程如下：
+
+分析器----》权限校验----》执行器---》引擎---redo log prepare---》binlog---》redo log commit 
+
+
+
+参考：
+
+https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485097&idx=1&sn=84c89da477b1338bdf3e9fcd65514ac1&chksm=cea24962f9d5c074d8d3ff1ab04ee8f0d6486e3d015cfd783503685986485c11738ccb542ba7&token=79317275&lang=zh_CN%23rd
+
+## MySQL优化规范建议
+
+https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485117&idx=1&sn=92361755b7c3de488b415ec4c5f46d73&chksm=cea24976f9d5c060babe50c3747616cce63df5d50947903a262704988143c2eeb4069ae45420&token=79317275&lang=zh_CN%23rd
+
+
+
+## SQL语句执⾏得慢的原因？
+
+一个 SQL 执行的很慢，我们要分两种情况讨论：
+
+1、大多数情况下很正常，偶尔很慢，则有如下原因
+
+(1)、数据库在刷新脏页，例如 redo log 写满了需要同步到磁盘。
+
+(2)、执行的时候，遇到锁，如表锁、行锁。
+
+2、这条 SQL 语句一直执行的很慢，则有如下原因。
+
+(1)、没有用上索引：例如该字段没有索引；由于对字段进行运算、函数操作导致无法用索引。
+
+(2)、数据库选错了索引。
+
+https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485185&idx=1&sn=66ef08b4ab6af5757792223a83fc0d45&chksm=cea248caf9d5c1dc72ec8a281ec16aa3ec3e8066dbb252e27362438a26c33fbe842b0e0adf47&token=79317275&lang=zh_CN%23rd
+
+
+
+## 书写⾼质量SQL的30条建议
+
+https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247486461&idx=1&sn=60a22279196d084cc398936fe3b37772&chksm=cea24436f9d5cd20a4fa0e907590f3e700d7378b3f608d7b33bb52cfb96f503b7ccb65a1deed&token=1987003517&lang=zh_CN%23rd
 
 
 
