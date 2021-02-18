@@ -1,3 +1,13 @@
+# 日志
+
+重做日志（redo log） 、 回滚日志（undo log） 、 二进制日志（binlog） 
+
+参考：
+
+https://www.cnblogs.com/wy123/p/8365234.html
+
+
+
 # 事务
 
 脏读:指读到了其他事务未提交的数据
@@ -668,20 +678,6 @@ BLOB 是一个二进制大对象，可以容纳可变数量的数据。
 有 4 种 TEXT 类型：TINYTEXT、TEXT、MEDIUMTEXT 和 LONGTEXT。
 
 对应的这 4 种 BLOB 类型，可存储的最大长度不同，可根据实际情况选择。
-
-
-
-
-
-# 日志
-
-重做日志（redo log） 、 回滚日志（undo log） 、 二进制日志（binlog） 
-
-参考：
-
-https://www.cnblogs.com/wy123/p/8365234.html
-
-
 
 
 

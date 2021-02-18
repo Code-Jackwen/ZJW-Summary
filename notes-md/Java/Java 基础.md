@@ -1464,6 +1464,14 @@ Java 注解是附加在代码中的一些元信息，用于一些工具在编译
 - JRE：Java Runtime Environment，Java 运行环境的简称，为 Java 的运行提供了所需的环境。它是一个 JVM 程序，主要包括了 JVM 的标准实现和一些 Java 基本类库。
 - JDK：Java Development Kit，Java 开发工具包，提供了 Java 的开发及运行环境。JDK 是 Java 开发的核心，集成了 JRE 以及一些其它的工具，比如编译 Java 源码的编译器 javac 等。
 
+Lam
+
+## Lambda 原理
+
+字节码上，Lambda表达式生成一个私有的静态函数，注意，在这里说的是生成，而不是等价
+
+private static void lambda$0(java.lang.String); 私有的静态函数干的就是Lambda表达式里面的内容 
+
 ## 参考资料
 
 - Eckel B. Java 编程思想[M]. 机械工业出版社, 2002.

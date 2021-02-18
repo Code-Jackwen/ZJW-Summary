@@ -94,6 +94,14 @@ Spring 中用到的包装器模式在类名上含有 **Wrapper或者Decorator**�
 
 5、**观察者**模式: Spring 事件驱动模型就是观察者模式很经典的⼀个应⽤。
 
+ 事件机制的实现需要三个部分,事件源,事件,事件监听器 
+
+ ApplicationEvent 抽象类 **[事件]** 
+
+ ApplicationListener 接口 **[事件监听器]** 
+
+ ApplicationContext 接口 **[事件源]** 
+
 - **ContextStartedEvent**：ApplicationContext **启动后**触发的事件;
 - **ContextStoppedEvent**：ApplicationContext **停止后**触发的事件;
 - **ContextRefreshedEvent**：ApplicationContext **初始化或刷新**完成后触发的事件;
@@ -104,6 +112,14 @@ Spring 中用到的包装器模式在类名上含有 **Wrapper或者Decorator**�
 Spring预定义的**通知**要通过对应的**适配器**，适配成 **MethodInterceptor** 接口(方法拦截器)类型的对象（如：`MethodBeforeAdviceInterceptor` 负责适配 `MethodBeforeAdvice`）。 
 
 7、**模板方法**模板方法： jdbcTemplate、hibernateTemplate 
+
+
+
+参考：
+
+https://blog.csdn.net/caoxiaohong1005/article/details/80039656
+
+
 
 
 
@@ -154,3 +170,86 @@ TransactionDefinition 接⼝中定义了五个表示隔离级别的常量：
 参考：
 
 https://www.ibm.com/developerworks/cn/java/j-master-spring-transactional-use/index.html
+
+
+
+## Spring解决循环依赖
+
+对于“prototype”作用域bean, Spring 容器无法完成依赖注入，因为Spring 容器不进行缓 存“prototype”作用域的bean ，因此无法提前暴露一个创建中的bean 。 
+
+对于单例：
+
+ 一个完整的对象包含两部分 ：当前对象实例化和对象属性的实例化。 
+
+ Spring中，对象的实例化是通过反射实现的， 而对象的属性则是在对象实例化之后通过一定的方式设置的。 
+
+![1613538148971](../../../assets/1613538148971.png)
+
+
+
+spring对循环依赖的处理有三种情况：
+
+①构造器的循环依赖：这种依赖spring是处理不了的，直 接抛出BeanCurrentlylnCreationException异常。
+
+②单例模式下的**setter循环依赖**：通过“三级缓存”处理循环依赖。 
+
+③非单例循环依赖：无法处理。
+
+
+
+spring单例对象的初始化大略分为三步：
+
+1、createBeanInstance：**实例化**，其实也就是调用对象的构造方法实例化对象
+
+2、populateBean：**填充属性**，这一步主要是多bean的依赖属性进行填充
+
+3、initializeBean：调用spring xml中的init 方法。
+
+
+
+
+
+三级缓存的作用分别是：
+
+**singletonFactories** ： 进入实例化阶段的单例对象工厂的cache （三级缓存）
+
+**earlySingletonObjects** ：完成实例化但是尚未初始化的，提前暴光的单例对象的Cache （二级缓存）
+
+**singletonObjects**：完成初始化的单例对象的cache（一级缓存）
+
+
+
+分析一下“A的某个field或者setter依赖了B的实例对象，同时B的某个field或者setter依赖了A的实例对象”这种循环依赖的情况。A首先完成了初始化的第一步，并且将自己提前曝光到singletonFactories中，此时进行初始化的第二步，发现自己依赖对象B，此时就尝试去get(B)，发现B还没有被create，所以走create流程，B在初始化第一步的时候发现自己依赖了对象A，于是尝试get(A)，尝试一级缓存singletonObjects(肯定没有，因为A还没初始化完全)，尝试二级缓存earlySingletonObjects（也没有），尝试三级缓存singletonFactories，**由于A通过ObjectFactory将自己提前曝光了，所以B能够通过ObjectFactory.getObject拿到A对象(虽然A还没有初始化完全**，但是总比没有好呀)，B拿到A对象后顺利完成了初始化阶段1、2、3，完全初始化之后将自己放入到一级缓存singletonObjects中。此时返回A中，A此时能拿到B的对象顺利完成自己的初始化阶段2、3，最终A也完成了初始化，进去了一级缓存singletonObjects中，而且更加幸运的是，由于B拿到了A的对象引用，所以B现在hold住的A对象完成了初始化。
+
+
+
+参考：
+
+https://zhuanlan.zhihu.com/p/84267654
+
+https://juejin.cn/post/6844903806757502984
+
+## spring的IOC底层实现原理 
+
+（1）xml配置文件
+
+（2）dom4j解析xml文件
+
+（3）工厂设计模式
+
+（4）反射
+
+IOC（控制反转）,是思想，将原来在程序中手动创建对象UserService对象的控制权，交由Spring框架管理。
+
+ **IOC容器实际上就是个Map（key，value）,Map 中存放的是各种对象。** 
+
+简单的说，就是创建UserService对象的控制权被反转到Spring框架啦
+
+DI(依赖注入),就是在Spring创建这个对象的过程中，将这个对象所依赖的属性注入进去。 
+
+
+
+
+
+
+
