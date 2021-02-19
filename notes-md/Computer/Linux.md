@@ -79,6 +79,8 @@
 - 硬链接与软链接；
 - 进程管理相关，僵尸进程与孤儿进程，SIGCHLD 。
 
+
+
 ## 一、常用操作以及概念
 
 ### 快捷键
@@ -165,8 +167,6 @@ Linux 发行版是 Linux 内核及各种应用软件的集成版本。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191209002818626.png"/> </div><br>
 
-
-
 - 一般指令模式（Command mode）：VIM 的默认模式，可以用于移动游标查看内容；
 - 编辑模式（Insert mode）：按下 "i" 等按键之后进入，可以对文本进行编辑；
 - 指令列模式（Bottom-line mode）：按下 ":" 按键之后进入，用于保存退出等操作。
@@ -204,25 +204,21 @@ GNU 计划，译为革奴计划，它的目标是创建一套完全自由的操�
 IDE（ATA）全称 Advanced Technology Attachment，接口速度最大为 133MB/s，因为并口线的抗干扰性太差，且排线占用空间较大，不利电脑内部散热，已逐渐被 SATA 所取代。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/924914c0-660c-4e4a-bbc0-1df1146e7516.jpg" width="400"/> </div><br>
-
 #### 2. SATA
 
 SATA 全称 Serial ATA，也就是使用串口的 ATA 接口，抗干扰性强，且对数据线的长度要求比 ATA 低很多，支持热插拔等功能。SATA-II 的接口速度为 300MB/s，而 SATA-III 标准可达到 600MB/s 的传输速度。SATA 的数据线也比 ATA 的细得多，有利于机箱内的空气流通，整理线材也比较方便。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/f9f2a16b-4843-44d1-9759-c745772e9bcf.jpg" width=""/> </div><br>
-
 #### 3. SCSI
 
 SCSI 全称是 Small Computer System Interface（小型机系统接口），SCSI 硬盘广为工作站以及个人电脑以及服务器所使用，因此会使用较为先进的技术，如碟片转速 15000rpm 的高转速，且传输时 CPU 占用率较低，但是单价也比相同容量的 ATA 及 SATA 硬盘更加昂贵。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/f0574025-c514-49f5-a591-6d6a71f271f7.jpg" width=""/> </div><br>
-
 #### 4. SAS
 
 SAS（Serial Attached SCSI）是新一代的 SCSI 技术，和 SATA 硬盘相同，都是采取序列式技术以获得更高的传输速度，可达到 6Gb/s。此外也通过缩小连接线改善系统内部空间等。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/6729baa0-57d7-4817-b3aa-518cbccf824c.jpg" width=""/> </div><br>
-
 ### 磁盘的文件名
 
 Linux 中每个硬件都被当做一个文件，包括磁盘。磁盘以磁盘接口类型进行命名，常见磁盘的文件名如下：
@@ -257,7 +253,6 @@ GPT 没有扩展分区概念，都是主分区，每个 LBA 可以分 4 个分�
 MBR 不支持 2.2 TB 以上的硬盘，GPT 则最多支持到 2<sup>33</sup> TB = 8 ZB。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/GUID_Partition_Table_Scheme.svg.png" width="400"/> </div><br>
-
 ### 开机检测程序
 
 #### 1. BIOS
@@ -265,7 +260,6 @@ MBR 不支持 2.2 TB 以上的硬盘，GPT 则最多支持到 2<sup>33</sup> TB 
 BIOS（Basic Input/Output System，基本输入输出系统），它是一个固件（嵌入在硬件中的软件），BIOS 程序存放在断电后内容不会丢失的只读内存中。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/50831a6f-2777-46ea-a571-29f23c85cc21.jpg"/> </div><br>
-
 BIOS 是开机的时候计算机执行的第一个程序，这个程序知道可以开机的磁盘，并读取磁盘第一个扇区的主要开机记录（MBR），由主要开机记录（MBR）执行其中的开机管理程序，这个开机管理程序会加载操作系统的核心文件。
 
 主要开机记录（MBR）中的开机管理程序提供以下功能：选单、载入核心文件以及转交其它开机管理程序。转交这个功能可以用来实现多重引导，只需要将另一个操作系统的开机管理程序安装在其它分区的启动扇区上，在启动开机管理程序时，就可以通过选单选择启动当前的操作系统或者转交给其它开机管理程序从而启动另一个操作系统。
@@ -273,7 +267,6 @@ BIOS 是开机的时候计算机执行的第一个程序，这个程序知道可
 下图中，第一扇区的主要开机记录（MBR）中的开机管理程序提供了两个选单：M1、M2，M1 指向了 Windows 操作系统，而 M2 指向其它分区的启动扇区，里面包含了另外一个开机管理程序，提供了一个指向 Linux 的选单。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/f900f266-a323-42b2-bc43-218fdb8811a8.jpg" width="600"/> </div><br>
-
 安装多重引导，最好先安装 Windows 再安装 Linux。因为安装 Windows 时会覆盖掉主要开机记录（MBR），而 Linux 可以选择将开机管理程序安装在主要开机记录（MBR）或者其它分区的启动扇区，并且可以设置开机管理程序的选单。
 
 #### 2. UEFI
@@ -299,17 +292,14 @@ BIOS 不可以读取 GPT 分区表，而 UEFI 可以。
 - block bitmap：记录 block 是否被使用的位图。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/BSD_disk.png" width="800"/> </div><br>
-
 ### 文件读取
 
 对于 Ext2 文件系统，当要读取一个文件的内容时，先在 inode 中查找文件内容所在的所有 block，然后把所有 block 的内容读出来。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/12a65cc6-20e0-4706-9fe6-3ba49413d7f6.png" width="500px"> </div><br>
-
 而对于 FAT 文件系统，它没有 inode，每个 block 中存储着下一个 block 的编号。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/5b718e86-7102-4bb6-8ca5-d1dd791530c5.png" width="500px"> </div><br>
-
 ### 磁盘碎片
 
 指一个文件内容所在的 block 过于分散，导致磁盘磁头移动距离过大，从而降低磁盘读写性能。
@@ -346,7 +336,6 @@ inode 具有以下特点：
 inode 中记录了文件内容所在的 block 编号，但是每个 block 非常小，一个大文件随便都需要几十万的 block。而一个 inode 大小有限，无法直接引用这么多 block 编号。因此引入了间接、双间接、三间接引用。间接引用让 inode 记录的引用 block 块记录引用信息。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/inode_with_signatures.jpg" width="600"/> </div><br>
-
 ### 目录
 
 建立一个目录时，会分配一个 inode 与至少一个 block。block 记录的内容是目录下所有文件的 inode 编号以及文件名。
@@ -372,7 +361,6 @@ ext3/ext4 文件系统引入了日志功能，可以利用日志来修复文件�
 - /var (variable)：存放系统或程序运行过程中的数据文件。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/linux-filesystem.png" width=""/> </div><br>
-
 ## 五、文件
 
 ### 文件属性
@@ -415,6 +403,65 @@ ext3/ext4 文件系统引入了日志功能，可以利用日志来修复文件�
 -d ：仅列出目录本身
 -l ：以长数据串行列出，包含文件的属性与权限等等数据
 ```
+
+例子：
+
+**1、按文件大小查看文件**
+
+ **a、降序：ls -lsh** 
+
+moudaen@morton:~$ ls -lsh
+total 20M
+ 20M -rw-r--r-- 1 moudaen 65536  20M Nov 11 17:44 Gender.war
+4.0K drwxr-xr-x 2 moudaen 65536 4.0K Nov 11 17:44 test
+8.0K -rw-r--r-- 1 moudaen 65536 5.2K Nov 11 11:44 MyApp.java
+
+命令解释：
+
+ls后面的三个参数：
+
+**-l**表示以**长格式显示**，即列出文件详细信息如上面的格式。
+
+**-s**表示排序，**默认是降序**排列。
+
+**-h**表示将**文件大小单位转换**为我们习惯的M，K等为单位的大小
+
+
+
+**b.升序:ls -lrsh**
+
+命令解释：
+
+关于-l,-s,-h含义同上
+
+**-r**表示reverse的意思，这里就是**reverse order**倒序，默认是降序的，加上-r就反转下即为**升序**了。
+
+
+
+**2.按文件修改时间查看文件**
+
+**a.按降序，即最近的修改 ls -lt**
+
+moudaen@morton:~$ ls -lt
+total 19836
+-rw-r--r-- 1 moudaen 65536     7 Nov 13 15:30 test.txt
+-rw-r--r-- 1 moudaen 65536 20267062 Nov 11 17:44 Gender.war
+drwxr-xr-x 2 moudaen 65536   4096 Nov 11 17:44 test
+-rw-r--r-- 1 moudaen 65536   5258 Nov 11 11:44 MyApp.java
+
+命令解释：
+
+**-t** 其实我们用man ls命令就可以看到ls命令带的参数的用法,-t sort by modification time,newest first即按**修改时间**对文件进行排序，**默认是最近修改的在前**。
+
+
+
+**b.那么想升序只需反转下就可以了，所以加上-r参数**
+
+**ls -lrt**
+
+
+
+
 
 #### 2. cd
 
@@ -539,8 +586,6 @@ cp [-adfilprsu] source destination
 ### 链接
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/1e46fd03-0cda-4d60-9b1c-0c256edaf6b2.png" width="450px"> </div><br>
-
-
 ```html
 ## ln [-sf] source_filename dist_filename
 -s ：默认是实体链接，加 -s 为符号链接
@@ -667,7 +712,6 @@ example: find . -name "shadow*"
 +4、4 和 -4 的指示的时间范围如下：
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/658fc5e7-79c0-4247-9445-d69bf194c539.png" width=""/> </div><br>
-
 **② 与文件拥有者和所属群组有关的选项**  
 
 ```html
@@ -1186,7 +1230,6 @@ dmtsai lines: 5 columns: 9
 <br>
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/2bab4127-3e7d-48cc-914e-436be859fb05.png" width="490px"/> </div><br>
-
 ### SIGCHLD
 
 当一个子进程改变了它的状态时（停止运行，继续运行或者退出），有两件事会发生在父进程中：
@@ -1199,7 +1242,6 @@ dmtsai lines: 5 columns: 9
 在子进程退出时，它的进程描述符不会立即释放，这是为了让父进程得到子进程信息，父进程通过 wait() 和 waitpid() 来获得一个已经退出的子进程的信息。
 
 <div align="center"> <!-- <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/flow.png" width=""/> --> </div><br>
-
 ### wait()
 
 ```c
@@ -1226,21 +1268,59 @@ options 参数主要有 WNOHANG 和 WUNTRACED 两个选项，WNOHANG 可以使 w
 
 ### 孤儿进程
 
-一个父进程退出，而它的一个或多个子进程还在运行，那么这些子进程将成为孤儿进程。
+一个**父进程退出**，而它的**一个或多个子进程还在运行**，那么这些**子进程**将成为**孤儿进程**。
 
 孤儿进程将被 init 进程（进程号为 1）所收养，并由 init 进程对它们完成状态收集工作。
 
-由于孤儿进程会被 init 进程收养，所以孤儿进程不会对系统造成危害。
+由于**孤儿进程会被 init 进程收养**，所以孤儿进程不会对系统造成危害。
 
 ### 僵尸进程
 
-一个子进程的进程描述符在子进程退出时不会释放，只有当父进程通过 wait() 或 waitpid() 获取了子进程信息后才会释放。如果子进程退出，而父进程并没有调用 wait() 或 waitpid()，那么子进程的进程描述符仍然保存在系统中，这种进程称之为僵尸进程。
+一个**子进程的进程描述符**在子进程退出时不会释放，只有当父进程通过 **wait**() 或 **waitpid**() 获取了子进程信息后才会释放。如果**子进程退出，而父进程并没有调用 wait() 或 waitpid()**，那么子进程的进程描述符仍然保存在系统中，这种进程称之为**僵尸进程**。
 
 僵尸进程通过 ps 命令显示出来的状态为 Z（zombie）。
 
-系统所能使用的进程号是有限的，如果产生大量僵尸进程，将因为没有可用的进程号而导致系统不能产生新的进程。
+**系统所能使用的进程号是有限的**，如果产生大量僵尸进程，将因为没有可用的进程号而导致系统**不能产生新的进程**。
 
-要消灭系统中大量的僵尸进程，只需要将其父进程杀死，此时僵尸进程就会变成孤儿进程，从而被 init 进程所收养，这样 init 进程就会释放所有的僵尸进程所占有的资源，从而结束僵尸进程。
+要消灭系统中大量的僵尸进程，**只需要将其父进程杀死**，此时僵尸进程就会**变成孤儿进程**，从而被 init 进程所收养，这样 init 进程就会释放所有的僵尸进程所占有的资源，从而结束僵尸进程。
+
+
+
+## Linux中ctrl-c, ctrl-z, ctrl-d 区别
+
+**ctrl-c:** ( kill foreground process ) 发送 SIG INT 信号给前台进程组中的所有进程，**强制终止程序的执行**。
+
+户按下 Ctrl-C，这个键盘输入产生一个**硬件中断**。
+
+如果CPU当前正在执行这个进程的代码，则该进程的用户空间代码暂停执行，CPU从**用户态切换到内核态处理硬件中断。**终端发送了一个SIGINT信号给进程。
+
+**ctrl-z:** ( suspend foreground process ) 发送 SIG TSTP 信号给前台进程组中的所有进程，常用于**挂起一个进程**，而并非结束进程，用户可以使用使用 fg/bg 操作**恢复执行前台或后台的进程**。
+
+fg 命令在前台**恢复**执行被挂起的进程，此时可以使用ctrl-z再次挂起该进程。
+
+bg命令在后台**恢复**执行被挂起的进程，而此时将无法使用 ctrl-z 再次挂起该进程。
+
+使用例子类似于 Windows 的Alt ＋Tab：
+
+正在使用 vi 编辑一个文件时，需要执行 shell 命令查询一些需要的信息，可以使用 ctrl-z 挂起 vi，等执行完shell命令后再使用**fg**恢复vi继续编辑你的文件（当然，也可以在vi中使用！command方式执行shell命令，但是没有该方法方便）。
+
+**ctrl-d:** ( Terminate input, or exit shell ) 一个特殊的二进制值，表示 EOF，作用相当于在终端中输入**exit后回车**；
+
+其他拓展：
+
+**ctrl-/**   发送 SIG QUIT 信号给前台进程组中的所有进程，**终止前台进程并生成 core 文件**。
+
+**ctrl-s**  中断控制台输出
+
+**ctrl-q**  恢复控制台输出
+
+**ctrl-l**   清屏
+
+其实，控制字符都是可以通过stty命令更改的，可在终端中输入命令"stty -a"查看终端配置
+
+
+
+
 
 ## 参考资料
 
