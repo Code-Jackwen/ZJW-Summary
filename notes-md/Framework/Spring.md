@@ -165,11 +165,186 @@ TransactionDefinition 接⼝中定义了五个表示隔离级别的常量：
 
 @Transactional注解中如果不配置rollbackFor属性,那么事物只会在遇到**RuntimeException**的时候才会回滚,加上**rollbackFor=Exception.class,**可以让事物在遇到⾮运⾏时异常时也回滚。
 
+参数：
+
+**timeout**
+
+- 事务的超时时间，单位为秒。
+
+**readOnly**
+
+- 该属性用于设置当前事务是否为只读事务，设置为true表示只读，false则表示可读写，默认值为false。如果一个事务只涉及到只读，可以设置为true。
+
 
 
 参考：
 
+很全：https://segmentfault.com/a/1190000022420927
+
 https://www.ibm.com/developerworks/cn/java/j-master-spring-transactional-use/index.html
+
+## 事务失效的情况
+
+1、数据库引擎不支持事务
+
+比如： MyISAM  
+
+2、没有被 Spring 管理
+
+类没有加@Service，但是方法加了 @Transactional
+
+3、方法不是 public 的
+
+以下来自 Spring 官方文档：
+
+> When using proxies, you should apply the @Transactional annotation only to methods with public visibility. If you do annotate protected, private or package-visible methods with the @Transactional annotation, no error is raised, but the annotated method does not exhibit the configured transactional settings. Consider the use of AspectJ (see below) if you need to annotate non-public methods.
+
+大概意思就是 `@Transactional` 只能用于 public 的方法上，否则事务不会失效，如果要用在非 public 方法上，可以开启 `AspectJ` 代理模式。 
+
+
+
+4、自身调用问题
+
+来看两个示例：
+
+```text
+@Service
+public class OrderServiceImpl implements OrderService {
+
+    public void update(Order order) {
+        updateOrder(order);
+    }
+
+    @Transactional
+    public void updateOrder(Order order) {
+        // update order
+    }
+
+}
+```
+
+update方法上面没有加 `@Transactional` 注解，调用有 `@Transactional` 注解的 updateOrder 方法，updateOrder 方法上的事务管用吗？
+
+再来看下面这个例子：
+
+```text
+@Service
+public class OrderServiceImpl implements OrderService {
+
+    @Transactional
+    public void update(Order order) {
+        updateOrder(order);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateOrder(Order order) {
+        // update order
+    }
+
+}
+```
+
+这次在 update 方法上加了 `@Transactional`，updateOrder 加了 `REQUIRES_NEW` 新开启一个事务，那么新开的事务管用么？
+
+这两个例子的答案是：不管用！
+
+原因很简单，Spring在扫描Bean的时候会自动为标注了`@Transactional`注解的类生成一个代理类（proxy）,当有注解的方法被调用的时候，**实际上是代理类调用**的，代理类在调用之前会开启事务，执行事务的操作。 但是同类中的方法互相调用，相当于`this.B()`，此时的B方法**并非是代理类调用**，而是直接通过原有的Bean直接调用，所以注解会失效。 
+
+因为它们发生了自身调用，就调该类自己的方法，而没有经过 Spring 的代理类，默认只有在外部调用事务才会生效，这也是老生常谈的经典问题了。
+
+这个的解决方案之一就是在的类中注入自己，用注入的对象再调用另外一个方法，这个不太优雅，另外一个可行的方案可以参考《[Spring 如何在一个事务中开启另一个事务？](https://link.zhihu.com/?target=https%3A//mp.weixin.qq.com/s/1TEBnmWynN4nwc6Q-oZfvw)》这篇文章。
+
+
+
+5、数据源没有配置事务管理器
+
+```text
+@Bean
+public PlatformTransactionManager transactionManager(DataSource dataSource) {
+    return new DataSourceTransactionManager(dataSource);
+}
+```
+
+如上面所示，当前**数据源若没有配置事务管理器**，那也是白搭！
+
+6、**事务传播行为不支持事务**
+
+来看下面这个例子：
+
+```text
+@Service
+public class OrderServiceImpl implements OrderService {
+
+    @Transactional
+    public void update(Order order) {
+        updateOrder(order);
+    }
+
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public void updateOrder(Order order) {
+        // update order
+    }
+
+}
+```
+
+**Propagation.NOT_SUPPORTED：** 表示不以事务运行，当前若存在事务则挂起，详细的可以参考《[事务隔离级别和传播机制](https://link.zhihu.com/?target=https%3A//mp.weixin.qq.com/s/RTEMPBB6AFmmdj0uw1SDsg)》这篇文章。
+
+都主动不支持以事务方式运行了，那事务生效也是白搭！
+
+7、**异常在方法内部给catch了，没有抛出去**。
+
+这个也是出现比较多的场景：
+
+```text
+// @Service
+public class OrderServiceImpl implements OrderService {
+
+    @Transactional
+    public void updateOrder(Order order) {
+        try {
+            // update order
+        } catch {
+
+        }
+    }
+
+}
+```
+
+把异常吃了，然后又不抛出来，事务不回滚。
+
+
+
+
+
+8、**异常类型不在回滚范围**
+
+上面的例子再抛出一个异常：
+
+```text
+// @Service
+public class OrderServiceImpl implements OrderService {
+
+    @Transactional
+    public void updateOrder(Order order) {
+        try {
+            // update order
+        } catch {
+            throw new Exception("更新错误");
+        }
+    }
+
+}
+```
+
+这样事务也是不生效的，因为**默认回滚的是：RuntimeException**，如果你想触发其他异常的回滚，需要在注解上配置一下，如：
+
+```text
+@Transactional(rollbackFor = Exception.class)
+```
+
+这个配置仅限于 `Throwable` 异常类及其子类。
 
 
 
