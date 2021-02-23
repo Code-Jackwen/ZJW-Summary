@@ -46,7 +46,7 @@ Java 的 I/O 大概可以分成以下几类：
 
 ## 二、磁盘操作
 
-File 类可以用于表示文件和目录的信息，但是它不表示文件的内容。
+File 类可以用于表示**文件和目录的信息**，但是它不表示文件的内容。
 
 递归地列出一个目录下所有文件：
 
@@ -65,7 +65,7 @@ public static void listAllFiles(File dir) {
 }
 ```
 
-从 Java7 开始，可以使用 Paths 和 Files 代替 File。
+从 **Java 7** 开始，可以使用 **Paths** 和 **Files** 代替 File。
 
 ## 三、字节操作
 
@@ -93,14 +93,13 @@ public static void copyFile(String src, String dist) throws IOException {
 
 ### 装饰者模式
 
-Java I/O 使用了装饰者模式来实现。以 InputStream 为例，
+Java I/O 使用了**装饰者模式**来实现。以 InputStream 为例，
 
 - InputStream 是抽象组件；
-- FileInputStream 是 InputStream 的子类，属于具体组件，提供了字节流的输入操作；
-- FilterInputStream 属于抽象装饰者，装饰者用于装饰组件，为组件提供额外的功能。例如 BufferedInputStream 为 FileInputStream 提供缓存的功能。
+- FileInputStream 是 InputStream 的子类，属于具体组件，提供了**字节流的输入**操作；
+- FilterInputStream 属于抽象装饰者，装饰者用于装饰组件，为组件提供额外的功能。例如 BufferedInputStream 为 FileInputStream 提供**缓存**的功能。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/9709694b-db05-4cce-8d2f-1c8b09f4d921.png" width="650px"> </div><br>
-
 实例化一个具有缓存功能的字节流对象时，只需要在 FileInputStream 对象上再套一层 BufferedInputStream 对象即可。
 
 ```java
@@ -108,23 +107,23 @@ FileInputStream fileInputStream = new FileInputStream(filePath);
 BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
 ```
 
-DataInputStream 装饰者提供了对更多数据类型进行输入的操作，比如 int、double 等基本类型。
+DataInputStream 装饰者提供了对**更多数据类型**进行输入的操作，比如 int、double 等基本类型。
 
 ## 四、字符操作
 
 ### 编码与解码
 
-编码就是把字符转换为字节，而解码是把字节重新组合成字符。
+**编码就是把字符转换为字节，而解码是把字节重新组合成字符。**
 
 如果编码和解码过程使用不同的编码方式那么就出现了乱码。
 
-- GBK 编码中，中文字符占 2 个字节，英文字符占 1 个字节；
-- UTF-8 编码中，中文字符占 3 个字节，英文字符占 1 个字节；
-- UTF-16be 编码中，中文字符和英文字符都占 2 个字节。
+- GBK 编码中，**中文字符占 2 个字节，英文字符占 1 个字节；**
+- UTF-8 编码中，**中文字符占 3 个字节，英文字符占 1 个字节；**
+- UTF-16be 编码中，**中文字符和英文字符都占 2 个字节。**
 
-UTF-16be 中的 be 指的是 Big Endian，也就是大端。相应地也有 UTF-16le，le 指的是 Little Endian，也就是小端。
+UTF-16be 中的 be 指的是 Big Endian，也就是**大端**。相应地也有 UTF-16le，le 指的是 Little Endian，也就是**小端**。
 
-Java 的内存编码使用双字节编码 UTF-16be，这不是指 Java 只支持这一种编码方式，而是说 char 这种类型使用 UTF-16be 进行编码。char 类型占 16 位，也就是两个字节，Java 使用这种双字节编码是为了让一个中文或者一个英文都能使用一个 char 来存储。
+**Java 的内存编码使用双字节编码 UTF-16be**，这不是指 Java 只支持这一种编码方式，而是说 **char** 这种类型使用 UTF-16be 进行编码。**char** 类型占 16 位，也就是**两个字节**，**Java 使用这种双字节编码是为了让一个中文或者一个英文都能使用一个 char 来存储。**
 
 ### String 的编码方式
 
@@ -280,7 +279,6 @@ public static void main(String[] args) throws IOException {
 - 服务器和客户端通过 InputStream 和 OutputStream 进行输入输出。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/1e6affc4-18e5-4596-96ef-fb84c63bf88a.png" width="550px"> </div><br>
-
 ### Datagram
 
 - DatagramSocket：通信类
@@ -342,23 +340,18 @@ I/O 包和 NIO 已经很好地集成了，java.io.\* 已经以 NIO 为基础重�
 ① 新建一个大小为 8 个字节的缓冲区，此时 position 为 0，而 limit = capacity = 8。capacity 变量不会改变，下面的讨论会忽略它。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/1bea398f-17a7-4f67-a90b-9e2d243eaa9a.png"/> </div><br>
-
 ② 从输入通道中读取 5 个字节数据写入缓冲区中，此时 position 为 5，limit 保持不变。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/80804f52-8815-4096-b506-48eef3eed5c6.png"/> </div><br>
-
 ③ 在将缓冲区的数据写到输出通道之前，需要先调用 flip() 方法，这个方法将 limit 设置为当前 position，并将 position 设置为 0。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/952e06bd-5a65-4cab-82e4-dd1536462f38.png"/> </div><br>
-
 ④ 从缓冲区中取 4 个字节到输出缓冲中，此时 position 设为 4。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/b5bdcbe2-b958-4aef-9151-6ad963cb28b4.png"/> </div><br>
-
 ⑤ 最后需要调用 clear() 方法来清空缓冲区，此时 position 和 limit 都被设置为最初位置。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/67bf5487-c45d-49b6-b9c0-a058d8c68902.png"/> </div><br>
-
 ### 文件 NIO 实例
 
 以下展示了使用 NIO 快速复制文件的实例：
@@ -416,7 +409,6 @@ NIO 实现了 IO 多路复用中的 Reactor 模型，一个线程 Thread 使用�
 应该注意的是，只有套接字 Channel 才能配置为非阻塞，而 FileChannel 不能，为 FileChannel 配置非阻塞也没有意义。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/093f9e57-429c-413a-83ee-c689ba596cef.png" width="350px"> </div><br>
-
 #### 1. 创建选择器
 
 ```java
