@@ -195,7 +195,7 @@ https://github.com/用户名/repository仓库名/blob/分支名master/图片文�
 
 ### 六、其他问题
 
-可能出现的其他问题，比如：在终端执行 git push 的时候，终端窗口报错。这是每个月或者说一定周期，Git 服务器 ip 地址变换的原因，因此上边拷贝的代理地址要是最新的，这里的代理地址会不断的更新（放心），注意使用最新的地址就可以。
+可能出现的其他问题，比如：在终端执行 git push 的时候，终端窗口报错。这是每个月初或者说一定周期，Git 服务器 ip 地址变换的原因，因此上边拷贝的代理地址要是最新的，这里的代理地址会不断的更新（放心），注意使用最新的地址就可以。
 
 fatal: unable to access 'https://github.com/Jack-wen-Java/ZJW-Summary.git/': OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443
 
