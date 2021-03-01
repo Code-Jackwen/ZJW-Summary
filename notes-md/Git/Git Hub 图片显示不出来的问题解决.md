@@ -144,9 +144,9 @@ https://avatars2.githubusercontent.com/u/15832957?s=60&v=4
 
 正常到这里再次刷新 GitHub 页面就可以了。
 
-### 三、其他问题
+### 三、效果不及时问题
 
-1、DNS 刷新 不及时
+1、DNS 刷新不及时
 
 可以使用 `ipconfig/flush` 对本地 DNS 缓存进行一次刷新，如果遇到网络异常，可能是 DNS 缓存的问题，刷新一下，步骤：
 
@@ -193,11 +193,9 @@ https://github.com/用户名/repository仓库名/blob/分支名master/图片文�
 
 
 
+### 六、其他问题
 
-
-比如：
-
-终端窗口报错
+可能出现的其他问题，比如：在终端执行 git push 的时候，终端窗口报错。这是每个月或者说一定周期，Git 服务器 ip 地址变换的原因，因此上边拷贝的代理地址要是最新的，这里的代理地址会不断的更新（放心），注意使用最新的地址就可以。
 
 fatal: unable to access 'https://github.com/Jack-wen-Java/ZJW-Summary.git/': OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443
 
