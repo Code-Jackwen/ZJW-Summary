@@ -11,35 +11,39 @@
 > mac 修改 hosts: sudo vim /etc/hosts 
 
 ````
- # GitHub Start
+# GitHub Start 
+140.82.113.3      github.com
+140.82.114.20     gist.github.com
 
-140.82.113.3      github.com 
-140.82.114.20     gist.github.com 
+151.101.184.133    assets-cdn.github.com
+151.101.184.133    raw.githubusercontent.com
+199.232.28.133     raw.githubusercontent.com 
+151.101.184.133    gist.githubusercontent.com
+151.101.184.133    cloud.githubusercontent.com
+151.101.184.133    camo.githubusercontent.com
+199.232.96.133     avatars.githubusercontent.com
+151.101.184.133    avatars0.githubusercontent.com
+199.232.68.133     avatars0.githubusercontent.com
+199.232.28.133     avatars0.githubusercontent.com 
+199.232.28.133     avatars1.githubusercontent.com
+151.101.184.133    avatars1.githubusercontent.com
+151.101.108.133    avatars1.githubusercontent.com
+151.101.184.133    avatars2.githubusercontent.com
+199.232.28.133     avatars2.githubusercontent.com
+151.101.184.133    avatars3.githubusercontent.com
+199.232.68.133     avatars3.githubusercontent.com
+151.101.184.133    avatars4.githubusercontent.com
+199.232.68.133     avatars4.githubusercontent.com
+151.101.184.133    avatars5.githubusercontent.com
+199.232.68.133     avatars5.githubusercontent.com
+151.101.184.133    avatars6.githubusercontent.com
+199.232.68.133     avatars6.githubusercontent.com
+151.101.184.133    avatars7.githubusercontent.com
+199.232.68.133     avatars7.githubusercontent.com
+151.101.184.133    avatars8.githubusercontent.com
+199.232.68.133     avatars8.githubusercontent.com
+199.232.96.133     avatars9.githubusercontent.com
 
-
-151.101.184.133    assets-cdn.github.com 
-151.101.184.133    raw.githubusercontent.com 
-151.101.184.133    gist.githubusercontent.com 
-151.101.184.133    cloud.githubusercontent.com 
-151.101.184.133    camo.githubusercontent.com 
-151.101.184.133    avatars0.githubusercontent.com 
-199.232.68.133     avatars0.githubusercontent.com 
-199.232.28.133     avatars1.githubusercontent.com 
-151.101.184.133    avatars1.githubusercontent.com 
-151.101.184.133    avatars2.githubusercontent.com 
-199.232.28.133     avatars2.githubusercontent.com 
-151.101.184.133    avatars3.githubusercontent.com 
-199.232.68.133     avatars3.githubusercontent.com 
-151.101.184.133    avatars4.githubusercontent.com 
-199.232.68.133     avatars4.githubusercontent.com 
-151.101.184.133    avatars5.githubusercontent.com 
-199.232.68.133     avatars5.githubusercontent.com 
-151.101.184.133    avatars6.githubusercontent.com 
-199.232.68.133     avatars6.githubusercontent.com 
-151.101.184.133    avatars7.githubusercontent.com 
-199.232.68.133     avatars7.githubusercontent.com 
-151.101.184.133    avatars8.githubusercontent.com 
-199.232.68.133     avatars8.githubusercontent.com 
 # GitHub End
 ````
 
@@ -104,13 +108,17 @@ https://avatars2.githubusercontent.com/u/15832957?s=60&v=4
 
 151.101.184.133    assets-cdn.github.com
 151.101.184.133    raw.githubusercontent.com
+199.232.28.133     raw.githubusercontent.com 
 151.101.184.133    gist.githubusercontent.com
 151.101.184.133    cloud.githubusercontent.com
 151.101.184.133    camo.githubusercontent.com
+199.232.96.133     avatars.githubusercontent.com
 151.101.184.133    avatars0.githubusercontent.com
 199.232.68.133     avatars0.githubusercontent.com
+199.232.28.133     avatars0.githubusercontent.com 
 199.232.28.133     avatars1.githubusercontent.com
 151.101.184.133    avatars1.githubusercontent.com
+151.101.108.133    avatars1.githubusercontent.com
 151.101.184.133    avatars2.githubusercontent.com
 199.232.28.133     avatars2.githubusercontent.com
 151.101.184.133    avatars3.githubusercontent.com
@@ -125,6 +133,7 @@ https://avatars2.githubusercontent.com/u/15832957?s=60&v=4
 199.232.68.133     avatars7.githubusercontent.com
 151.101.184.133    avatars8.githubusercontent.com
 199.232.68.133     avatars8.githubusercontent.com
+199.232.96.133     avatars9.githubusercontent.com
 
 # GitHub End
 ```
@@ -185,6 +194,20 @@ https://github.com/用户名/repository仓库名/blob/分支名master/图片文�
 
 
 
+
+比如：
+
+终端窗口报错
+
+fatal: unable to access 'https://github.com/Jack-wen-Java/ZJW-Summary.git/': OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443
+
+```
+git config --global http.sslBackend "openssl"
+```
+
+```
+git config --global http.sslCAInfo "E:\Git\Git\mingw64\ssl\cert.pem"
+```
 
 
 
