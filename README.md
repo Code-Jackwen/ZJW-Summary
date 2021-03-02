@@ -24,7 +24,7 @@
 
 ## 📝  算法
 
-- [数据结构与算法](notes-md/Algorithm/数据结构%20-%20目录.md) | [剑指 Offer 题解](notes-md/To%20offer/剑指%20Offer%20-%20目录.md) | [Leetcode 精选题解](notes-md/Leetcode/Leetcode%20题解%20-%20目录.md) 
+- [数据结构与算法](notes-md/Algorithm/数据结构%20-%20目录.md) | [剑指 Offer 题解](notes-md/To%20offer/剑指%20Offer%20-%20目录.md) | [Leetcode 精选题解](notes-md/Leetcode/Leetcode%20题解%20-%20目录.md) | [牛客面试高频](notes-md/Niuke)
 
 ## :date:  数据库 
 
@@ -36,7 +36,7 @@
 
 ## :european_castle: 开源框架  
 
-- [Spring ](notes-md/Framework)| [Spring Mvc](notes-md/Framework) | [Mybatis](notes-md/Framework) | [Dubbo](notes-md/Framework) | [Zookeeper ](notes-md/Framework) | [Oauth](notes-md/Framework)
+- [Spring ](notes-md/Framework)| [Mybatis](notes-md/Framework) | [Dubbo](notes-md/Framework) | [Zookeeper ](notes-md/Framework) | [Oauth](notes-md/Framework)
 
 ## :straight_ruler:  项目设计   
 
@@ -66,7 +66,7 @@
 
 ## 后记
 
-路漫漫，其修远兮。 在学习这条路上难免会有很多盲点和学不完的知识。有道无术，术尚可求， 欢迎有更多的技术爱好者参与仓库的维护共同建设，欢迎 Pr ，Issues 也都会看。
+路漫漫，其修远兮。在学习这条路上难免会有很多盲点和学不完的知识。有道无术，术尚可求， 欢迎有更多的技术爱好者参与仓库的维护共同建设，欢迎 Pr ，Issues 也都会看。
 
 
 
