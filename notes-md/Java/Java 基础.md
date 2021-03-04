@@ -504,6 +504,25 @@ public String(String original) {
 }
 ```
 
+### String 的最大长度
+
+1.Java中的字符串String最大长度，编译期如果是**javac编译就是65534**。如果绕过javac编译的限制，其最大长度可以达到u2类型变达的最大值65535。
+
+2.Java中的字符串String最大长度运行期大约**4G**。
+
+3.Eclise编译超过65534长度的字符串不报错，是Eclipse有自己的Java编译器。JDT优化为了StringBuilder的append。
+
+4.Eclise使用自己的编译器。主要原因是JDT核心具有渐进式编译的能力（也就是增量编译），这也是Eclipse不需要编译按钮的原因，因为它会在检测到更改时自动编译。但Oracle的JDK不支持增量编译。
+
+String 的长度是有限制的。
+
+- 编译期的限制：字符串的UTF8编码值的字节数不能超过65535，字符串的长度不能超过65534；
+- 运行时限制：字符串的长度不能超过2^31-1，占用的内存数不能超过虚拟机能够提供的最大值。
+
+参考
+
+https://www.cnblogs.com/54chensongxia/p/13640352.html
+
 ## 运算
 
 ### 参数传递

@@ -216,11 +216,11 @@ public static void main(String[] args) {
 
 **Executor 管理多个异步任务的执行**，而无需程序员显式地管理线程的生命周期。这里的异步是指多个任务的执行互不干扰，不需要进行同步操作。**这里的异步见互斥同步的demo**。
 
-主要有三种 Executor：
+**主要有三种 Executor：**
 
-- CachedThreadPool：一个任务创建一个线程；
-- FixedThreadPool：所有任务只能使用固定大小的线程；
-- SingleThreadExecutor：相当于大小为 1 的 FixedThreadPool。
+- **CachedThreadPool**：一个任务创建一个线程；
+- **FixedThreadPool**：所有任务只能使用固定大小的线程；
+- **SingleThreadExecutor**：相当于大小为 1 的 FixedThreadPool。
 
 ```java
 public static void main(String[] args) {
@@ -1856,6 +1856,26 @@ take操作和put操作的流程是类似的，总结一下take操作的流程：
 参考：
 
 http://concurrent.redspider.group/article/03/13.html
+
+## 线程池
+
+### 拒绝策略
+
+RejectedExecutionHandler提供了四种方式来处理任务拒绝策略
+
+1、直接**丢弃**（DiscardPolicy）
+
+2、**丢弃队列中最老的任务**(DiscardOldestPolicy)。
+
+3、抛**异常**(AbortPolicy)
+
+4、将任务分给调用线程来执行(CallerRunsPolicy)。
+
+## Java的 JIT 工作模式
+
+
+
+
 
 ## 参考资料
 

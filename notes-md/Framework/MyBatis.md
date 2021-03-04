@@ -135,3 +135,15 @@ Mybatis 将所有 **Xml 配置信息**都封装到 All-In-One 重量级对象 **
 <resultMap>标签会被解析为**ResultMap**对象，其每个⼦元素会被解析为**ResultMapping**对象。
 
 每⼀个<select><insert><update><delete>**标签**均会被解析为**MappedStatement**对象，标签内的 **sql** 会被解析为 **BoundSql** 对象。
+
+
+
+## todo
+
+MyBatis执行一个Select查询的流程？
+
+有哪些Executor
+
+插件原理
+
+二级缓存机制？

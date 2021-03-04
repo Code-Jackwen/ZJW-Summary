@@ -815,25 +815,33 @@ b+树，是b树的一种变体，查询性能更好。m阶的b+树的特征：
 
 **案例：**
 
-1、**违反最左前缀法则**
+##### 1、**违反最左前缀法则**
 
 对a、b、c列建立联合索引，where里是b and c 不走、where里是b 不走。
 
 而where里是a、c 的话走只 a 的那一段索引长度。
 
-而where里是=a、>b、=c 的话走只 a和b 的那一段索引长度，c的就不走了。
+**而where里是=a、>b、=c 的话走只 a和b 的那一段索引长度，c的就不走了。就是范围后边的索引不走**
 
-2、不要在索引列上进行**运算操作**，索引将失。
+##### 2、运算操作
+
+不要在索引列上进行**运算操作**，索引将失。
 
 比如 where substring(a, 3 , 2 ) ='索引'
 
-3、**字符串不加单引号**，造成索引失效。没有对字符串类型的值加单引号，MySQL的查询优化器，会自动的进行类型转换，造成索引失效。
+##### 3、**字符串不加单引号**
 
-4、用**or分**割开的条件，如果or前的条件中的列有索引，而后面的列中没有索引，那么涉及的索引都不会被用到。
+造成索引失效。没有对字符串类型的值加单引号，MySQL的查询优化器，会自动的进行类型转换，造成索引失效。
+
+##### 4、用**or分**割开的条件
+
+如果or前的条件中的列有索引，而后面的列中没有索引，那么涉及的索引都不会被用到。
 
 比如：a or b	a有索引，b没有建索引，不加其他sql关键字的话sql整体不走索引。
 
-5、**模糊查询**，以%开头的Like模糊查询，索引失效。
+##### 5、**模糊查询**
+
+以%开头的Like模糊查询，索引失效。
 
 这里说的都是 查询的 多字段，非覆盖索引查询。
 
@@ -843,13 +851,17 @@ b+树，是b树的一种变体，查询性能更好。m阶的b+树的特征：
 
 使用**覆盖索引查询**，随便模糊都走索引。
 
-6、**in 走索引， not in 索引失效**。
+##### 6、**in 走索引， not in 索引失效**。
 
-7、**is NULL ， is NOT NULL 有时索引失效，看评估。**
+##### 7、null
 
-8、如果MySQL**评估**使用索引比全表更慢，则不使用索引。看列值的区别度大不大。
+索引是可以走的，官方也是这么说的。
 
+**is NULL ， is NOT NULL 有时索引失效，看评估。**
 
+##### 8、评估
+
+如果MySQL**评估**使用索引比全表更慢，则不使用索引。看列值的区别度大不大。
 
 # SQL优化
 
@@ -953,7 +965,7 @@ where a.id =stu.id
 
 ##### SQL提示
 
-1、IGNORE INDEX
+##### 1、IGNORE INDEX
 
 如果用户只是单纯的想让MySQL忽略一个或者多个索引，则可以使用 ignore index
 
@@ -961,7 +973,7 @@ select*fromtb_sellerignoreindex(idx_seller_name)wherename='小米科技';
 
 
 
-2、FORCE INDEX
+##### 2、FORCE INDEX
 
 为强制MySQL使用一个特定的索引，可在查询中使用 force index 
 
@@ -969,13 +981,9 @@ SELECT *  FROM student AS stu force index  (idx_a_b)  where ....
 
 
 
-3、USE INDEX
+##### 3、USE INDEX
 
 在查询语句中表名的后面，添加 use index 来提供希望MySQL去参考的索引列表，就可以让MySQL不再考虑其他可用的索引，适用于索引有多种选择的情况。
-
-
-
-
 
 ## MyISAM和InnoDB区别
 
@@ -1005,15 +1013,15 @@ InnoDB: 其数据⽂件本身就是索引⽂件。相⽐MyISAM，索引⽂件和
 
 根据数据库⾥⾯数据表的相关性进⾏拆分。
 
-
-
 **客户端代理**： 分⽚逻辑在应⽤端，封装在jar包中，通过修改或者封装JDBC层来实现。**当当⽹的Sharding-JDBC**、阿⾥的TDDL是两种⽐᫾常⽤的实现。
 
 **中间件代理**：在应⽤和数据中间加了⼀个代理层。分⽚逻辑统⼀维护在中间件服务中。我们现在谈的**Mycat**、360的Atlas、⽹易的DDB等等都是这种架构的实现。
 
 
 
-大表优化参考：https://segmentfault.com/a/1190000006158186
+大表优化参考：
+
+https://segmentfault.com/a/1190000006158186
 
 
 
@@ -1067,13 +1075,45 @@ https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485117&idx=1&sn=923617
 
 https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485185&idx=1&sn=66ef08b4ab6af5757792223a83fc0d45&chksm=cea248caf9d5c1dc72ec8a281ec16aa3ec3e8066dbb252e27362438a26c33fbe842b0e0adf47&token=79317275&lang=zh_CN%23rd
 
-
-
 ## 书写⾼质量SQL的30条建议
 
 https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247486461&idx=1&sn=60a22279196d084cc398936fe3b37772&chksm=cea24436f9d5cd20a4fa0e907590f3e700d7378b3f608d7b33bb52cfb96f503b7ccb65a1deed&token=1987003517&lang=zh_CN%23rd
 
+## PageHelper 分页插件源码及原理剖析
 
+实现了 mybatis 的  Interceptor  进行拦截， 内部是动态代理拦截 sql 语句判断 sql 是增、删、改、查，判断返回值是多个，然后根据 page 对象信息拼装 。
+
+
+
+实例总结：
+
+原来 PageHelper 的分页功能是通过 Limit 拼接 SQL 实现的。查询效率低的问题也找出来了，那么应该如何解决。
+
+首先分析 SQL 语句，limit 在数据量少或者页数比较靠前的时候查询效率是比较高的。(**单表数据量百万进行测试)**
+
+select * from user where age = 10 limit 1,10; 结果显示 0.43s
+
+当 where 条件后的结果集较大并且页数达到一个量级整个 SQL 的查询效率就十分低下 (哪怕 where 的条件加上了索引也不行)。
+
+select * from user where age = 10 limit 10**0000,10; 结果显示 4.73s**
+
+那有什么解决方案呢？mysql 就不能单表数据量超百万乃至千万嘛？答案是 NO，显然是可以的。
+
+````sql
+SELECT a.* FROM  USER a
+INNER JOIN   (SELECT id FROM USER WHERE age = 10 LIMIT 100000,10) b 
+ON  a.id = b.id;
+````
+
+结果 0.53s
+
+完美解决了查询效率问题！！！其中需要对 where 条件增加索引，id 因为是主键自带索引。select 返回减少回表可以提升查询性能，所以采用查询主键字段后进行关联大幅度提升了查询效率。
+
+PageHelper 想要优化需要在拦截器的拼接 SQL 部分进行重构，由于博主能力有限暂未实现。能力较强的读者可以自己进行重构
+
+参考：
+
+https://www.cnblogs.com/jpfss/p/10782341.html
 
 # 数据类型：
 

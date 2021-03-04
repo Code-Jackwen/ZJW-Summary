@@ -147,9 +147,7 @@ Windows 键+,
 
 创建一个新的虚拟桌面 
 
-Win键+Tab 点击加号新建桌面
-
-Win键+Ctrl+D
+Win键+Tab 点击加号新建桌面或者Win键+Ctrl+D
 
 切换虚拟桌面 
 
