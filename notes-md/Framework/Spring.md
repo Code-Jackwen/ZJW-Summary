@@ -1,3 +1,66 @@
+## Spring AOP 动态代理原理
+
+JCSprout：https://github.com/crossoverJie/JCSprout/blob/master/MD/SpringAOP.md
+
+## Spring AOP 注解
+
+ 1、开启注解模式
+
+使用`@EnableAspectJAutoProxy`注解，开启注解AOP模式。
+
+````
+@Configuration
+@EnableAspectJAutoProxy
+public class Config {
+}
+````
+
+2、写AOP配置类
+
+ `@AspectJ` 
+
+开启了上述配置之后，所有**在容器中**，**被`@AspectJ`注解的 bean** 都会被 Spring 当做是 **AOP 配置类**，称为一个 Aspect。 
+
+注意：这里有个要注意的地方，**@AspectJ 注解只能作用于Spring Bean 上面**，所以你用 @Aspect 修饰的类要么是用 **@Component注解修饰**，要么是在 XML中配置过的。 
+
+3、配置 Pointcut (增强的切入点)
+
+```java
+// 指定的方法
+@Pointcut("execution(* testExecution(..))")
+public void anyTestMethod() {}
+```
+4、配置Advice
+
+**ProceedingJoinPoint pjp**
+
+Aspect 类应该遵守**单一职责**原则，**不要把所有的Advice配置全部写在一个Aspect类里面。** 
+
+````java
+@Aspect
+@Component
+public class GlobalAopAdvice {
+    
+    @Before("ric.study.demo.aop.SystemArchitecture.dataAccessOperation()")
+    public void doAccessCheck() {
+        // ... 实现代码
+    }
+    
+    // 这种最灵活，既能做 @Before 的事情，也可以做 @AfterReturning 的事情
+    @Around("ric.study.demo.aop.SystemArchitecture.businessService()")
+    public Object doBasicProfiling(ProceedingJoinPoint pjp) throws Throwable {
+        //  target 方法执行前... 实现代码
+        Object retVal = pjp.proceed();
+        //  target 方法执行后... 实现代码
+        return retVal;
+    }
+}
+````
+
+参考：
+
+Spring AOP 注解：https://juejin.cn/post/6844903987062243341#heading-3
+
 ## Spring 中的单例 bean 的线程安全问题了解吗？
 
 当多个线程操作同⼀个对象的时候，对这个对象的⾮静态成员变量的写操作会存在线程安全问题。
@@ -38,15 +101,41 @@ Bean 容器利⽤ Java Reflection API 创建⼀个Bean的实例。
 
 图示：
 
-![1613482127365](../../../assets/1613482127365.png)
+![1613482127365](../../assets/1613482127365.png)
 
 
 
 参考：
 
+JCSprout：https://github.com/crossoverJie/JCSprout/blob/master/MD/spring/spring-bean-lifecycle.md
+
 https://www.cnblogs.com/zrtqsk/p/3735273.html
 
+## spring在运行时给Bean怎么修改beanName?
 
+BeanPostProcessor  它是一个接口，定义了两个方法： 
+
+````java
+public interface BeanPostProcessor {
+	@Nullable //所有bean初始化之前触发该方法
+	default Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		return bean;
+	}
+
+	@Nullable //所有bean初始化之后触发该方法
+	default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+		return bean;
+	}
+}
+````
+
+执行时期
+
+![1614932522209](../../assets/1614932522209.png)
+
+参考：
+
+https://www.cnblogs.com/hama1993/p/11198310.html
 
 
 
@@ -175,8 +264,6 @@ TransactionDefinition 接⼝中定义了五个表示隔离级别的常量：
 
 - 该属性用于设置当前事务是否为只读事务，设置为true表示只读，false则表示可读写，默认值为false。如果一个事务只涉及到只读，可以设置为true。
 
-
-
 参考：
 
 很全：https://segmentfault.com/a/1190000022420927
@@ -185,15 +272,15 @@ https://www.ibm.com/developerworks/cn/java/j-master-spring-transactional-use/ind
 
 ## 事务失效的情况
 
-1、数据库引擎不支持事务
+**1、数据库引擎不支持事务**
 
 比如： MyISAM  
 
-2、没有被 Spring 管理
+**2、没有被 Spring 管理**
 
 类没有加@Service，但是方法加了 @Transactional
 
-3、方法不是 public 的
+**3、方法不是 public 的**
 
 以下来自 Spring 官方文档：
 
@@ -201,9 +288,7 @@ https://www.ibm.com/developerworks/cn/java/j-master-spring-transactional-use/ind
 
 大概意思就是 `@Transactional` 只能用于 public 的方法上，否则事务不会失效，如果要用在非 public 方法上，可以开启 `AspectJ` 代理模式。 
 
-
-
-4、自身调用问题
+**4、自身调用问题**
 
 来看两个示例：
 
@@ -248,15 +333,13 @@ public class OrderServiceImpl implements OrderService {
 
 这两个例子的答案是：不管用！
 
-原因很简单，Spring在扫描Bean的时候会自动为标注了`@Transactional`注解的类生成一个代理类（proxy）,当有注解的方法被调用的时候，**实际上是代理类调用**的，代理类在调用之前会开启事务，执行事务的操作。 但是同类中的方法互相调用，相当于`this.B()`，此时的B方法**并非是代理类调用**，而是直接通过原有的Bean直接调用，所以注解会失效。 
+原因很简单，**Spring在扫描Bean的时候会自动为标注了`@Transactional`注解的类生成一个代理类（proxy）**,当有注解的方法被调用的时候，**实际上是代理类调用的**，代理类在调用之前会开启事务，执行事务的操作。 但是同类中的方法互相调用，**相当于`this.B()`，**此时的B方法**并非是代理类调用**，而是直接通过原有的Bean直接调用，所以注解会失效。 
 
 因为它们发生了自身调用，就调该类自己的方法，而没有经过 Spring 的代理类，默认只有在外部调用事务才会生效，这也是老生常谈的经典问题了。
 
 这个的解决方案之一就是在的类中注入自己，用注入的对象再调用另外一个方法，这个不太优雅，另外一个可行的方案可以参考《[Spring 如何在一个事务中开启另一个事务？](https://link.zhihu.com/?target=https%3A//mp.weixin.qq.com/s/1TEBnmWynN4nwc6Q-oZfvw)》这篇文章。
 
-
-
-5、数据源没有配置事务管理器
+**5、数据源没有配置事务管理器**
 
 ```text
 @Bean
@@ -267,7 +350,7 @@ public PlatformTransactionManager transactionManager(DataSource dataSource) {
 
 如上面所示，当前**数据源若没有配置事务管理器**，那也是白搭！
 
-6、**事务传播行为不支持事务**
+**6、事务传播行为不支持事务**
 
 来看下面这个例子：
 
@@ -292,7 +375,7 @@ public class OrderServiceImpl implements OrderService {
 
 都主动不支持以事务方式运行了，那事务生效也是白搭！
 
-7、**异常在方法内部给catch了，没有抛出去**。
+**7、异常在方法内部给catch了，没有抛出去。**
 
 这个也是出现比较多的场景：
 
@@ -314,11 +397,7 @@ public class OrderServiceImpl implements OrderService {
 
 把异常吃了，然后又不抛出来，事务不回滚。
 
-
-
-
-
-8、**异常类型不在回滚范围**
+**8、异常类型不在回滚范围****
 
 上面的例子再抛出一个异常：
 
@@ -358,7 +437,7 @@ public class OrderServiceImpl implements OrderService {
 
  Spring中，对象的实例化是通过反射实现的， 而对象的属性则是在对象实例化之后通过一定的方式设置的。 
 
-![1613538148971](../../../assets/1613538148971.png)
+![1613538148971](../../assets/1613538148971.png)
 
 
 
