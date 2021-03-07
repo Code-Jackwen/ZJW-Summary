@@ -233,7 +233,7 @@ Java 中的网络支持：
 
 - **InetAddress**：用于表示网络上的硬件资源，即 **IP** 地址；
 - URL：统一资源定位符；
-- Sockets：使用 TCP 协议实现网络通信；
+- **Sockets：使用 TCP 协议实现网络通信；**
 - **Datagram**：使用 **UDP** 协议实现网络通信。
 
 ### InetAddress
@@ -309,8 +309,8 @@ I/O 与 NIO 最重要的区别是**数据打包**和**传输的方式**，**I/O 
 通道包括以下类型：
 
 - FileChannel：从文件中读写数据；
-- DatagramChannel：通过 UDP 读写网络中数据；
-- SocketChannel：通过 TCP 读写网络中数据；
+- **DatagramChannel：通过 UDP 读写网络中数据；**
+- **SocketChannel：通过 TCP 读写网络中数据；**
 - **ServerSocketChannel：可以监听新进来的 TCP 连接，对每一个新进来的连接都会创建一个 SocketChannel。**
 
 #### 2. 缓冲区
@@ -402,9 +402,9 @@ NIO 常常被叫做**非阻塞 IO**，主要是因为 NIO 在**网络通信中�
 
 **NIO 实现了 IO 多路复用中的 Reactor 模型，一个线程 Thread 使用一个选择器 Selector 通过轮询的方式去监听多个通道 Channel 上的事件，从而让一个线程就可以处理多个事件。**
 
-通过配置监听的通道 Channel 为非阻塞，那么当 Channel 上的 IO 事件还未到达时，就不会进入阻塞状态一直等待，而是**继续轮询其它 Channel**，找到 IO 事件已经到达的 Channel 执行。
+**通过配置监听的通道 Channel 为非阻塞**，那么当 Channel 上的 IO 事件还未到达时，就不会进入阻塞状态一直等待，而是**继续轮询其它 Channel**，找到 IO 事件已经到达的 Channel 执行。
 
-因为创建和切换线程的开销很大，因此使用一个线程来处理多个事件而不是一个线程处理一个事件，**对于 IO 密集型的应用具有很好地性能。**
+**因为创建和切换线程的开销很大，因此使用一个线程来处理多个事件而不是一个线程处理一个事件，对于 IO 密集型的应用具有很好地性能。**
 
 应该注意的是，**只有套接字 Channel 才能配置为非阻塞**，而 **FileChannel 不能**，为 FileChannel 配置非阻塞也没有意义。
 
@@ -423,7 +423,7 @@ ssChannel.configureBlocking(false);
 ssChannel.register(selector, SelectionKey.OP_ACCEPT);
 ```
 
-通道必须**配置为非阻塞模式，否则使用选择器就没有任何意义了**，因为如果通道在某个事件上被阻塞，那么服务器就不能响应其它事件，必须等待这个事件处理完毕才能去处理其它事件，显然这和选择器的作用背道而驰。
+**通道必须配置为非阻塞模式，否则使用选择器就没有任何意义了**，因为如果通道在某个事件上被阻塞，那么服务器就不能响应其它事件，必须等待这个事件处理完毕才能去处理其它事件，显然这和选择器的作用背道而驰。
 
 在将通道注册到选择器上时，还需要指定要注册的具体事件，主要有以下几类：
 
@@ -453,7 +453,7 @@ int interestSet = SelectionKey.OP_READ | SelectionKey.OP_WRITE;
 int num = selector.select();
 ```
 
-使用 select() 来监听到达的事件，**它会一直阻塞直到有至少一个事件到达。**
+**使用 select()** 来监听到达的事件，**它会一直阻塞直到有至少一个事件到达。**
 
 #### 4. 获取到达的事件
 

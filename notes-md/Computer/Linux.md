@@ -166,7 +166,6 @@ Linux 发行版是 Linux 内核及各种应用软件的集成版本。
 ### VIM 三个模式
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191209002818626.png"/> </div><br>
-
 - 一般指令模式（Command mode）：VIM 的默认模式，可以用于移动游标查看内容；
 - 编辑模式（Insert mode）：按下 "i" 等按键之后进入，可以对文本进行编辑；
 - 指令列模式（Bottom-line mode）：按下 ":" 按键之后进入，用于保存退出等操作。
@@ -317,7 +316,7 @@ MBR 不支持 2.2 TB 以上的硬盘，GPT 则最多支持到 2<sup>33</sup> TB 
 
 ### inode
 
-inode 具体包含以下信息：
+inode （属性）具体包含以下信息：
 
 - **权限** (read/write/excute)；
 - 拥有者与**群组** (owner/group)；
@@ -410,15 +409,17 @@ ext3/ext4 文件系统引入了日志功能，可以利用**日志来修复文�
 
 例子：
 
-**1、按文件大小查看文件**
+**1、按文件大小排序查看文件**
 
- **a、降序：ls -lsh** 
+ **<1>、降序：ls -lsh** 
 
+````
 moudaen@morton:~$ ls -lsh
 total 20M
- 20M -rw-r--r-- 1 moudaen 65536  20M Nov 11 17:44 Gender.war
+20M -rw-r--r-- 1 moudaen 65536  20M Nov 11 17:44 Gender.war
 4.0K drwxr-xr-x 2 moudaen 65536 4.0K Nov 11 17:44 test
 8.0K -rw-r--r-- 1 moudaen 65536 5.2K Nov 11 11:44 MyApp.java
+````
 
 命令解释：
 
@@ -430,9 +431,7 @@ ls后面的三个参数：
 
 **-h**表示将**文件大小单位转换**为我们习惯的M，K等为单位的大小
 
-
-
-**b.升序:ls -lrsh**
+**<2>、升序:ls -lrsh**
 
 命令解释：
 
@@ -440,30 +439,28 @@ ls后面的三个参数：
 
 **-r**表示reverse的意思，这里就是**reverse order**倒序，默认是降序的，加上-r就反转下即为**升序**了。
 
+**2、按文件修改时间排序查看文件**
 
+**<1>、按降序，即最近的修改 ls -lt**
 
-**2.按文件修改时间查看文件**
-
-**a.按降序，即最近的修改 ls -lt**
-
+````
 moudaen@morton:~$ ls -lt
 total 19836
 -rw-r--r-- 1 moudaen 65536     7 Nov 13 15:30 test.txt
 -rw-r--r-- 1 moudaen 65536 20267062 Nov 11 17:44 Gender.war
 drwxr-xr-x 2 moudaen 65536   4096 Nov 11 17:44 test
 -rw-r--r-- 1 moudaen 65536   5258 Nov 11 11:44 MyApp.java
+````
 
 命令解释：
 
-**-t** 其实我们用man ls命令就可以看到ls命令带的参数的用法,-t sort by modification time,newest first即按**修改时间**对文件进行排序，**默认是最近修改的在前**。
+**-t** 其实我们用man ls命令就可以看到ls命令带的参数的用法：
 
+-t sort by modification time,newest first即按**修改时间**对文件进行排序，**默认是最近修改的在前**。
 
-
-**b.那么想升序只需反转下就可以了，所以加上-r参数**
+**<2>、那么想升序只需反转下就可以了，所以加上-r参数**
 
 **ls -lrt**
-
-
 
 #### 2. cd
 
@@ -1166,7 +1163,45 @@ dmtsai lines: 5 columns: 9
 
 ## 十、进程管理
 
-### 查看进程
+##### 常用
+
+1、通过**服务名**查看**进程号** pid		**ps 没有端口号，有服务名和进程号**
+
+````sh
+ps -aux/ef | grep 服务名称
+````
+
+2、通过**端口号**查询进程号 pId
+
+````sh
+ps -aux | grep 端口号
+ps -ef  | grep 端口号
+lsof -i:端口号
+lsof -i | grep 端口号	此命令可以查端口和进程号 通过lsof -i:只能查端端口号
+````
+
+3、根据**进程号** pid 查看此进程所占用的端口号等
+
+**也可以端口号查进程号 PID**
+
+````sh
+netstat -nap | grep pid
+netstat -ntlp | grep pid
+
+lsof -i | grep pid	此命令可以查端口和进程号 通过lsof -i:只能查端端口号
+````
+
+一般知道进程名就可以直接通过 ps进行查看。
+
+知道端口的话 lsof 和netstat都能直接查询，然后进而直接查询进程下相关端口。
+
+> netstat 无权限控制，lsof 有权限控制。
+
+参考
+
+Linux根据服务名称或端口查询进程：https://blog.csdn.net/bhq2010/article/details/7370354
+
+带图：https://blog.csdn.net/daiyudong2020/article/details/50551334
 
 #### 1. ps
 

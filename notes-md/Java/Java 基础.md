@@ -1663,9 +1663,44 @@ Lam
 
 ## Lambda 原理
 
+（未看）Lambda表达式看这一篇就够了：https://objcoding.com/2019/03/04/lambda/
+
+https://github.com/objcoding?tab=overview&from=2019-12-01&to=2019-12-31
+
+**函数式接口**
+
 字节码上，Lambda表达式生成一个私有的静态函数，注意，在这里说的是生成，而不是等价。
 
 private static void lambda$0(java.lang.String); 私有的静态函数干的就是Lambda表达式里面的内容 
+
+**map和foreach**
+
+```java
+list.forEach(s -> {
+    System.out.println(args.getClass().getTypeName());
+});
+```
+
+````java
+list.stream().map(s -> {
+    Integer a = Integer.parseInt(s);
+    a = a+1;
+    System.out.println(a.getClass().getTypeName());
+    return a;
+ }).collect(Collectors.toList());
+````
+
+**map对原来的集合操作后返回一个新的集合。此集合和原集合无任何关系，且不会改变原集合的任何东西。**
+
+**foreach操作的是原集合，返回的还是原集合**
+
+参考
+
+java8 lambda表达式之map和foreach的区别：https://blog.csdn.net/EnseHeiKe/article/details/103649676
+
+## JDK8 的时间类
+
+https://www.jianshu.com/p/2949db9c3df5
 
 ## 哈希碰撞解决方式
 

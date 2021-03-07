@@ -28,13 +28,11 @@ I/O：例如通过从磁盘驱动器读取数据，就会被认为是 I/O；
 - **同步**：调用者会主动等待调用结果。按照“调用者”线程在等待调用结果时的状态可分为：
   - 阻塞：线程被操作系统挂起。
   - 非阻塞：线程不被操作系统挂起，可以处理其他事情。
-- **异步**：调用者发起一个异步调用，然后立即返回去做别的事。**“被调用者”**通过状态、**通知**、**回调函数**等手段来**通知“调用者”**。异步IO不是FIFO有序的，例如进程A与进程B先后对一个端口发起了异步读操作，有可能是进程B先得到读操作的结果。
+- **异步**：调用者发起一个异步调用，然后立即返回去做别的事。**“被调用者”**通过状态、**通知**、**回调函数**等手段来**通知“调用者”**。**异步IO不是FIFO有序的**，例如进程A与进程B先后对一个端口发起了异步读操作，有可能是进程B先得到读操作的结果。
 
 参考：
 
 https://zh.wikipedia.org/wiki/I/O
-
-
 
 ## 用户空间与内核空间
 
@@ -115,7 +113,7 @@ ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *
 ```
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/1492928416812_4.png"/> </div><br>
-在linux中，默认情况下所有的socket都是blocking，一个典型的读操作流程大概是这样： 
+**在linux中，默认情况下所有的socket都是blocking**，一个典型的读操作流程大概是这样： 
 
 当用户进程调用了recvfrom这个系统调用，kernel就开始了IO的第一个阶段：准备数据（对于网络IO来说，很多时候数据在一开始还没有到达。比如，还没有收到一个完整的UDP包。这个时候kernel就要等待足够的数据到来）。这个过程需要等待，也就是说数据被拷贝到操作系统内核的缓冲区中是需要一个过程的。而在用户进程这边，整个进程会被阻塞（当然，是进程自己选择的阻塞）。当kernel一直等到数据准备好了，它就会将数据从kernel中拷贝到用户内存，然后kernel返回结果，用户进程才解除block的状态，重新运行起来。
 
@@ -161,7 +159,7 @@ IO multiplexing就是我们说的select，poll，epoll，有些地方也称这�
 
 **select/epoll**的**优势**并不是对于单个连接能处理得更快，而是**在于能处理更多的连接**。）
 
-在IO multiplexing Model中，实际中，对于每一个socket，一般都设置成为non-blocking，但是，如上图所示，**整个用户的process其实是一直被block的**。只不过**process是被select这个函数block，而不是被socket IO给block**。
+在**IO multiplexing Model**中，实际中，对于每一个socket，一般都设置成为**non-blocking**，但是，如上图所示，**整个用户的process其实是一直被block的**。只不过**process是被select这个函数block，而不是被socket IO给block**。
 
 ### 信号驱动 I/O
 
@@ -223,7 +221,7 @@ Linux下的asynchronous IO其实用得很少。先看一下它的流程：
 
 select/poll/epoll 都是 I/O 多路复用的具体实现，select 出现的最早，之后是 poll，再是 epoll。
 
-select，poll，epoll本质上都是同步I/O，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的。而异步I/O则无需自己负责进行读写，异步I/O的实现会负责把数据从内核拷贝到用户空间。
+select，poll，epoll本质上都是同步I/O，因为他们都需要在读写事件就绪后**自己负责进行读写**，也就是说**这个读写过程是阻塞的**。而异步I/O则无需自己负责进行读写，异步I/O的实现会负责把数据从内核拷贝到用户空间。
 
 ### select
 
@@ -231,7 +229,7 @@ select，poll，epoll本质上都是同步I/O，因为他们都需要在读写�
 int select(int n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
 ```
 
-调用后select函数会阻塞，直到有描述副就绪（有数据 可读、可写、或者有except），或者超时（timeout指定等待时间，如果立即返回设为null即可），函数返回。当select函数返回后，可以 通过遍历fdset，来找到就绪的描述符。
+**调用后select函数会阻塞，直到有描述副就绪**（有数据 可读、可写、或者有except），或者超时（timeout指定等待时间，如果立即返回设为null即可），函数返回。当select函数返回后，可以 通过遍历fdset，来找到就绪的描述符。
 
 select目前几乎在所有的平台上支持，其**良好跨平台**支持也是它的一个优点。
 
@@ -294,9 +292,9 @@ int poll(struct pollfd *fds, unsigned int nfds, int timeout);
 
 pollfd结构包含了要监视的event和发生的event，不再使用select“参数-值”传递的方式。
 
-同时，pollfd并没有最大数量限制（但是数量过大后性能也是会下降）。
+同时，pollfd并**没有最大数量限制**（**但是数量过大后性能也是会下降**）。
 
-和select函数一样，poll返回后，需要轮询pollfd来获取就绪的描述符。
+和**select函数一样，poll返回后，需要轮询pollfd来获取就绪的描述符。**
 
 > 从上面看，select和poll都需要在返回后，通过遍历文件描述符来获取已经就绪的socket。
 >
@@ -353,7 +351,7 @@ select 和 poll 的功能基本相同，不过在一些实现细节上有所不�
 
 - **select 会修改描述符，而 poll 不会**；
 - **select** 的描述符类型使用**数组实现**，FD_SETSIZE 大小默认为 **1024**，因此默认只能监听少于 1024 个描述符。如果要监听更多描述符的话，需要修改 FD_SETSIZE 之后重新编译；而 **poll 没有描述符数量的限制**；
-- **poll 提供了更多的事件类型**，并且对描述符的重复利用上比 select 高。
+- **poll 提供了更多的事件类型**，并且对描述符的重复**利用率**上比 select 高。
 - 如果一个线程对某个描述符调用了 select 或者 poll，另一个线程关闭了该描述符，会导致调用结果不确定。
 
 #### 2. 速度
@@ -411,7 +409,7 @@ EPOLLONESHOT：只监听一次事件，当监听完这次事件之后，如果�
 
 从上面的描述可以看出，**epoll 只需要将描述符从进程缓冲区向内核缓冲区拷贝一次**，并且**进程不需要通过轮询**来获得事件完成的描述符。
 
-epoll 仅适用于 Linux OS。
+**epoll 仅适用于 Linux OS。**
 
 epoll 比 select 和 poll 更加灵活而且**没有描述符数量限制**。
 

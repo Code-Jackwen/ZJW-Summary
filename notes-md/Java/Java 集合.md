@@ -128,9 +128,9 @@ private static final int DEFAULT_CAPACITY = 10;
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191208232221265.png"/> </div><br>
 #### 2. 扩容
 
-添加元素时使用 ensureCapacityInternal() 方法来保证容量足够，如果不够时，需要使用 grow() 方法进行扩容，新容量的大小为 `oldCapacity + (oldCapacity >> 1)`，即 oldCapacity+oldCapacity/2。其中 oldCapacity >> 1 需要取整，**所以新容量大约是旧容量的 1.5 倍左右**。（oldCapacity 为**偶数**就是 1.5 倍，为**奇数**就是 1.5 倍-0.5）
+添加元素时使用 ensureCapacityInternal() 方法来保证容量足够，如果不够时，需要使用 grow() 方法进行扩容，新容量的大小为 oldCapacity + (oldCapacity >> 1)，即 oldCapacity+oldCapacity/2。其中 oldCapacity >> 1 需要取整，**所以新容量大约是旧容量的 1.5 倍左右**。（oldCapacity 为**偶数**就是 1.5 倍，为**奇数**就是 1.5 倍-0.5）
 
-扩容操作需要调用 `Arrays.copyOf()` 把原数组整个复制到新数组中，这个操作代价很高，因此最好在创建 ArrayList 对象时就指定大概的容量大小，减少扩容操作的次数。
+扩容操作需要调用 Arrays.copyOf() 把原数组整个复制到新数组中，这个操作代价很高，因此最好在创建 ArrayList 对象时就指定大概的容量大小，减少扩容操作的次数。
 
 ```java
 public boolean add(E e) {
@@ -325,7 +325,7 @@ public Vector() {
 
 #### 4. 替代方案
 
-可以使用 `Collections.synchronizedList();` 得到一个线程安全的 ArrayList。
+可以使用 Collections.synchronizedList(); 得到一个线程安全的 ArrayList。
 
 ```java
 List<String> list = new ArrayList<>();
@@ -1108,6 +1108,31 @@ public final class ConcurrentCache<K, V> {
 }
 ```
 
+## TreeMap
+
+ TreeMap的底层是通过红黑树实现，在put元素的时候会去通过二分法查找。
+
+TreeMap 默认排序规则：
+
+按照key的字典顺序来排序(升序) 当然,也可以自定义排序规则：实现Comparable接口或者在创建构造器的时候给一个Comparator实例。我们每一种情况都分析一下。 
+
+**采用默认排序**
+
+观察在不自定义排序规则下，是如何排序的。观察put(key,val)方法，如果key是String类型，则会调用String类中的**compareTo**做排序。默认的排序规则是根据key值的**首字符**去进行比较判断的，并按照**从小到大升序排序。**
+
+注意：**使用TreeMap所有的key要直接或间接的实现Comparable接口**，否则会报cannot be cast to java.lang.Comparable。或者直接采用TreeMap(**Comparator** comparator)构造器也是可以的。
+
+**采用Comparable接口排序**
+
+将key实现Comparable接口，重写其中的compareTo方法，定义排序的规则。我们建一个学生类并按照年龄排序。
+
+**采用Comparator接口排序**
+
+当我们并不想把key值拿来实现Comparable接口时，可以在创建TreeMap对象的时候传入排序规则，也就是实现了Comparator接口。
+
+参考
+
+TreeMap排序规则及使用：https://juejin.cn/post/6850418117240160263
 
 ## 参考资料
 
