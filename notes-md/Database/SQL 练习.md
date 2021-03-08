@@ -385,7 +385,7 @@ WHERE
     );
 ```
 
-应该注意的是上述解法**额外嵌套了一个 SELECT 语句**，如果不这么做，会出现错误：You can't specify target table 'Person' for update in FROM clause。以下演示了这种错误解法。
+应该注意的是上述解法**额外嵌套了一个 SELECT 语句**，如果不这么做，会出现错误：You can't specify target table 'Person' for update in FROM clause。以下演示了这种错误解法。 
 
 ```sql
 DELETE
@@ -646,7 +646,7 @@ Department 表：
 +----+----------+
 ```
 
-查找一个 Department 中收入最高者的信息：
+**查找一个 Department 中收入最高者的信息**：
 
 ```html
 +------------+----------+--------+
@@ -659,9 +659,11 @@ Department 表：
 
 ### Solution
 
-创建一个临时表，包含了部门员工的最大薪资。可以对部门进行分组，然后使用 MAX() 汇总函数取得最大薪资。
+**创建一个临时表，包含了部门员工的最大薪资。**
 
-之后使用连接找到一个部门中薪资等于临时表中最大薪资的员工。
+**可以对部门进行分组，然后使用 MAX() 汇总函数取得最大薪资。**
+
+**之后使用连接找到一个部门中薪资等于临时表中最大薪资的员工。**
 
 ```sql
 SELECT
@@ -730,7 +732,7 @@ https://leetcode.com/problems/second-highest-salary/description/
 
 ### Solution
 
-**为了在没有查找到数据时返回 null，需要在查询结果外面再套一层 SELECT。**
+**为了在没有查找到数据时返回 null，需要在查询结果外面再套一层 SELECT。**			**注意是DESC**
 
 ```sql
 SELECT
@@ -851,7 +853,7 @@ ORDER BY
 |1|	4.1	|2|	4.2|
 |1|	4.1	|3|	4.3|
 
-可以看到每个 S1.score 都有对应好几条记录，我们再进行分组，并统计每个分组的数量作为 'Rank'
+**可以看到每个 S1.score 都有对应好几条记录，我们再进行分组，并统计每个分组的数量作为 'Rank'**
 
 ```sql
 SELECT
@@ -1072,6 +1074,7 @@ FROM
 WHERE
     s4.id MOD 2 = 1
     AND s4.id = ( SELECT max( s5.id ) FROM seat s5 )
+    
 ORDER BY
     id;
 ```
