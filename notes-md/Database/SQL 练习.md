@@ -494,7 +494,7 @@ Employee 表：
 +----+-------+--------+-----------+
 ```
 
-查找薪资大于其经理薪资的员工信息。
+**查找薪资大于其经理薪资的员工信息。**
 
 ### Solution
 
@@ -823,7 +823,7 @@ https://leetcode.com/problems/rank-scores/description/
 
 ### Solution
 
-要统计某个 score 的排名，只要统计大于等于该 score 的 score 数量。
+**要统计某个 score 的排名，只要统计大于等于该 score 的 score 数量。**
 
 | Id | score | 大于等于该 score 的 score 数量 | 排名 |
 | :---: | :---: | :---: | :---: |
@@ -831,7 +831,7 @@ https://leetcode.com/problems/rank-scores/description/
 | 2 | 4.2 | 2 | 2 |
 | 3 | 4.3 | 1 | 1 |
 
-使用连接操作找到某个 score 对应的大于等于其值的记录：
+**使用连接操作找到某个 score 对应的大于等于其值的记录：**
 
 ```sql
 SELECT

@@ -260,9 +260,9 @@ CONNECT www.example.com:443 HTTP/1.1
 
 ### 3XX 重定向
 
--   **301 Moved Permanently**  ：永久性重定向
+-   **301 Moved Permanently**  ：**永久性重定向**
 
--   **302 Found**  ：临时性重定向
+-   **302 Found**  ：**临时性重定向**
 
 -   **303 See Other**  ：和 302 有着相同的功能，但是 303 明确要求客户端应该采用 GET 方法获取资源。
 
@@ -274,19 +274,19 @@ CONNECT www.example.com:443 HTTP/1.1
 
 ### 4XX 客户端错误
 
--   **400 Bad Request**  ：请求报文中存在语法错误。
+-   **400 Bad Request**  ：请求**报文中存在语法错误**。
 
 -   **401 Unauthorized**  ：该状态码表示发送的请求需要有认证信息（BASIC 认证、DIGEST 认证）。如果之前已进行过一次请求，则表示用户认证失败。
 
--   **403 Forbidden**  ：请求被拒绝。
+-   **403 Forbidden**  ：请求被**拒绝**。
 
--   **404 Not Found**  
+-   **404 Not Found**  ：路径不对，页面没找到。
 
 ### 5XX 服务器错误
 
--   **500 Internal Server Error**  ：服务器正在执行请求时发生错误。
+-   **500 Internal Server Error**  ：服务器**正在执行请求时发生错误。**
 
--   **503 Service Unavailable**  ：服务器暂时处于超负载或正在进行停机维护，现在无法处理请求。
+-   **503 Service Unavailable**  ：服务器**暂**时处于**超负载或正在进行停机维护**，现在**无法处理**请求。
 
 ## 四、HTTP 首部
 
