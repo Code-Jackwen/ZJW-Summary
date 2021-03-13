@@ -453,3 +453,5 @@ public class Solution {
 ## 参考：
 
 牛客NC93：https://www.nowcoder.com/practice/e3769a5f49894d49b871c09cadd13a61?tpId=190&tqId=35214&rp=1&ru=%2Factivity%2Foj&qru=%2Fta%2Fjob-code-high-rd%2Fquestion-ranking&tab=answerKey
+
+力扣：[面试题 16.25. LRU 缓存](https://leetcode-cn.com/problems/lru-cache-lcci/)

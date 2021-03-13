@@ -505,6 +505,39 @@ DI(依赖注入),就是在Spring创建这个对象的过程中，将这个对象
 
 ## Spring中BeanFactory与FactoryBean的区别
 
-https://juejin.cn/post/6844903967600836621
+- `BeanFactory`是Spring容器的顶层接口，`FactoryBean`更类似于用户自定义的工厂接口
+- 他们两个都是个工厂，但`FactoryBean`本质上还是一个Bean，也归`BeanFactory`管理
 
-https://www.cnblogs.com/aspirant/p/9082858.html
+**BeanFactory是接口**，给具体的IOC容器的实现提供了规范。
+
+**FactoryBean也是接口**，为IOC容器中Bean的实现提供了更加灵活的方式，FactoryBean在IOC容器的基础上给Bean的实现加上了一个简单工厂模式和装饰模式。我们可以在getObject()方法中灵活配置，其实在Spring源码中有很多FactoryBean的实现类。
+
+区别：
+
+BeanFactory是个Factory，也就是IOC容器或对象工厂，FactoryBean是个Bean。在Spring中，**所有的Bean都是由BeanFactory(也就是IOC容器)来进行管理的**。但对FactoryBean而言，**这个Bean不是简单的Bean，而是一个能生产或者修饰对象生成的工厂Bean,它的实现与设计模式中的工厂模式和修饰器模式类似**。 
+
+参考
+
+[BeanFactory 简介以及它 和FactoryBean的区别(阿里面试)](https://www.cnblogs.com/aspirant/p/9082858.html)
+
+[Spring中BeanFactory与FactoryBean的区别](https://juejin.cn/post/6844903967600836621)
+
+## Spring注解实现原理
+
+【Spring如何使用注解机制完成**自动装配**】
+
+Java实例构造时会调用默认父类无参构造方法，Spring正是利用了这一点，让"操作元素的代码"得以执行。 
+
+【两种处理策略】
+
+(1)类级别的注解：如@Component、@Repository、@Controller、@Service以及JavaEE6的@ManagedBean和@Named注解，都是添加在类上面的类级别注解。
+
+Spring容器**根据注解的过滤规则扫描读取注解Bean定义类**，并将其注册到Spring IoC容器中。
+
+(2)类内部的注解：如@Autowire、@Value、@Resource以及EJB和WebService相关的注解等，都是添加在类内部的字段或者方法上的类内部注解。
+
+SpringIoC容器**通过Bean后置注解处理器解析Bean内部的注解。**
+
+参考
+
+[Spring注解实现原理](https://www.cnblogs.com/lsx1993/p/4793124.html)

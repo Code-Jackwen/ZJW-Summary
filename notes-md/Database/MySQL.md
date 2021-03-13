@@ -201,15 +201,11 @@ InnoDB 的 B+Tree 索引分为**主索引**和**辅助索引**。主索引的叶
 
 3、如果没有唯一的非空索引，InnoDB会隐式定义一个主键来作为聚簇索引。
 
-
-
 #### 使用
 
  对于InnoDB表，顺序插入是最快的方式，乱序慢，一般都会定义一个自增的ID列为主键。 
 
 对于InnoDB表，一般定义主键为不可更新，更改耗时，因为将会导致被更新的行移动 。
-
-
 
 ## 非聚簇索引
 
@@ -219,15 +215,31 @@ InnoDB 的 B+Tree 索引分为**主索引**和**辅助索引**。主索引的叶
 
 叶子节点简单记忆为存了当前索引的键值和主键索引。详细说是除了包含键值以外，每个叶子节点的索引行还包含了一个书签（bookmark），该书签用来告诉InnoDB哪里可以找到与索引相对应的行数据。 
 
-
-
 ##### 区别
+
+聚簇索引的叶**节点就是数据节点**，而非聚簇索引的**叶节点仍然是索引节点，并保留一个链接指向对应数据块**。
+
+**MyISAM的是非聚簇索引**，B+Tree的叶子节点上的data，并不是数据本身，而是数据存放的地址。
+
+**InnoDB使用的是聚簇索引，将主键组织到一棵B+树中，而行数据就储存在叶子节点上**
+
+MySQL **InnoDB一定会建立聚簇索引**，把实际数据行和相关的键值保存在一块，这也决定了一个表只能有一个聚簇索引
+
+- 如果没有创建主键，则会用一个唯一且不为空的索引列做为主键，成为此表的聚簇索引
+- 上面二个条件都不满足，InnoDB会自己创建一个虚拟的聚集索引
+
+聚簇索引的
+
+- **优点**：就是提高数据访问性能。
+- **缺点**：维护索引很昂贵，特别是插入新行或者主键被更新导至要分页(page split)的时候
 
 **聚簇索引和非聚簇索引的区别：叶节点是否存放一整行记录 。**
 
-**InnoDB 主键使用的是聚簇索引，MyISAM 不管是主键索引，还是二级索引使用的都是非聚簇索引。** 
+**插入和删除的区别**
 
+最简单的情况下，插入操作根据索引找到对应的**数据页**，然后通过挪动已有的记录为新数据腾出空间，最后插入数据。如果数据页已满，则需要**拆分数据页**，调整索引指针（且如果表还有**非聚集索引**，还需要更新这些**索引指向新的数据页**）。
 
+而类似于**自增列为聚集索引**的，数据库系统可能并**不拆分数据页**，而只是**简单的新添数据页**。 
 
 ## 覆盖索引
 
@@ -242,14 +254,14 @@ InnoDB 的 B+Tree 索引分为**主索引**和**辅助索引**。主索引的叶
 2、 有助于统计 
 
 ````sql
-CREATE TABLE `student` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `age` varchar(255) NOT NULL,
-  `school` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)，
-  KEY `idx_name` (`name`)，
-  KEY `idx_school_age` (`school`，`age`)
+CREATE TABLE student (
+  id bigint(20) NOT NULL,
+  name varchar(255) NOT NULL,
+  age varchar(255) NOT NULL,
+  school varchar(255) NOT NULL,
+  PRIMARY KEY (id)，
+  KEY idx_name (name)，
+  KEY idx_school_age (school，age)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ````
 
@@ -427,10 +439,88 @@ https://www.cnblogs.com/studyzy/p/4310653.html
 ### 索引的使用条件
 
 - 对于非常小的表、大部分情况下简单的全表扫描比建立索引更高效；
-
 - 对于中到大型的表，索引就非常有效；
-
 - 但是对于特大型的表，建立和维护索引的代价将会随之增长。这种情况下，需要用到一种技术可以直接区分出需要查询的一组数据，而不是一条记录一条记录地匹配，例如可以使用分区技术。
+
+## Mysql 锁
+
+**加锁**
+
+如果一条sql语句操作了主键索引，MySQL就会锁定这条主键索引；如果一条语句操作了非主键索引，MySQL会先锁定该非主键索引，再锁定相关的主键索引。 
+
+例子：
+
+一个表db.tab_test，结构如下： 
+
+id：主键；state：状态；time：时间；索引：idx_1 (state, time)
+
+当“update tab_test set state=1064,time=now() where state=1061 and time < date_sub(now(), INTERVAL 30 minute)”执行时，MySQL会使用idx_1索引，因此首先锁定相关的索引记录，因为idx_1是非主键索引，为执行该语句，MySQL还会锁定主键索引。
+
+假设“update tab_test set state=1067,time=now () where id in (9921180)”几乎同时执行时，本语句首先锁定主键索引，由于需要更新state的值，所以还需要锁定idx_1的某些索引记录。
+
+这样第一条语句锁定了idx_1的记录，等待主键索引，而第二条语句则锁定了主键索引记录，而等待idx_1的记录，这样死锁就产生了。
+
+解决办法
+
+拆分第一条sql，先查出符合条件的主键值，再按照主键更新记录：
+
+select id from tab_test where state=1061 and time < date_sub(now(), INTERVAL 30 minute);
+
+update tab_test state=1064,time=now() where id in(......); 
+
+参考
+
+[MySQL死锁及解决方案](https://www.cnblogs.com/uestc2007/p/11978172.html)https://www.cnblogs.com/uestc2007/p/11978172.html
+
+## **死锁处理**
+
+ MySQL有两种死锁处理方式： 
+
+- 等待，直到超时（innodb_lock_wait_timeout=50s）。
+- 发起死锁检测，主动回滚一条事务，让其他事务继续执行（innodb_deadlock_detect=on）。detect（发现）
+
+**死锁检测**
+
+死锁检测的原理是构建一个以事务为顶点、锁为边的有向图，判断有向图是否存在环，存在即有死锁。
+
+检测到死锁之后，选择插入更新或者删除的行数最少的事务回滚，基于 INFORMATION_SCHEMA.INNODB_TRX 表中的 trx_weight 字段来判断。 
+
+## 如何避免发生死锁
+
+**收集死锁信息**：
+
+- 利用命令 SHOW ENGINE INNODB STATUS查看死锁原因。
+- 调试阶段开启 innodb_print_all_deadlocks，收集所有死锁日志。
+
+**减少死锁：**
+
+- 保证没有长事务，减少事务的长度。
+- 操作完之后立即提交事务，特别是在交互式命令行中。
+- 如果在用 (SELECT … FOR UPDATE or SELECT … LOCK IN SHARE MODE)，尝试降低隔离级别。
+- 最好不要用 (SELECT … FOR UPDATE or SELECT … LOCK IN SHARE MODE)。
+- 如果上述都无法解决问题，那么**尝试使用 lock tables t1, t2, t3 锁多张表**
+
+## InnoDB 行锁
+
+InnoDB是基于索引来完成行锁
+
+例: select * from tab_with_index where id = 1 for update;
+
+**for update** 可以**根据条件来完成行锁锁定**，并且 **id 是有索引键的列**，**如果 id 不是索引键那么InnoDB将完成表锁**，并发将无从谈起。
+
+参考
+
+技术池：https://www.jishuchi.com/read/mysql-interview/2824
+
+## text 类型拆表
+
+MySQL 表中有大字段X(例如：text类型)，且字段X不会经常更新，以读为主，请问您是选择拆成子表，还是继续放一起?写出您这样选择的理由。
+
+**拆带来的问题：**连接消耗 + 存储拆分空间；**不拆可能带来的问题**：查询性能；
+
+如果能容忍拆分带来的空间问题，拆的话最好和经常要查询的表的主键在**物理结构上放置在一起(分区) 顺序IO**,减少连接消耗，最后这是一个**文本列再加上一个全文索引来尽量抵消连接消耗**
+
+如果能容忍不拆分带来的查询性能损失的话，上面的方案在某个极致条件下查询肯定会出现问题，建议拆。
 
 ## 二、查询性能优化
 
@@ -640,6 +730,10 @@ MySQL 提供了 FROM_UNIXTIME() 函数把 UNIX 时间戳转换为日期，并提
 -   **SQL 线程**  ：负责读取**中继日志**，解析出主服务器已经执行的数据更改并在从服务器中**重放**（Replay）。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/master-slave.png" width=""> </div><br>
+**主从一致性校验**
+
+主从一致性校验有多种工具，例如checksum、mysqldiff、pt-table-checksum等 
+
 ### 读写分离
 
 主服务器处理写操作以及实时性要求比较高的读操作，而从服务器处理读操作。
@@ -701,6 +795,31 @@ WHERE C1 <= 2;
 limit n,m翻页语法是需要**沿着索引逐项遍历抵达**offset n的，因此**n越大花费的时间越大**。
 
 一般不要用IN，因为IN的执行计划超乎想象的愚蠢，它会拿父查询的每一条记录去执行一次**子查询**，而不是先将子查询生成**临时表**，再与父查询进行匹配。 
+
+## JDCB 连接数据库六步走
+
+1、加载驱动			    Class.forName("oracle.jdbc.driver.OracleDriver"); 
+
+2、获取数据库连接 	DriverManager.getConnection(url,user,password); 
+
+​	+其他三个参数 url =  "jdbc:oracle:thin:@localhost:1521:XE"; 、账号、密码
+
+3、创建statement	 conn.prepareStatement(sql); 
+
+4、执行SQL语句	 	 ResultSet rs  = pst.executeQuery(); 
+
+5、获取结果集			 while (rs.next()) 
+
+6、释放资源（关闭statement和连接） pst.close();  conn.close(); 
+
+**PreparedStatement特点**
+
+1、PreparedStatement能够尽最大可能提高性能。
+2、PreparedStatement极大的提高了安全性（防止SQL注入）。 
+
+参考
+
+https://blog.csdn.net/xiaojie119120/article/details/73123759
 
 # 日志
 
@@ -803,6 +922,12 @@ binlog的默认是**保持时间**由参数expire_logs_days配置，也就是说
 
 [MySQL中的重做日志（redo log），回滚日志（undo log），以及二进制日志（binlog）](https://www.cnblogs.com/wy123/p/8365234.html)
 
+## MySQL 监控
+
+MySQL 你是如何监控你们的数据库的？你们的慢日志都是怎么查询的？
+
+监控的工具有很多，例如zabbix，lepus，我这里用的是**lepus**
+
 # 事务
 
 **脏读**：指读到了其他事务未提交的数据
@@ -839,9 +964,9 @@ MVCC：多版本并发控制。MySQL、ORACLE、PostgreSQL等都是使用了以�
 
 ![1612934828092](../../../../../项目/Git-md/ZJW-Summary/assets/1612934828092.png)
 
-B+树的所有数据存储在叶子节点上,当有一个新的叫`秦寿生`的数据进来,一定是排在在这条id=34的数据前面或者后面的,我们如果对前后这个范围进行加锁了,那当然新的`秦寿生`就插不进来了.
+B+树的所有数据存储在叶子节点上,当有一个新的叫秦寿生的数据进来,一定是排在在这条id=34的数据前面或者后面的,我们如果对前后这个范围进行加锁了,那当然新的秦寿生就插不进来了.
 
-那如果有一个新的`范统`要插进行呢? 因为`范统`的前后并没有被锁住,是能成功插入的,这样就极大地提高了数据库的并发能力.
+那如果有一个新的范统要插进行呢? 因为范统的前后并没有被锁住,是能成功插入的,这样就极大地提高了数据库的并发能力.
 
 
 
@@ -1092,7 +1217,9 @@ mysql 中的 **in 语句是把外表和内表作 hash 连接**，而 **exists �
 - 如果使用 UNION ALL，不会合并重复的记录行，二Union相当于自带去重。
 - 效率 UNION 高于 UNION ALL
 
+## profile的意义以及使用场景
 
+Profile 用来分析 sql 性能的消耗分布情况。当用 explain 无法解决慢 SQL 的时候，需要用profile 来对 sql 进行更细致的分析，**找出 sql 所花的时间大部分消耗在哪个部分，确认 sql的性能瓶颈**。
 
 ## ⼤表优化
 
