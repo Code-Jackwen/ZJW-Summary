@@ -215,7 +215,7 @@ DELETE /file.html HTTP/1.1
 
 > 要求在与代理服务器通信时建立隧道
 
-使用 SSL（Secure Sockets Layer，安全套接层）和 TLS（Transport Layer Security，传输层安全）协议把通信内容加密后经网络隧道传输。
+**使用 SSL（Secure Sockets Layer，安全套接层）和 TLS（Transport Layer Security，传输层安全）协议把通信内容加密后经网络隧道传输。**
 
 ```html
 CONNECT www.example.com:443 HTTP/1.1
@@ -240,11 +240,11 @@ CONNECT www.example.com:443 HTTP/1.1
 
 | 状态码 | 类别 | 含义 |
 | :---: | :---: | :---: |
-| 1XX | Informational（信息性状态码） | 接收的请求正在处理 |
-| 2XX | Success（成功状态码） | 请求正常处理完毕 |
-| 3XX | Redirection（重定向状态码） | 需要进行附加操作以完成请求 |
-| 4XX | Client Error（客户端错误状态码） | 服务器无法处理请求 |
-| 5XX | Server Error（服务器错误状态码） | 服务器处理请求出错 |
+| 1XX | Informational（信息性状态码） | 接收的请求**正在处理** |
+| 2XX | Success（成功状态码） | 请求**正常处理完毕** |
+| 3XX | Redirection（重定向状态码） | **需要进行附加操作以完成请求** |
+| 4XX | Client Error（客户端错误状态码） | 服务器**无法处理请求** |
+| 5XX | Server Error（服务器错误状态码） | 服务器**处理请求出错** |
 
 ### 1XX 信息
 
@@ -254,9 +254,9 @@ CONNECT www.example.com:443 HTTP/1.1
 
 -   **200 OK**  
 
--   **204 No Content**  ：请求已经成功处理，但是返回的响应报文不包含实体的主体部分。一般在只需要从客户端往服务器发送信息，而不需要返回数据时使用。
+-   **204 No Content**  ：请求已经成功处理，但是**返回的响应报文不包含实体的主体部分**。一般在只需要从客户端往服务器发送信息，而**不需要返回数据时使用**。
 
--   **206 Partial Content**  ：表示客户端进行了范围请求，响应报文包含由 Content-Range 指定范围的实体内容。
+-   **206 Partial Content**  ：表示客户端进行了**范围请求，响应报文包含由 Content-Range 指定范围的实体内容。**
 
 ### 3XX 重定向
 
@@ -717,13 +717,13 @@ HTTPS 建立连接的详细过程：https://cloud.tencent.com/developer/article/
 
 ### 简介
 
-HTTPS 是在 HTTP 的基础上和 SSL/TLS 证书结合起来的一种协议，很好的解决了 http 的三个缺点（被监听、被篡改、身份被伪装）。
+HTTPS 是在 HTTP 的基础上和 **SSL/TLS 证书**结合起来的一种协议，很好的解决了 http 的三个缺点（**被监听、被篡改、身份被伪装**）。
 
 HTTP 有以下安全性问题：
 
-- 明文通信，内容可能会被窃听；
-- 不验证身份，身份有可能遭遇伪装；
-- 报文有可能遭篡改。
+- **明文通信**，内容可能会被**窃听**；
+- **不验证身份**，身份有可能遭遇**伪装**；
+- 报文有可能遭**篡改**。
 
 ### 建立连接
 
@@ -738,15 +738,15 @@ HTTP 有以下安全性问题：
 
 HTTPS 并不是新协议，而是让 HTTP 先和 SSL（Secure Sockets Layer）通信，再由 SSL 和 TCP 通信，也就是说 HTTPS 使用了隧道进行通信。
 
-通过使用 SSL，HTTPS 具有了加密（防窃听）、认证（防伪装）和完整性保护（防篡改）。
+**通过使用 SSL，HTTPS 具有了加密（防窃听）、认证（防伪装）和完整性保护（防篡改）。**
 
 ##### SSL
 
-SSL(Secure Sockets Layer 安全套接层)是为网络通信提供安全及数据完整性的一种安全协议。 
+SSL(Secure Sockets Layer **安全套接层**)是为网络通信提供安全及数据完整性的一种安全协议。 
 
 ##### TLS
 
-安全**传输层协议**（TLS：Transport Layer Security）用于在两个通信应用程序之间提供保密性和数据完整性。该协议由两层组成： TLS 记录协议（TLS Record）和 TLS 握手协议（TLS Handshake），是更新、更安全的SSL版本。 
+安全**传输层协议**（TLS：Transport Layer Security）用于在两个通信应用程序之间提供保密性和数据完整性。该协议由两层组成： TLS 记录协议（TLS Record）和 TLS 握手协议（TLS Handshake），是**更安全的SSL版本**。 
 
 TLS和SSL协议理论上属于**传输层**，在应用层实现，所以我们可以在浏览器中设置是否使用此协议，使用哪一版本的协议。 
 
@@ -775,10 +775,10 @@ TLS和SSL协议理论上属于**传输层**，在应用层实现，所以我们�
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/39ccb299-ee99-4dd1-b8b4-2f9ec9495cb4.png" width="600"/> </div><br>
 #### 3. HTTPS 采用的加密方式
 
-上面提到对称密钥加密方式的传输效率更高，但是无法安全地将密钥 Secret Key 传输给通信方。而非对称密钥加密方式可以保证传输的安全性，因此我们可以利用非对称密钥加密方式将 Secret Key  传输给通信方。HTTPS 采用混合的加密机制，正是利用了上面提到的方案：
+上面提到对称密钥加密方式的传输效率更高，但是无法安全地将密钥 Secret Key 传输给通信方。而非对称密钥加密方式可以保证传输的安全性，因此我们可以利用非对称密钥加密方式将 Secret Key  传输给通信方。HTTPS 采用**混合的加密机制**，正是利用了上面提到的方案：
 
-- 使用非对称密钥加密方式，传输对称密钥加密方式所需要的 Secret Key，从而保证安全性;
-- 获取到 Secret Key 后，再使用对称密钥加密方式进行通信，从而保证效率。（下图中的 Session Key 就是 Secret Key）
+- 使用**非对称密钥加密方式，传输对称密钥加密方式所需要的 Secret Key，从而保证安全性;**
+- **获取到 Secret Key 后，再使用对称密钥加密方式进行通信，从而保证效率**。（下图中的 Session Key 就是 Secret Key）
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/How-HTTPS-Works.png" width="600"/> </div><br>
 ### 认证
@@ -796,11 +796,11 @@ TLS和SSL协议理论上属于**传输层**，在应用层实现，所以我们�
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/2017-06-11-ca.png" width=""/> </div><br>
 ### 完整性保护
 
-SSL 提供报文摘要功能来进行完整性保护。
+**SSL 提供报文摘要功能来进行完整性保护。**
 
-HTTP 也提供了 **MD5 报文摘要功能**，但不是安全的。例如报文内容被篡改之后，同时重新计算 MD5 的值，通信接收方是无法意识到发生了篡改。
+HTTP 也提供了 **MD5 报文摘要功能，但不是安全的**。例如报文内容被篡改之后，同时重新计算 MD5 的值，通信接收方是无法意识到发生了篡改。
 
-HTTPS 的报文摘要功能之所以安全，是因为它结合了加密和认证这两个操作。试想一下，**加密之后的报文，遭到篡改之后，也很难重新计算报文摘要，因为无法轻易获取明文。**
+HTTPS 的报文摘要功能之所以安全，是因为它结合了**加密和认证**这两个操作。试想一下，**加密之后的报文，遭到篡改之后，也很难重新计算报文摘要，因为无法轻易获取明文。**
 
 ### HTTPS 的缺点
 
@@ -867,8 +867,6 @@ GET 和 POST 只是 HTTP 协议中两种请求方式，而 HTTP 协议是基于 
 
 不带参数时，最大区别就是第一行方法名不同 
 
-
-
 简单区别：
 
 1、后退刷新按钮：Get 无害，而 Post 数据会被重新提交（浏览器应该告知用户数据会被重新提交）。
@@ -891,9 +889,15 @@ GET 和 POST 只是 HTTP 协议中两种请求方式，而 HTTP 协议是基于 
 
 HTTP 协议中没有明确说明 POST 会产生两个 TCP 数据包，而且实际测试(Chrome)发现，header 和 body 不会分开发送。 
 
-header 和 body 分开发送是部分浏览器或框架的请求方法，不属于 post 必然行为。 
+header 和 body 分开发送是部分浏览器或框架的请求方法，不属于 post 必然行为。
 
+**GET 不能有请求体 ？**
 
+只是大部分软件和 API 不能，依然有少部分可以发，比如：AsyncHttpClient，而Postman、 OkHttpClient不可以有请求体。
+
+参考
+
+谁说 HTTP GET 就不能通过 Body 来发送数据呢？:https://juejin.cn/post/6844903685206573069 
 
 ### 作用
 

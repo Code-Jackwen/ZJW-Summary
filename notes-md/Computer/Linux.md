@@ -622,6 +622,30 @@ cp [-adfilprsu] source destination
 
 ### 获取文件内容
 
+查看日志：https://zhuanlan.zhihu.com/p/77608977
+
+**1、查看文件的第一行到第十行之间的内容**
+
+sed -n '1,10p' filename
+
+查看日志的第1-20行内容：
+
+nl log.file | sed -n '1,10p'
+
+查看文本文件100-120行之间的内容：
+
+cat -n filename |tail -n +100|head -n 20
+
+2、**查看日志最后一次出现关键字'test'的日志记录**
+
+ grep 'test' -A 10  log.file | tail -n 11
+
+3、根据日期查询日志
+
+sed -n '/2019-12-17 16:17:20/,/2020-12-17 16:17:36' test.log
+
+特别说明:上面的两个日期必须是日志中打印出来的日志,否则无效；
+
 #### 1. cat
 
 取得文件内容。
@@ -1060,6 +1084,10 @@ $ split [-bl] file PREFIX
 
 ## 九、正则表达式
 
+grep的使用方法：https://www.jianshu.com/p/6e0a561ec851
+
+Linux快速查看日志信息常用命令：https://www.codenong.com/cs105907251/
+
 ### grep
 
 g/re/p（globally search a regular expression and print)，使用正则表示式进行**全局查找并打印**。
@@ -1073,7 +1101,7 @@ $ grep [-acinv] [--color=auto] 搜寻字符串 filename
 --color=auto ：找到的关键字加颜色显示
 ```
 
-示例：把含有 the 字符串的行提取出来（注意默认会有 --color=auto 选项，因此以下内容在 Linux 中有颜色显示 the 字符串）
+**示例：把含有 the 字符串的行提取出来（注意默认会有 --color=auto 选项，因此以下内容在 Linux 中有颜色显示 the 字符串）**
 
 ```html
 $ grep -n 'the' regular_express.txt
@@ -1083,6 +1111,30 @@ $ grep -n 'the' regular_express.txt
 16:The world Happy is the same with "glad".
 18:google is the best tools for search keyword
 ```
+
+ 如果想查看指定内容上下几行，可以用参考下面的用法： 
+
+**$grep -10 ‘123’ test.log//打印匹配行的前后10行**
+或
+**$grep -C 10 ‘123’ test.log//打印匹配行的前后10行**
+或
+**$ grep -A 10 -B 10 ‘123’ test.log //打印匹配行的前后10行**
+
+**$grep -A 10 ‘123’ test.log //打印匹配行的后10行**
+
+**$grep -B 10 ‘123’ test.log//打印匹配行的前10行**
+
+例子：//显示既匹配 ‘123’又匹配 ‘456’的行
+
+grep ‘123’ test.log| grep ‘456’ 
+
+例子： //查看test.log指定行号后的内容，比如50行
+tail -n +50 test.log 
+
+ 例子： //查看test.log的第50行到100行
+sed -n ‘50,100p’ test.log#记得p字母 
+
+参考：linux grep查看指定内容上下几行：https://my.oschina.net/donngchao/blog/4712248
 
 示例：正则表达式 a{m,n} 用来匹配字符 a m\~n 次，这里需要将 { 和 } 进行转义，因为它们在 shell 是有特殊意义的。
 
@@ -1163,45 +1215,81 @@ dmtsai lines: 5 columns: 9
 
 ## 十、进程管理
 
-##### 常用
+#### 1. 根据进程名查看进程信息，以查看tomcat进程名为例
 
-1、通过**服务名**查看**进程号** pid		**ps 没有端口号，有服务名和进程号**
+```
+ps  -ef | grep {programName}
+复制代码
+```
 
-````sh
-ps -aux/ef | grep 服务名称
-````
+![img](../../assets/169c951b4aeb85bd)
 
-2、通过**端口号**查询进程号 pId
+#### 2.根据进程PID 查看进程信息
 
-````sh
-ps -aux | grep 端口号
-ps -ef  | grep 端口号
-lsof -i:端口号
-lsof -i | grep 端口号	此命令可以查端口和进程号 通过lsof -i:只能查端端口号
-````
+```
+ps -ef | grep {PID}
+复制代码
+```
 
-3、根据**进程号** pid 查看此进程所占用的**端口号**等
+![img](../../assets/169c95da0f198a2b)
 
-**也可以端口号查进程号 PID**
+#### 3. 根据端口查看对应进程
 
-````sh
-netstat -nap | grep pid
+```
+netstat -tunlp | grep {port}
+复制代码
+```
+
+![img](../../assets/169c95a83753bfa6)
+
+#### 4. 查看进程PID占用端口情况
+
+```
+netstat -anp | grep {PID}
+
 netstat -ntlp | grep pid
+```
 
-lsof -i | grep pid	此命令可以查端口和进程号 通过lsof -i:只能查端端口号
-````
+![img](../../assets/169c9591a6b0d08b)
 
-一般知道进程名就可以直接通过 ps进行查看。
+#### 5. `ps -ef 和ps -aux`区别
 
-知道端口的话 lsof 和netstat都能直接查询，然后进而直接查询进程下相关端口。
+![img](../../assets/169c9c015bec3513)
 
-> netstat 无权限控制，lsof 有权限控制。
+```
+UID     用户ID、但输出的是用户名   
+PID     进程的ID 
+PPID    父进程ID   
+C       进程占用CPU的百分比   
+STIME   进程启动到现在的时间   
+TTY    该进程在那个终端上运行，若与终端无关，则显示?  
+CMD    命令的名称和参数
+复制代码
+```
+
+![img](../../assets/169c9bf51161ce8d)
+
+```
+USER      用户名  
+%CPU      进程占用的CPU百分比  
+%MEM      占用内存的百分比    
+VSZ       该进程使用的虚拟內存量（KB）   
+RSS       该进程占用的固定內存量（KB）（驻留中页的数量）   
+STAT      进程的状态   
+START     该进程被触发启动时间    
+TIME      该进程实际使用CPU运行的时间  
+复制代码
+```
+
+ps 注意使用场景:
+
+**看进程的CPU占用率和内存占用率，可以使用aux**
+
+**看进程的父进程ID和完整的COMMAND命令，可以使用ef**
 
 参考
 
-Linux根据服务名称或端口查询进程：https://blog.csdn.net/bhq2010/article/details/7370354
-
-带图：https://blog.csdn.net/daiyudong2020/article/details/50551334
+带图 linux 根据进程名查看进程：https://juejin.cn/post/6844903809764818957
 
 #### 1. ps
 
@@ -1311,17 +1399,21 @@ options 参数主要有 WNOHANG 和 WUNTRACED 两个选项，**WNOHANG** 可以�
 
 由于**孤儿进程会被 init 进程收养**，所以孤儿进程不会对系统造成危害。
 
-### 僵尸进程
+### 僵尸进程 （Zombie）
 
-一个**子进程的进程描述符**在子进程退出时不会释放，只有当父进程通过 **wait**() 或 **waitpid**() 获取了子进程信息后才会释放。如果**子进程退出，而父进程并没有调用 wait() 或 waitpid()**，那么子进程的**进程描述符**仍然保存在系统中，这种进程称之为**僵尸进程**。
+**一个进程使用fork创建子进程，如果子进程退出，一个子进程的进程描述符在子进程退出时不会释放，而父进程并没有调用wait或waitpid获取子进程的状态信息，那么子进程的进程描述符仍然保存在系统中。这种进程称之为僵死进程。** 
 
-僵尸进程通过 **ps 命令**显示出来的**状态为 Z**（zombie）。
+**任何一个子进程(init除外)在exit()之后，并非马上就消失掉，而是留下一个称为僵尸进程(Zombie)的数据结构，等待父进程处理。**这是每个 子进程在结束时都要经过的阶段。如果子进程在exit()之后，父进程没有来得及处理，这时用**ps命令就能看到子进程的状态是“Z”**。如果父进程能及时 处理，可能用ps命令就来不及看到子进程的僵尸状态，但这并不等于子进程不经过僵尸状态。  如果父进程在子进程结束之前退出，则子进程将由init接管。init将会以父进程的身份对僵尸状态的子进程进行处理。
+
+**危害**
 
 **系统所能使用的进程号是有限的**，如果产生大量僵尸进程，将因为没有可用的进程号而导致系统**不能产生新的进程**。
 
 要消灭系统中大量的僵尸进程，**只需要将其父进程杀死**，此时僵尸进程就会**变成孤儿进程**，从而被 init 进程所收养，这样 init 进程就会释放所有的僵尸进程所占有的资源，从而结束僵尸进程。
 
+参考
 
+孤儿、僵尸进程 ：https://www.cnblogs.com/lushilin/p/9401494.html
 
 ## Linux中ctrl-c, ctrl-z, ctrl-d 区别
 
@@ -1355,7 +1447,25 @@ bg命令在后台**恢复**执行被挂起的进程，而此时将无法使用 c
 
 其实，控制字符都是可以通过stty命令更改的，可在终端中输入命令"stty -a"查看终端配置
 
+## linux下tcp客户端能建立多少个长连接
 
+理论上限是无限。
+
+tcp客户端能连接的最大长连接，与几个因素有关，可以超越65536
+(1) 进程能打开的最大描述符 65536
+(2) IP_TABLE的限制
+
+#临时端口范围
+net.ipv4.ip_local_port_range = 10000 65535
+
+#Linux网络内核的IP_TABLE防火墙对最大跟踪的TCP连接数有限制
+net.netfilter.nf_conntrack_max = 655350
+net.nf_conntrack_max = 655350
+(4) 内存大小 
+
+参考
+
+linux下tcp客户端能建立多少个长连接：https://blog.csdn.net/daiyudong2020/article/details/77852049
 
 
 

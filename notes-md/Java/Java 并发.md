@@ -1875,11 +1875,38 @@ RejectedExecutionHandler提供了四种方式来处理任务拒绝策略
 
 4、将任务分给调用线程来执行(CallerRunsPolicy)。
 
+## 自定义线程池
+
+````java
+public void init() {    
+    pool = new ThreadPoolExecutor(    
+        1,    
+        3,    
+        30,    
+        TimeUnit.MINUTES,    
+        new ArrayBlockingQueue<Runnable>(5),    
+        new CustomThreadFactory(),    
+        new CustomRejectedExecutionHandler());    
+}    
+````
+
+参考
+
+Java线程池ThreadPoolExecutor及自定义线程池：https://blog.csdn.net/zmx729618/article/details/78839284
+
 ## Java的 JIT 工作模式
 
+ Java JIT（just in time）**即时编译器**是sun公司采用了hotspot虚拟机取代其开发的classic vm之后引入的一项技术，目的在于提高java程序的性能，改变人们“java比C/C++慢很多”这一尴尬印象。 
 
+JIT与JVM的三种执行模式：解释模式、编译模式、混合模式
 
+解释执行，不经过jit直接由解释器解释执行所有字节码，执行效率不高。 
 
+编译执行，不加筛选的将全部代码进行编译机器码不论其执行频率是否有编译价值。
+
+参考
+
+JIT与JVM的三种执行模式：https://blog.csdn.net/includeiostream123/article/details/52280758
 
 ## 参考资料
 

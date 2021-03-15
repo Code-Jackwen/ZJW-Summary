@@ -444,11 +444,78 @@ https://www.cnblogs.com/studyzy/p/4310653.html
 
 ## Mysql 锁
 
+问题：
+
+**mysql innodb引擎什么时候表锁什么时候行锁？**
+
+**1、InnoDB基于索引的行锁**
+
+InnoDB行锁是通过**索引**上的索引项来实现的，这一点ＭySQL与Oracle不同，后者是通过在数据中对相应**数据行**加锁来实现的。
+
+**InnoDB**这种行锁实现特点意味者：**只有通过索引条件检索数据，InnoDB才会使用行级锁，否则，InnoDB将使用表锁。**
+
+**在MySQL中，行级锁并不是直接锁记录，而是锁索引。**
+
+**索引分为主键索引和非主键索引两种，如果一条sql语句操作了主键索引，MySQL就会锁定这条主键索引；**
+
+**如果一条语句操作了非主键索引，MySQL会先锁定该非主键索引，再锁定相关的主键索引。** 
+
+在UPDATE、DELETE操作时，MySQL不仅锁定WHERE条件扫描过的所有索引记录，而且会锁定相邻的键值，即所谓的next-key locking。
+
+**2、innodb行锁和表锁的情况**
+
+由于InnoDB默认是Row-Level Lock，所以**只有「明确」的指定索引列**，MySQL才会执行Row lock (只锁住被选取的资料例) ，否则MySQL将会执行Table Lock (将整个资料表单给锁住)：
+
+- (明确指定主键，并且有此笔资料，row lock)
+  SELECT * FROM products WHERE id='3' FOR UPDATE;
+  SELECT * FROM products WHERE id='3' and type=1 FOR UPDATE;
+- (明确指定主键，若查无此笔资料，无lock)
+  SELECT * FROM products WHERE id='-1' FOR UPDATE;
+- **(无主键，table lock)**
+  SELECT * FROM products WHERE name='Mouse' FOR UPDATE;
+- **(主键不明确，table lock)**
+  SELECT * FROM products WHERE id<>'3' FOR UPDATE;
+- **(主键不明确，table lock)**
+  SELECT * FROM products WHERE id LIKE '3' FOR UPDATE;
+
+**3、有时有索引也会导致表锁的情况**
+
+导致这个的原因第一是sql语句写法问题，没有合理构建和使用索引。
+第二个原因是mysql的优化器，有时优化器发现：即使使用了索引，还是要做全表扫描，故而放弃了索引，也就没有使用行锁，却使用了表锁
+
+4、索引类型对锁类型的影响
+
+主键：众所周知，自带最高效的索引属性
+唯一索引：属性值重复率为0，可以作为业务主键
+普通索引：属性值重复率大于0，不能作为唯一指定条件
+注意：对于普通索引，当“重复率”低时，甚至接近主键或者唯一索引的效果时，依然是行锁；但是如果“重复率”高时，Mysql不会把这个普通索引当做索引，即会造成一个没有索引的SQL，从而形成表锁。
+
+5、锁等待
+
+- 即当一个事务要操作一个资源时，这个资源已经被其它事务先锁定使用，那么后者事务只能等待上一个事务执行完毕释放资源使用权后才能继续操作，而这个等待的过程就是锁等待；
+- 如果等待时间过长，超过配置项中的设定的时间，则会报错（锁等待错误）
+
+原因
+
+- 都使用表锁
+- 一个使用行锁，一个使用表锁
+- 都是用行锁
+
+参考
+
+面试问题之Mysql InnoDB引擎 行锁变表锁：https://www.codenong.com/cs106864142/
+
+mysql innodb引擎什么时候表锁什么时候行锁？：https://blog.csdn.net/Frankltf/article/details/82976493
+
+InnoDB行锁的实现方式：http://www.soolco.com/post/63208_1_1.html
+
 **加锁**
 
-如果一条sql语句操作了主键索引，MySQL就会锁定这条主键索引；如果一条语句操作了非主键索引，MySQL会先锁定该非主键索引，再锁定相关的主键索引。 
+如果一条sql语句操作了主键索引，MySQL就会锁定这条主键索引；
 
-例子：
+如果一条语句操作了非主键索引，MySQL会先锁定该非主键索引，再锁定相关的主键索引。 
+
+死锁例子：
 
 一个表db.tab_test，结构如下： 
 
@@ -470,7 +537,7 @@ update tab_test state=1064,time=now() where id in(......);
 
 参考
 
-[MySQL死锁及解决方案](https://www.cnblogs.com/uestc2007/p/11978172.html)https://www.cnblogs.com/uestc2007/p/11978172.html
+MySQL死锁及解决方案：https://www.cnblogs.com/uestc2007/p/11978172.html
 
 ## **死锁处理**
 
@@ -500,13 +567,15 @@ update tab_test state=1064,time=now() where id in(......);
 - 最好不要用 (SELECT … FOR UPDATE or SELECT … LOCK IN SHARE MODE)。
 - 如果上述都无法解决问题，那么**尝试使用 lock tables t1, t2, t3 锁多张表**
 
-## InnoDB 行锁
+## InnoDB 行锁与表级锁加锁时机
 
 InnoDB是基于索引来完成行锁
 
 例: select * from tab_with_index where id = 1 for update;
 
 **for update** 可以**根据条件来完成行锁锁定**，并且 **id 是有索引键的列**，**如果 id 不是索引键那么InnoDB将完成表锁**，并发将无从谈起。
+
+
 
 参考
 
@@ -614,10 +683,6 @@ SELECT * FROM post WHERE post.id IN (123,456,567,9098,8904);
 可以手工或者自动执行检查和修复操作，但是和事务恢复以及崩溃恢复不同，可能导致一些数据丢失，而且修复操作是非常慢的。
 
 如果指定了 DELAY_KEY_WRITE 选项，在每次修改执行完成时，不会立即将修改的索引数据写入磁盘，而是会写到内存中的键缓冲区，只有在清理键缓冲区或者关闭表的时候才会将对应的索引块写入磁盘。这种方式可以极大的提升写入性能，但是在数据库或者主机崩溃时会造成索引损坏，需要执行修复操作。
-
-
-
-
 
 ## MyISAM和InnoDB区别
 

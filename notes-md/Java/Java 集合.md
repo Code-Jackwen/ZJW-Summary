@@ -1134,6 +1134,12 @@ TreeMap 默认排序规则：
 
 TreeMap排序规则及使用：https://juejin.cn/post/6850418117240160263
 
+## HashMap的死循环
+
+1.7 在并发的情况，发生扩容时，可能会产生循环链表，在执行get的时候，会触发死循环，引起CPU的100%问题，所以一定要避免在并发环境下使用HashMap。 
+
+老生常谈，HashMap的死循环：https://www.jianshu.com/p/1e9cf0ac07f4
+
 ## 参考资料
 
 - Eckel B. Java 编程思想 [M]. 机械工业出版社, 2002.
