@@ -427,15 +427,11 @@ ls后面的三个参数：
 
 **-l**表示以长格式显示，即列出文件**详细信息**如上面的格式。
 
-**-s**表示排序，**默认是降序**排列。
+**-s**表示**排序**，**默认是降序**排列。
 
 **-h**表示将**文件大小单位转换**为我们习惯的M，K等为单位的大小
 
 **<2>、升序:ls -lrsh**
-
-命令解释：
-
-关于-l,-s,-h含义同上
 
 **-r**表示reverse的意思，这里就是**reverse order**倒序，默认是降序的，加上-r就反转下即为**升序**了。
 
@@ -461,6 +457,10 @@ drwxr-xr-x 2 moudaen 65536   4096 Nov 11 17:44 test
 **<2>、那么想升序只需反转下就可以了，所以加上-r参数**
 
 **ls -lrt**
+
+参考
+
+linux 命令查看文件按照修改时间排序：https://blog.csdn.net/zjjxxh/article/details/101703396
 
 #### 2. cd
 
@@ -749,13 +749,47 @@ example: find . -name "shadow*"
 **③ 与文件权限和名称有关的选项**  
 
 ```html
--name filename
+-name filename    模糊查询：*acb是前模糊，而？abc 是模糊一个，_abc
 -size [+-]SIZE：搜寻比 SIZE 还要大 (+) 或小 (-) 的文件。这个 SIZE 的规格有：c: 代表 byte，k: 代表 1024bytes。所以，要找比 50KB 还要大的文件，就是 -size +50k
 -type TYPE
 -perm mode  ：搜索权限等于 mode 的文件
 -perm -mode ：搜索权限包含 mode 的文件
 -perm /mode ：搜索权限包含任一 mode 的文件
 ```
+
+linux 文件的几种时间 (以 find 为例):
+
+atime 最后一次**访问**时间, 如 ls, more 等, 但 chmod, chown, ls, stat 等不会修改些时间, 使用 **ls -utl 可以按此时间顺序查看;**
+
+ctime 最后一次**状态修改**时间, 如 chmod, chown 等状态时间改变但修改时间不会改变, 使用 **stat file** 可以查看;
+
+mtime 最后一次**内容修改**时间, 如 vi 保存后等, 修改时间发生改变的话, atime 和 ctime 也相应跟着发生改变.
+
+注意: linux 里是不会记录文件的创建时间的, 除非这个文件自创建以来没有发生改变, 那么它的创建时间就是它的最后一次修改时间.
+
+\#ls -lt   ./ 按修改时间顺序查看
+
+\#ls -lut ./ 按访问时间顺序查看 (如果想反序查看的话需要加一个选项 -r) 
+
+例子：ls 按时间排序显示指定条数
+解：ll -t |head -n 10
+用这个命令查看最新创建的文件，还是比较有用 
+
+##### 单位
+
+[acm]time **计量单位是天，即24H**
+
+[acm]min  **计量单位是分钟**
+
+find ./ -mtime 0 #查找一天内修改的文件
+
+find ./ -mtime -2 #查找2天内修改的文件，多了一个减号
+
+find ./ -mmin -10 #查找距离现在10分钟内修改的文件
+
+参考
+
+linux的find命令--按时间查找文件：https://blog.csdn.net/ytmayer/article/details/6364739
 
 ## 六、压缩与打包
 
