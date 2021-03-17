@@ -1400,6 +1400,12 @@ https://www.cnblogs.com/jpfss/p/10782341.html
 
 
 
+## 设计db连接池
+
+如何设计并实现一个db连接池？：https://juejin.cn/post/6844903853872119822#heading-15
+
+数据库 -- 由数据库连接池引出的三种设计模式：https://www.cnblogs.com/xushuai123/archive/2013/03/31/2992385.html
+
 # 数据类型：
 
 **varchar（100）可以存多少中文字符？**

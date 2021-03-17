@@ -1,3 +1,7 @@
+(好文) RPC与Double ：https://www.cnblogs.com/gxyandwmm/p/9651780.html
+
+
+
 本文是作者根据官方文档以及自己平时的使用情况，对 Dubbo 所做的一个总结。如果不懂 Dubbo 的使用的话，可以参考我的这篇文章[《超详细，新手都能看懂 ！使用SpringBoot+Dubbo 搭建一个简单的分布式服务》](https://mp.weixin.qq.com/s?__biz=MzU4NDQ4MzU5OA==&mid=2247484706&idx=1&sn=d413fc17023482f67ca17cb6756b9ff8&chksm=fd985343caefda555969568fdf4734536e0a1745f9de337d434a7dbd04e893bd2d75f3641aab&token=1902169190&lang=zh_CN#rd)
 
 Dubbo 官网：http://dubbo.apache.org/zh-cn/index.html

@@ -8,7 +8,7 @@
     * [二、String](#二string)
         * [概览](#概览)
         * [不可变的好处](#不可变的好处)
-        * [String, StringBuffer and StringBuilder	](#string-stringbuffer-and-stringbuilder	)
+        * [String, StringBuffer and StringBuilder](#string-stringbuffer-and-stringbuilder	)
         * [String Pool](#string-pool)
         * [new String("abc")](#new-stringabc)
     * [三、运算](#三运算)
@@ -161,7 +161,7 @@ Java 程序在执⾏⼦类的构造⽅法之前，**如果没有⽤super()来调
 
 1、接⼝的**⽅法默认是public**，所有⽅法在接⼝中**不能有实现**(Java 8 开始接⼝⽅法可以有默认实现），⽽**抽象类可以有⾮抽象的⽅法**。
 
-2、接⼝中除了**static、final变量**，不能有其他变量，⽽抽象类中则不⼀定。
+2、接⼝中除了**static、final变量**，不能有其他变量，⽽抽象类中则不⼀定。抽象类可以有构造方法。接口不可以。default 不可以修饰抽象类的变量和方法。default 修饰的接口方法必须有函数体。抽象类里面的字段方法都可以protected修饰。抽象类字段也是final的，但还有个小点是抽象类这样只声明不赋值不报错，但在普通类会报错，写了构造方法才不报错。
 
 3、**⼀个类可以实现多个接⼝，但只能实现⼀个抽象类**。**接⼝⾃⼰本身可以通过extends关键字扩展多个接⼝**
 

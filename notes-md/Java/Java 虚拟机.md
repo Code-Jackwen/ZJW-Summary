@@ -905,7 +905,7 @@ https://www.jianshu.com/p/b7e8a9bc4f53
 
 https://blog.csdn.net/qq_16681169/article/details/53296137
 
-
+（好文） 服务器端使用jstat定位GC问题的有关命令 ：https://www.cnblogs.com/gxyandwmm/p/9650752.html
 
 ## JIT工作模式
 
