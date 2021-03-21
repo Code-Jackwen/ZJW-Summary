@@ -6,7 +6,7 @@
 
 其中为 sql ⽚段标签，通过<include>标签引⼊ sql ⽚段，<selectKey>为不⽀持⾃增的主键⽣成策略标签。
 
-## 动态 sql 是做什么的？都有哪些动态 sql？执⾏原理？
+## 动态 sql 标签、原理
 
 动态 sql 的 9个标签，trim | **where** | set | **foreach** | **if** | choose | **when** | otherwise | bind等。
 
