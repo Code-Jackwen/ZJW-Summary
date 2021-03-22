@@ -38,9 +38,9 @@
 
 #### 1. 数据结构
 
-B Tree 指的是 Balance Tree，也就是平衡树。平衡树是一颗查找树，并且所有叶子节点位于同一层。
+B Tree 指的是 Balance Tree，也就是**平衡树**。平衡树是一颗**查找树**，并且**所有叶子节点位于同一层**。
 
-B+ Tree 是基于 B Tree 和叶子节点顺序访问指针进行实现，它具有 B Tree 的平衡性，并且通过顺序访问指针来提高区间查询的性能。
+**B+ Tree 是基于 B Tree 和叶子节点顺序访问指针进行实现，它具有 B Tree 的平衡性，并且通过顺序访问指针来提高区间查询的性能。**
 
 在 B+ Tree 中，一个节点中的 key 从左到右非递减排列，如果某个指针的左右相邻 key 分别是 key<sub>i</sub> 和 key<sub>i+1</sub>，且不为 null，则该指针指向节点的所有 key 大于等于 key<sub>i</sub> 且小于等于 key<sub>i+1</sub>。
 
@@ -1146,13 +1146,13 @@ Mysql官方给的幻读解释是：只要在一个事务中，第二次select多
 
 type：显示的是访问类型:
 
-system > const > eq_ref > ref > fulltext > ref_or_null > index_merge > unique_subquery  > index_subquery > range > index > ALL
+system > **const** > **eq_ref** > **ref** > fulltext > ref_or_null > index_merge > unique_subquery  > index_subquery > **range** > **index** > ALL
 
 **Extra** 含义：
 
-using index：使用覆盖索引的时候就会出现
+using index：使用**覆盖索引**的时候就会出现
 
-using where：在查找使用索引的情况下，需要回表去查询所需的数据
+using where：在查找使用**索引**的情况下，需要**回表**去查询所需的数据
 
 using index condition：查找使用了索引，但是需要回表查询数据
 
@@ -1188,7 +1188,7 @@ VALUES
 
 3、其他优化
 
-- 对于InnoDB，按照**主键顺序插入**，因为InnoDB类型的表是按照主键的顺序保存。
+- 对于InnoDB，按照**主键顺序插入，因为InnoDB类型的表是按照主键的顺序保存。**
 
 - **关闭唯一性校验**
 
@@ -1196,17 +1196,17 @@ VALUES
 
 ##### 排序
 
-所有不是通过索引直接返回排序结果的排序都叫 FileSort 排序。
+所有**不是通过索引直接返回排序结果的排序都叫 FileSort 排序。**
 
-通过有序索引顺序扫描直接返回有序数据为 using index，不需要额外排序，操作效率高。这里说的是explain结果中的 Extra 列。
+通过有序索引顺序扫描直接返回有序数据为 **using index**，不需要额外排序，操作效率高。这里说的是explain结果中的 **Extra 列**。
 
 总结：
 
 1、通过加索引，where 条件和Order by 使用相同的索引，并且Order By 的顺序和索引顺序相同（多字段排序也要最左前缀的意思）。
 
-Order by 的字段都是升序，或者都是降序。否则肯定需要额外的操作，这样就会出现FileSort。
+**Order by 的字段都是升序，或者都是降序。否则肯定需要额外的操作，这样就会出现FileSort。**
 
-2、索引优化不掉的FileSort，可以适当提高 sort_buffer_size 和 max_length_for_sort_data 系统变量，来增大排序区的大小，提高排序的效率。或者视情况提示sql直接FileSort 不再先内存排序再转FileSort 。
+2、**索引优化不掉的FileSort，可以适当提高 sort_buffer_size 和 max_length_for_sort_data 系统变量，来增大排序区的大小，提高排序的效率。或者视情况提示sql直接FileSort 不再先内存排序再转FileSort 。**
 
 ##### 优化 group by
 
@@ -1224,9 +1224,9 @@ Order by 的字段都是升序，或者都是降序。否则肯定需要额外�
 
 建议使用 union 替换 or，UNION 要优于 OR 。
 
-UNION 语句的 type 值为 ref，OR 语句的 type 值为 range，可以看到这是一个很明显的差距
+**UNION 语句的 type 值为 ref，OR 语句的 type 值为 range，可以看到这是一个很明显的差距**
 
-UNION 语句的 ref 值为 const，OR 语句的 type 值为 null，const 表示是常量值引用。
+**UNION 语句的 ref 值为 const**，OR 语句的 type 值为 null，const 表示是常量值引用。
 
 ##### 优化分页查询
 

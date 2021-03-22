@@ -211,7 +211,7 @@ DELETE /file.html HTTP/1.1
 
 **查询指定的 URL 能够支持的方法。**
 
-**会返回 `Allow: GET, POST, HEAD, OPTIONS` 这样的内容。**
+**会返回 Allow: GET, POST, HEAD, OPTIONS 这样的内容。**
 
 ### CONNECT
 
@@ -224,7 +224,6 @@ CONNECT www.example.com:443 HTTP/1.1
 ```
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/dc00f70e-c5c8-4d20-baf1-2d70014a97e3.jpg" width=""/> </div><br>
-
 ### TRACE
 
 **追踪路径**
@@ -369,15 +368,14 @@ CONNECT www.example.com:443 HTTP/1.1
 ### 连接管理
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/HTTP1_x_Connections.png" width="800"/> </div><br>
-
 #### 1. 短连接与长连接
 
 当浏览器访问一个包含多张图片的 HTML 页面时，除了请求访问的 HTML 页面资源，还会请求图片资源。如果每进行一次 HTTP 通信就要新建一个 TCP 连接，那么开销会很大。
 
 **长连接只需要建立一次 TCP 连接就能进行多次 HTTP 通信。**
 
-- **从 HTTP/1.1 开始默认是长连接的，如果要断开连接，需要由客户端或者服务器端提出断开，使用 `Connection : close`；**
-- **在 HTTP/1.1 之前默认是短连接的，如果需要使用长连接，则使用 `Connection : Keep-Alive`。**
+- **从 HTTP/1.1 开始默认是长连接的，如果要断开连接，需要由客户端或者服务器端提出断开，使用 Connection : close；**
+- **在 HTTP/1.1 之前默认是短连接的，如果需要使用长连接，则使用 Connection : Keep-Alive。**
 
 #### 2. 流水线
 
@@ -441,7 +439,7 @@ Set-Cookie: id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT;
 
 #### 5. JavaScript
 
-**浏览器通过 `document.cookie` 属性可创建新的 Cookie，也可通过该属性访问非 HttpOnly 标记的 Cookie。**
+**浏览器通过 document.cookie 属性可创建新的 Cookie，也可通过该属性访问非 HttpOnly 标记的 Cookie。**
 
 ```html
 document.cookie = "yummy_cookie=choco";
@@ -451,7 +449,7 @@ console.log(document.cookie);
 
 #### 6. HttpOnly
 
-**标记为 HttpOnly 的 Cookie 不能被 JavaScript 脚本调用。**跨站脚本攻击 (XSS) 常常使用 JavaScript 的 `document.cookie` API 窃取用户的 Cookie 信息，因此使用 HttpOnly 标记可以在一定程度上避免 XSS 攻击。
+**标记为 HttpOnly 的 Cookie 不能被 JavaScript 脚本调用。**跨站脚本攻击 (XSS) 常常使用 JavaScript 的 document.cookie API 窃取用户的 Cookie 信息，因此使用 HttpOnly 标记可以在一定程度上避免 XSS 攻击。
 
 ```html
 Set-Cookie: id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Secure; HttpOnly
@@ -488,7 +486,7 @@ Set-Cookie: id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Secure; HttpOnly
 
 #### 11. Cookie 大小
 
-**`cookie`标准还是做了一些限制的：每个域名下的cookie 的大小最大为4KB，每个域名下的`cookie`数量最多为20个。**
+**cookie标准还是做了一些限制的：每个域名下的cookie 的大小最大为4KB，每个域名下的cookie数量最多为20个。**
 
 - [聊一聊 cookie](https://segmentfault.com/a/1190000004556040)
 
@@ -559,7 +557,7 @@ Expires: Wed, 04 Jul 2012 08:26:05 GMT
 
 #### 4. 缓存验证
 
-**需要先了解 ETag 首部字段的含义，它是资源的唯一标识。URL 不能唯一表示资源，例如 `http://www.google.com/` 有中文和英文两个资源，只有 ETag 才能对这两个资源进行唯一标识。**
+**需要先了解 ETag 首部字段的含义，它是资源的唯一标识。URL 不能唯一表示资源，例如 http://www.google.com/ 有中文和英文两个资源，只有 ETag 才能对这两个资源进行唯一标识。**
 
 ```html
 ETag: "82e22293907ce725faf67773957acd12"
@@ -617,7 +615,7 @@ Vary: Accept-Language
 
 在使用内容协商的情况下，只有当缓存服务器中的缓存满足内容协商条件时，才能使用该缓存，否则应该向源服务器请求该资源。
 
-例如，一个**客户端发送了一个包含 Accept-Language 首部字段的请求之后，源服务器返回的响应包含 `Vary: Accept-Language` 内容**，缓存服务器对这个响应进行缓存之后，**在客户端下一次访问同一个 URL 资源，并且 Accept-Language 与缓存中的对应的值相同时才会返回该缓存。**
+例如，一个**客户端发送了一个包含 Accept-Language 首部字段的请求之后，源服务器返回的响应包含 Vary: Accept-Language 内容**，缓存服务器对这个响应进行缓存之后，**在客户端下一次访问同一个 URL 资源，并且 Accept-Language 与缓存中的对应的值相同时才会返回该缓存。**
 
 ### 内容编码
 
@@ -716,11 +714,9 @@ Content-Type: text/plain
 - **用户察觉得到正向代理的存在。**
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/a314bb79-5b18-4e63-a976-3448bffa6f1b.png" width=""/> </div><br>
-
 - **反向代理一般位于内部网络中，用户察觉不到。**
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/2d09a847-b854-439c-9198-b29c65810944.png" width=""/> </div><br>
-
 #### 2. 网关
 
 与代理服务器不同的是，**网关服务器会将 HTTP 转化为其它协议进行通信，从而请求其它非 HTTP 服务器的服务。**
@@ -731,8 +727,6 @@ Content-Type: text/plain
 
 ## 六、HTTPS
 
-HTTPS 建立连接的详细过程：https://cloud.tencent.com/developer/article/1017988
-
 ### 简介
 
 HTTPS 是在 HTTP 的基础上和 **SSL/TLS 证书**结合起来的一种协议，很好的解决了 http 的三个缺点（**被监听、被篡改、身份被伪装**）。
@@ -742,6 +736,12 @@ HTTP 有以下安全性问题：
 - **明文通信**，内容可能会被**窃听**；
 - **不验证身份**，身份有可能遭遇**伪装**；
 - 报文有可能遭**篡改**。
+
+在《图解HTTP》这本书中有一个经典的定义，HTTPS = HTTP + 加密 + 认证 + 完整性保护。
+
+更直白的说，HTTPS是包了一层SSL的HTTP协议，使用握手阶段生成的Session Key进行**加密**。
+
+**使用数字证书证明通信方的身份**，使用**散列算法**生成的MAC ( **消息认证码**（带密钥的hash函数) ) **附加到发送的数据包，保证数据的完整性。** 
 
 ### 建立连接
 
@@ -767,8 +767,23 @@ SSL(Secure Sockets Layer **安全套接层**)是为网络通信提供安全及�
 TLS和SSL协议理论上属于**传输层**，在应用层实现，所以我们可以在浏览器中设置是否使用此协议，使用哪一版本的协议。 
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/ssl-offloading.jpg" width="700"/> </div><br>
-
 ### 加密
+
+##### **加密过程**
+
+1. 验证完合法性后，在证书里取出服务器的公钥。
+2. 浏览器生成**对称密钥**。
+3. 使用服务器公钥对该**对称密钥**加密，发回给服务器。
+4. 服务器使用私钥解密，得到**对称密钥。**
+5. 服务器使用该对称密钥加密后续http数据。使用对称密钥加密是因为比非对称加密高效。
+
+##### 七种加密算法
+
+常见的 **对称加密** 算法主要有 **DES、AES、3DES**等，常见的 **非对称算法** 主要有 **RSA、DSA** 等，**散列算法** 主要有 MD5、SHA-1 等。 
+
+参考：
+
+[七种加密算法](https://juejin.cn/post/6844903638117122056#heading-7)
 
 #### 1. 对称密钥加密
 
@@ -778,7 +793,6 @@ TLS和SSL协议理论上属于**传输层**，在应用层实现，所以我们�
 - 缺点：无法安全地将密钥传输给通信方。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/7fffa4b8-b36d-471f-ad0c-a88ee763bb76.png" width="600"/> </div><br>
-
 #### 2.非对称密钥加密
 
 非对称密钥加密，又称公开密钥加密（Public-Key Encryption），加密和解密使用不同的密钥。
@@ -791,7 +805,6 @@ TLS和SSL协议理论上属于**传输层**，在应用层实现，所以我们�
 - 缺点：运算速度慢。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/39ccb299-ee99-4dd1-b8b4-2f9ec9495cb4.png" width="600"/> </div><br>
-
 #### 3. HTTPS 采用的加密方式
 
 上面提到对称密钥加密方式的传输效率更高，但是无法安全地将密钥 Secret Key 传输给通信方。而非对称密钥加密方式可以保证传输的安全性，因此我们可以利用非对称密钥加密方式将 Secret Key  传输给通信方。HTTPS 采用**混合的加密机制**，正是利用了上面提到的方案：
@@ -800,7 +813,6 @@ TLS和SSL协议理论上属于**传输层**，在应用层实现，所以我们�
 - **获取到 Secret Key 后，再使用对称密钥加密方式进行通信，从而保证效率**。（下图中的 Session Key 就是 Secret Key）
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/How-HTTPS-Works.png" width="600"/> </div><br>
-
 ### 认证
 
 通过使用   **证书**   来对**通信方**进行认证。
@@ -814,6 +826,55 @@ TLS和SSL协议理论上属于**传输层**，在应用层实现，所以我们�
 **进行 HTTPS 通信时，服务器会把证书发送给客户端。客户端取得其中的公开密钥之后，先使用数字签名进行验证，如果验证通过，就可以开始通信了。**
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/2017-06-11-ca.png" width=""/> </div><br>
+验证书过程CA下发给网站的证书是分层的证书链，从根证书开始一层一层直到网站证书。
+
+要验证某一层证书是否确实由上级CA发放的，需要验证时附带上在该证书上的由上级CA通过签名函数及私钥生成的数字签名。
+
+数字签名的解密需要上级CA的公钥，这个公钥就明文保存在证书链中的上层证书中。
+
+而可信性是看根证书是否在操作系统或浏览器内置的根证书列表中，如果在的话那么这个证书链就可信的。
+
+补充：
+
+证书可靠性(真实并可信)验证过程是一个信任链的验证过程，需要明确三点： 
+
+1.浏览器中预置了一些可信根证书；
+
+2.证书的签名是由上级颁发者的私钥加密的；
+
+3.信任链的验证终止与一个可信的证书。
+
+<img src="../../assets/1616326816317.png" alt="1616326816317" style="zoom: 67%;" />
+
+
+
+网站的证书里是包含上级颁发机构的证书获取地址，比如：
+
+<img src="../../assets/1616326853770.png" alt="1616326853770" style="zoom: 50%;" />
+
+
+
+在浏览器的菜单中，找到并点击“Internet选项”，选择“内容”标签，点击“证书”按钮，然后就可以看到浏览器已经信任了许多“中级证书颁发机构”和“受信任的根证书颁发机构”。当我们在访问该网站时，浏览器就会自动下载该网站的SSL证书，并对证书的安全性进行检查。 
+
+**浏览器需要验证SSL证书的5个方面：**
+
+第一，验证浏览器中“受信任的根证书颁发机构”是否存在颁发该SSL证书的机构。
+
+第二，检查证书有没有被证书颁发机构**吊销**。
+
+第三，验证该网站的SSL证书是否**过期**。
+
+第四，审核该SSL证书的网站的域名是否与证书中的域名一致。
+
+第五，该网站**有没有被列入欺诈网站黑名单**。
+
+在经过上述5个方面确认后，才能安全显示该网站，所以部署一个SSL证书对网站安全还是很有必要的！
+
+参考
+
+浏览器如何验证HTTPS证书的合法性？：https://www.zhihu.com/question/37370216
+
+HTTPS 建立连接的详细过程：https://cloud.tencent.com/developer/article/1017988
 
 ### 完整性保护
 
@@ -843,7 +904,6 @@ HTTPS 的报文摘要功能之所以安全，是因为它结合了**加密和认
 HTTP/2.0 将**报文分成 HEADERS 帧和 DATA 帧**，它们都是**二进制**格式的。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/86e6a91d-a285-447a-9345-c5484b8d0c47.png" width="400"/> </div><br>
-
 在通信过程中，**只会有一个 TCP 连接存在，它承载了任意数量的双向数据流（Stream）。**
 
 - 一个数据流（Stream）都有一个唯一标识符和可选的优先级信息，用于承载**双向信息**。
@@ -851,13 +911,11 @@ HTTP/2.0 将**报文分成 HEADERS 帧和 DATA 帧**，它们都是**二进制**
 - **帧（Frame）是最小的通信单位**，来自不同数据流的帧可以交错发送，然后再根据每个帧头的数据流标识符重新组装。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/af198da1-2480-4043-b07f-a3b91a88b815.png" width="600"/> </div><br>
-
 ### 服务端推送
 
 **HTTP/2.0 在客户端请求一个资源时，会把相关的资源一起发送给客户端**，客户端就不需要再次发起请求了。**例如客户端请求 page.html 页面，服务端就把 script.js 和 style.css 等与之相关的资源一起发给客户端。**
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/e3f1657c-80fc-4dfa-9643-bf51abd201c6.png" width="800"/> </div><br>
-
 ### 首部压缩
 
 HTTP/1.1 的首部带有大量信息，而且每次都要重复发送。
@@ -867,7 +925,6 @@ HTTP/1.1 的首部带有大量信息，而且每次都要重复发送。
 **不仅如此，HTTP/2.0 也使用 Huffman 编码对首部字段进行压缩。**
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/_u4E0B_u8F7D.png" width="600"/> </div><br>
-
 ## 八、HTTP/1.1 新特性
 
 详细内容请见上文
@@ -932,7 +989,7 @@ GET 和 POST 只是 HTTP 协议中两种请求方式，而 **HTTP 协议是基�
 
 GET 和 POST 的请求都能使用额外的参数，但是 GET 的参数是以查询字符串出现在 URL 中，而 POST 的参数存储在实体主体中。不能因为 POST 参数存储在实体主体中就认为它的安全性更高，因为照样可以通过一些抓包工具（Fiddler）查看。
 
-因为 **URL 只支持 ASCII 码**，因此 GET 的参数中**如果存在中文等字符就需要先进行编码**。例如 `中文` 会转换为 `%E4%B8%AD%E6%96%87`，而空格会转换为 `%20`。POST 参数支持标准字符集。
+因为 **URL 只支持 ASCII 码**，因此 GET 的参数中**如果存在中文等字符就需要先进行编码**。例如 中文 会转换为 %E4%B8%AD%E6%96%87，而空格会转换为 %20。POST 参数支持标准字符集。
 
 ```
 GET /test/demo_form.asp?name1=value1&name2=value2 HTTP/1.1
