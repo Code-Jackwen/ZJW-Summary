@@ -287,8 +287,15 @@ CONNECT www.example.com:443 HTTP/1.1
 ### 5XX 服务器错误
 
 -   **500 Internal Server Error**  ：服务器**正在执行请求时发生错误。**
-
 -   **503 Service Unavailable**  ：服务器**暂**时处于**超负载或正在进行停机维护**，现在**无法处理**请求。
+
+http 502 和 504 的区别 ？
+
+通俗的来说，nginx作为一个代理服务器，将请求转发到其他服务器或者php-cgi来处理。当nginx收到了无法理解的响应时，就返回502。当nginx超过自己配置的超时时间还没有收到请求时，就返回504错误。 
+
+参考
+
+http 502 和 504 的区别：https://juejin.cn/post/6844903462048628749
 
 ## 四、HTTP 首部
 
@@ -360,8 +367,8 @@ CONNECT www.example.com:443 HTTP/1.1
 |   **Content-MD5**    |   **实体主体的报文摘要**   |
 |  **Content-Range**   |   **实体主体的位置范围**   |
 |     Content-Type     |     实体主体的媒体类型     |
-|       Expires        |   实体主体过期的日期时间   |
-|    Last-Modified     |   资源的最后修改日期时间   |
+|     **Expires**      | **实体主体过期的日期时间** |
+|  **Last-Modified**   | **资源的最后修改日期时间** |
 
 ## 五、具体应用
 
@@ -595,7 +602,7 @@ If-Modified-Since: Wed, 21 Oct 2015 07:28:00 GMT
 
 **1.1 服务端驱动型**  
 
-**客户端**设置特定的 HTTP 首部字段，**例如 Accept、Accept-Charset、Accept-Encoding、Accept-Language，****服务器根据这些字段返回特定的资源。**
+**客户端**设置特定的 HTTP 首部字段，**例如 Accept、Accept-Charset、Accept-Encoding、Accept-Language，**服务器根据这些字段返回特定的资源。
 
 它存在以下问题：
 
@@ -764,7 +771,7 @@ SSL(Secure Sockets Layer **安全套接层**)是为网络通信提供安全及�
 
 安全**传输层协议**（TLS：Transport Layer Security）用于在两个通信应用程序之间提供保密性和数据完整性。该协议由两层组成： TLS 记录协议（TLS Record）和 TLS 握手协议（TLS Handshake），是**更安全的SSL版本**。 
 
-TLS和SSL协议理论上属于**传输层**，在应用层实现，所以我们可以在浏览器中设置是否使用此协议，使用哪一版本的协议。 
+TLS和SSL协议理论上属于**传输层**，**在应用层实现**，所以我们可以在浏览器中设置是否使用此协议，使用哪一版本的协议。 
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/ssl-offloading.jpg" width="700"/> </div><br>
 ### 加密

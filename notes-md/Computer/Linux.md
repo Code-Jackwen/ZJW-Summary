@@ -521,10 +521,25 @@ cp [-adfilprsu] source destination
 
 **删除文件**。
 
+用户可以用rm命令删除不需要的目录及文件。该命令的功能是删除一个目录中的一个或多个文件或目录，他也可以将某个目录及其下的所有文件及子目录均删除。
+
+对于链接文件，只是断开了链接，源文件保持不变。 
+
 ```html
 ## rm [-fir] 文件或目录
 -r ：递归删除
+
+-f, --force    忽略不存在的文件，从不给出提示。
+-i, --interactive 进行交互式删除
+-r, -R, --recursive   指示rm将参数中列出的全部目录和子目录均递归地删除。
+-v, --verbose    详细显示进行的步骤
 ```
+
+参考
+
+百度百科：https://baike.baidu.com/item/rm/2243799
+
+Linux学习笔记--rm命令(删除文件或目录)：https://blog.csdn.net/daidaineteasy/article/details/50663101
 
 #### 8. mv
 
@@ -749,8 +764,11 @@ example: find . -name "shadow*"
 **③ 与文件权限和名称有关的选项**  
 
 ```html
--name filename    模糊查询：*acb是前模糊，而？abc 是模糊一个，_abc
--size [+-]SIZE：搜寻比 SIZE 还要大 (+) 或小 (-) 的文件。这个 SIZE 的规格有：c: 代表 byte，k: 代表 1024bytes。所以，要找比 50KB 还要大的文件，就是 -size +50k
+-name filename    模糊查询：*acb是前模糊，以abc结尾的，而？abc 是模糊一个，相当于_abc
+-size [+-]SIZE：搜寻比 SIZE 还要大 (+) 或小 (-) 的文件。
+	SIZE 的规格有：
+		c: 代表 byte
+		k: 代表 1024bytes。所以，要找比 50KB 还要大的文件，就是 -size +50k
 -type TYPE
 -perm mode  ：搜索权限等于 mode 的文件
 -perm -mode ：搜索权限包含 mode 的文件
@@ -981,7 +999,7 @@ $ cut
 -c ：以字符为单位取出区间
 ```
 
-示例 1：last 显示登入者的信息，取出用户名。
+示例 1：**last 显示登入者的信息**，取出用户名。
 
 ```html
 $ last
@@ -1074,7 +1092,7 @@ $ tr [-ds] SET1 ...
 $ last | tr '[a-z]' '[A-Z]'
 ```
 
-   **col**   将 tab 字符转为空格字符。
+**col**   将 tab 字符转为空格字符。
 
 ```html
 $ col [-xb]
@@ -1115,6 +1133,125 @@ $ split [-bl] file PREFIX
 -l ：以行数来进行分区。
 - PREFIX ：分区文件的前导名称
 ```
+
+### 场景: 统计a.txt出现次数前3名的单词
+
+示例文件:
+
+```
+[root@lovedan test]# cat a.txt
+hello
+good
+world
+hello
+...
+```
+
+- **出现次数**用**awk**统计	
+- 排名用**sort**命令排序
+- 取文件前N行用**head**命令
+
+awk是以文件的一行为处理单位的,awk每接收文件的一行，然后执行相应的命令处理文本。
+awk玩法请参考文档：https://www.runoob.com/linux/linux-comm-awk.html
+
+```
+[root@lovedan test]# awk '{sum[$1]+=1} END {for(k in sum) print k ":" sum[k]}' a.txt
+hello:4
+dandan:1
+good:3
+world:2
+```
+
+ 注: 如上结果,每读取一行，得取到那个单词，这是$1，有其它的分隔符则-F等。取具体的$n。
+
+以上用sum数组（当做HashMap来用）存储，key是自每行的单词，每读取一行加1。
+
+END是最终执行，循环打印内容。单词由次数显示出来，则只要按冒号后的数字倒序排序即可。
+
+**sort命令**
+
+> - **格式** sort 【参数】【文件】
+> - **参数** -n 以数字排序
+> - **参数** -r 倒序
+> - **参数** -t 第几区间【分隔后分隔后的第几列】
+> - **参数** -k 以第几区间【分隔后分隔后的第几列】来排序
+> - **eg:** sort -n -r -k 2 -t ‘:’  xx.txt -n数字排序方式。
+> - 解释： -r倒序, -t ‘:’以冒号分隔, -k 2表示以冒号分隔后的第2例
+
+```
+[root@lovedan test]# awk '{sum[$1]+=1} END {for(k in sum) print k ":" sum[k]}' a.txt | sort -n -r -k 2 -t ':'
+
+hello:4
+good:3
+world:2
+dandan:1
+```
+
+### head命令
+
+> - **格式** head 【参数】【文件】
+> - **参数** -n<行数> 显示的行数
+> - **显示前10行** head -10 xx.txt
+> - 结果示例
+
+```
+[root@lovedan test]# head -n 3 a.txt
+hello
+good
+world
+//最终结果
+[root@lovedan test]# awk '{sum[$1]+=1} END {for(k in sum) print k ":" sum[k]}' a.txt | sort -n -r -k 2 -t ':' | head -n 3
+hello:4
+good:3
+world:2
+```
+
+貌似上面都复杂了但awk是个神器，uniq命令也可以而有时会显得局限。(毕竟日志中没有这么简单的数据) 
+
+另一种写法：
+
+```
+[root@lovedan test]# sort a.txt | uniq -c | sort -nr  -t ' ' -k 1 | head -n 3
+4 hello
+3 good
+2 world
+```
+
+若有道面试说有个文件中有1000W行，每行一个单词，现要统单词词频排名前10的查询出来，你有哪些方案方法？1000w写shell脚本吧，然后再统计排名。   大到几个G，数据条数过亿就MapReduce  
+
+参考：
+
+[linux awk命令统计排名单词出现次数](https://love61v.github.io/2017/07/12/awk%E7%BB%9F%E8%AE%A1%E6%8E%92%E5%90%8D%E5%8D%95%E8%AF%8D%E5%87%BA%E7%8E%B0%E6%AC%A1%E6%95%B0/)
+
+
+
+```shell
+[root@centos6-test06 ~]# awk -F' ' '{for(i=1;i<=NF;i=i+1){print $i}}' /root/kevin.txt |sort|uniq -c|sort -nr|awk -F' ' '{printf("%s %s\n",$2,$1)}'
+the 5
+kevin 4
+is 3
+world 2
+grace 1
+art 1
+ 
+通常，awk逐行处理文本。awk每接收文件的一行，然后执行相应的命令来处理。
+找到指定单词，自定义变量count自增，最后输出语句和count值
+sort: 把各行按首字母排列顺序重新排列起来
+sort -nr: 每行都以数字开头，按数字从达到小，排列各行
+uniq -c: 统计各行出现的次数，并把次数打印在每行前端
+NF: 浏览记录的域的个数
+ 
+例如；
+搜索统计单词"kevin"的个数
+[root@centos6-test06 ~]# awk -F : '/kevin/{count++} END{print "the count is ",count}' /root/kevin.txt
+the count is  3
+```
+
+参考
+
+统计文件中出现的单词次数：https://www.cnblogs.com/kevingrace/p/8670623.html
+
+
 
 ## 九、正则表达式
 
@@ -1158,15 +1295,23 @@ $ grep -n 'the' regular_express.txt
 
 **$grep -B 10 ‘123’ test.log//打印匹配行的前10行**
 
+
+
 例子：//显示既匹配 ‘123’又匹配 ‘456’的行
 
 grep ‘123’ test.log| grep ‘456’ 
 
+
+
 例子： //查看test.log指定行号后的内容，比如50行
 tail -n +50 test.log 
 
- 例子： //查看test.log的第50行到100行
-sed -n ‘50,100p’ test.log#记得p字母 
+
+
+例子： //查看test.log的第50行到100行
+sed -n  ‘50,100p’  test.log		#记得p字母 
+
+
 
 参考：linux grep查看指定内容上下几行：https://my.oschina.net/donngchao/blog/4712248
 
@@ -1193,7 +1338,9 @@ $ printf '%10s %5i %5i %5i %8.2f \n' $(cat printf.txt)
 
 awk **每次处理一行**，处理的**最小单位是字段**，每个字段的命名方式为：\$n，n 为字段号，从 1 开始，\$0 表示一整行。
 
-示例：取出最近五个登录用户的用户名和 IP。首先用 last -n 5 取出用最近五个登录用户的所有信息，可以看到用户名和 IP 分别在第 1 列和第 3 列，我们用 \$1 和 \$3 就能取出这两个字段，然后用 print 进行打印。
+示例：取出最近五个登录用户的用户名和 IP。
+
+首先用 last -n 5 取出用最近五个登录用户的所有信息，可以看到用户名和 IP 分别在第 1 列和第 3 列，我们用 \$1 和 \$3 就能取出这两个字段，然后用 print 进行打印。
 
 ```html
 $ last -n 5
