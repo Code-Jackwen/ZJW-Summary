@@ -287,7 +287,9 @@ CONNECT www.example.com:443 HTTP/1.1
 ### 5XX 服务器错误
 
 -   **500 Internal Server Error**  ：服务器**正在执行请求时发生错误。**
+-   502 服务器无法理解接受到的响应。
 -   **503 Service Unavailable**  ：服务器**暂**时处于**超负载或正在进行停机维护**，现在**无法处理**请求。
+-   504 超过响应时间
 
 http 502 和 504 的区别 ？
 

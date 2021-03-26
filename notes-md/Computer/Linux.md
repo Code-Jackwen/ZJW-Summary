@@ -1283,7 +1283,9 @@ $ grep -n 'the' regular_express.txt
 18:google is the best tools for search keyword
 ```
 
- 如果想查看指定内容上下几行，可以用参考下面的用法： 
+如果想查看指定内容上下几行，可以用参考下面的用法： 
+
+相关面试题： 输出日志包含某个关键字的前多少到后多少行 
 
 **$grep -10 ‘123’ test.log//打印匹配行的前后10行**
 或
