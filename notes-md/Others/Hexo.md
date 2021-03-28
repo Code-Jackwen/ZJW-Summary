@@ -341,6 +341,12 @@ Mx 过客～铭む 	https://mx142.cn/friends/	 二级标签较花。	来自南�
 
 ##### 其他
 
+这人博客挺干净： Powered by [Hux Blog](http://huangxuan.me/) 
+
+https://xzchsia.github.io/2020/03/05/linux-hard-soft-link/
+
+
+
 有他qq，让它帮我搭，后放弃。：https://hesifan.top/about/
 
 YFun在校生：https://www.yfun.top/archives/	文章：免费图床推荐、CloudFlare 加速网站

@@ -470,7 +470,7 @@ epoll 的描述符事件有两种触发模式：LT（level trigger）(默认)和
 
 #### 1. select 应用场景
 
-**select** 的 **timeout** 参数精度为**微秒**，而 poll 和 epoll 为**毫秒**，因此 select 更加适用于**实时性要求比较高**的场景，比如**核反应堆的控制**。
+**select** 的 **timeout** 参数精度为**微秒**，而 poll 和 epoll 为**毫秒**，因此 select 更加适用于**实时性要求比较高**的场景，比如**核反应堆的控制**。支持最多数量和系统硬件有很大关系，32位的1024、64位一般2048
 
 **select** **可移植性更好**，几乎被所有主流平台所支持。
 
@@ -486,6 +486,12 @@ epoll 的描述符事件有两种触发模式：LT（level trigger）(默认)和
 
 **需要监控的描述符状态变化多，而且都是非常短暂的，也没有必要使用 epoll**。因为 epoll 中的**所有描述符都存储在内核中**，造成每次需要对**描述符的状态改变**都需要通过 **epoll_ctl()** 进行**系统调用**，**频繁系统调用降低效率**。并且 **epoll 的描述符存储在内核**，**不容易调试**。
 
+
+
+面试之区别再整理：
+
+select、poll、epoll之间的区别：https://xzchsia.github.io/2021/02/24/select-poll-epoll/
+
 ## 参考资料
 
 - Stevens W R, Fenner B, Rudoff A M. UNIX network programming[M]. Addison-Wesley Professional, 2004.
@@ -498,7 +504,7 @@ epoll 的描述符事件有两种触发模式：LT（level trigger）(默认)和
 - [select / poll / epoll: practical difference for system architects](http://www.ulduzsoft.com/2014/01/select-poll-epoll-practical-difference-for-system-architects/)
 - [Browse the source code of userspace/glibc/sysdeps/unix/sysv/linux/ online](https://code.woboq.org/userspace/glibc/sysdeps/unix/sysv/linux/)
 
-参考：
+其他参考：
 
 [用户空间与内核空间，进程上下文与中断上下文总结](http://www.cnblogs.com/Anker/p/3269106.html)
 [进程切换](http://guojing.me/linux-kernel-architecture/posts/process-switch/)
