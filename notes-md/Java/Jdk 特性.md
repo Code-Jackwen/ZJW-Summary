@@ -133,6 +133,131 @@ ZGC原来java11的测试gC，可伸缩、低延迟的垃圾收集器。
 
 - https://blog.csdn.net/m0_38001814/article/details/88831037?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.edu_weight&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.edu_weight#jdk12%E6%96%B0%E7%89%B9%E6%80%A7
 
+
+
+## switch
+
+一个case语句代表一个制定操作，然后转向结构出口。default子句是可选的，当表达式的值与case表达式常量的值都不匹配时，就运行default子句，转向结构出口。 
+
+```java
+switch(表达式){  
+	case 表达式常量1：语句1； break；  
+	case 表达式常量2：语句2； break； 
+	......  
+	case 表达式常量n：语句n； break；  
+	[default：语句n+1；] 
+}
+```
+
+#### 执行顺序
+
+switch表达式的值决定选择哪个case分支，如果找不到相应的分支，就直接从"default"开始输出。
+当程序执行一条case语句后，因为下边例子中的case分支中没有break 和return语句，所以程序会执行紧接于其后的语句。
+
+```java
+public class Switch {
+	public static void main(String[] args)
+	{
+		int x=0;
+		switch(x)
+		{
+			default:
+			System.out.println("default");
+			case 1:
+			System.out.println(1);
+			case 2:
+			System.out.println(2);
+		}
+	}
+}
+```
+
+输出结果如下：
+default
+1
+2
+
+#### switch与if的区别
+
+2、switch和if-else相比，由于使用了Binary Tree算法，绝大部分情况下switch会快一点，除非是if-else的第一个条件就为true。
+
+3、编译器编译switch与编译if...else...不同。不管有多少case，都直接跳转，不需逐个比较查询。
+
+4、相比于if-else结构，switch的效率绝对是要高很多的，但是switch使用查找表的方式决定了case的条件必须是个连续的常量。而if-else则可以灵活的多。
+
+5、switch效率高,从汇编代码可以看出来。switch只计算?次值，然后都是test。
+
+6、switch的效率与分支数无关。当只有分支比较少的时候，if效率比switch高(因为switch有跳转表)。分支比较多，那当然是使用switch。
+
+## 总结
+
+switch(A),括号中A的取值只能是整型或者可以转换为整型的数值类型，比如byte、short、int、char、还有枚举；需要强调的是：long和String类型是不能作?在switch语句上的。
+case B：C；case是常量表达式，也就是说B的取值只能是常量（需要定义一个final型的常量,后面会详细介绍原因）或者int、byte、short、char（比如1、2、3、200000000000（注意了这是整型）），如果你需要在此处写一个表达式或者变量，那么就要加上单引号； case后的语句可以不用大括号，就是C不需要用大括号包裹着；
+default就是如果没有符合的case就执行它,default并不是必须的。
+
+## 实例
+
+### 1.标准型(case后面都有break语句，case后的值都是整数)
+
+```java
+int i=3;
+switch(i)
+{
+	case 1:
+	System.out.println(1);
+	break;
+	case 2:
+	System.out.println(2);
+	break;
+	default:
+	System.out.println("default");
+	break;
+}
+```
+
+### 2.常量型(case后面都有break语句，case后的值都是常量)
+
+```java
+private final int NUM1=1；
+private final int NUM2=1；
+int i=3;
+switch(i)
+{
+	case NUM1:
+	System.out.println(1);
+	break;
+	case NUM2:
+	System.out.println(2);
+	break;
+	default:
+	System.out.println("default");
+	break;
+}
+```
+
+### 3.表达式型(case后面都有break语句，case后的值都是表达式)
+
+```java
+int i=3;
+int b = 2;
+switch(i)
+{
+	case ‘类名.getId()‘:
+	System.out.println(1);
+	break;
+	case ‘b‘
+	System.out.println(2);
+	break;
+	default:
+	System.out.println("default");
+	break;
+}
+```
+
+参考
+
+Java switch 条件语句用法详解：http://www.51gjie.com/java/631.html
+
 # 参考
 
 JDK 15 新特性讲解：https://my.oschina.net/u/4262150/blog/4656149
