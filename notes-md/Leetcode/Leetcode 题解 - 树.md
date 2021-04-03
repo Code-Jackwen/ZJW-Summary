@@ -94,7 +94,13 @@ public int maxDepth(TreeNode root) {
 
 543\. Diameter of Binary Tree (Easy)
 
+[543. 二叉树的直径](https://leetcode-cn.com/problems/diameter-of-binary-tree/)
+
 [Leetcode](https://leetcode.com/problems/diameter-of-binary-tree/description/) / [力扣](https://leetcode-cn.com/problems/diameter-of-binary-tree/description/)
+
+给定一棵二叉树，你需要计算它的直径长度。一棵二叉树的直径长度是任意两个结点路径长度中的最大值。
+
+这条路径可能穿过也可能不穿过根结点。
 
 ```html
 Input:
@@ -106,6 +112,8 @@ Input:
      4   5
 
 Return 3, which is the length of the path [4,2,1,3] or [5,2,1,3].
+返回 3, 它的长度是路径 [4,2,1,3] 或者 [5,2,1,3]。
+注意：两结点之间的路径长度是以它们之间边的数目表示。
 ```
 
 ```java
@@ -147,6 +155,10 @@ public TreeNode invertTree(TreeNode root) {
 
 [Leetcode](https://leetcode.com/problems/merge-two-binary-trees/description/) / [力扣](https://leetcode-cn.com/problems/merge-two-binary-trees/description/)
 
+原题：https://leetcode-cn.com/problems/merge-two-binary-trees/solution/
+
+题解：https://leetcode-cn.com/problems/merge-two-binary-trees/solution/he-bing-er-cha-shu-by-leetcode-solution/
+
 ```html
 Input:
        Tree 1                     Tree 2
@@ -174,6 +186,72 @@ public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
     root.right = mergeTrees(t1.right, t2.right);
     return root;
 }
+//官解
+//dfs
+//时间：O(min(m,n))，只有当两个二叉树中的对应节点都不为空时才会对该节点进行显性合并操作，因此被访问到的节点数不会超过较小的二叉树的节点数。
+//空间：O(min(m,n))，递归的层数，不会超过树的最大高度，最坏，树为链表。
+class Solution {
+    public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+        if (t1 == null) {
+            return t2;
+        }
+        if (t2 == null) {
+            return t1;
+        }
+        TreeNode merged = new TreeNode(t1.val + t2.val);
+        merged.left = mergeTrees(t1.left, t2.left);
+        merged.right = mergeTrees(t1.right, t2.right);
+        return merged;
+    }
+}
+//bfs 代码量很大
+class Solution {
+    public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+        if (t1 == null) return t2;
+        if (t2 == null) return t1;
+        TreeNode merged = new TreeNode(t1.val + t2.val); //初始化操作
+        Queue<TreeNode> queue =  new LinkedList<TreeNode>();
+        Queue<TreeNode> queue1 = new LinkedList<TreeNode>();
+        Queue<TreeNode> queue2 = new LinkedList<TreeNode>();
+        queue.offer(merged);
+        queue1.offer(t1);
+        queue2.offer(t2);
+        while (!queue1.isEmpty() && !queue2.isEmpty()) {
+            TreeNode node = queue.poll(), node1 = queue1.poll(), node2 = queue2.poll();
+            TreeNode left1 = node1.left; 
+            TreeNode left2 = node2.left; 
+            TreeNode right1 = node1.right;
+            TreeNode right2 = node2.right;
+            if (left1 != null || left2 != null) { //处理左子节点
+                if (left1 != null && left2 != null) {
+                    TreeNode left = new TreeNode(left1.val + left2.val);
+                    node.left = left;
+                    queue.offer(left);
+                    queue1.offer(left1);
+                    queue2.offer(left2);
+                } else if (left1 != null) {
+                    node.left = left1;
+                } else if (left2 != null) {
+                    node.left = left2;
+                }
+            }
+            if (right1 != null || right2 != null) { //处理右子节点
+                if (right1 != null && right2 != null) {
+                    TreeNode right = new TreeNode(right1.val + right2.val);
+                    node.right = right;
+                    queue.offer(right);
+                    queue1.offer(right1);
+                    queue2.offer(right2);
+                } else if (right1 != null) {
+                    node.right = right1;
+                } else {
+                    node.right = right2;
+                }
+            }
+        }
+        return merged;
+    }
+}
 ```
 
 ### 6. 判断路径和是否等于一个数
@@ -194,15 +272,79 @@ Given the below binary tree and sum = 22,
         7    2      1
 
 return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.
+//这个路径是根节点到叶子节点。
 ```
 
 路径和定义为从 root 到 leaf 的所有节点的和。
 
 ```java
+//展开版本
+public boolean hasPathSum(TreeNode root, int sum) {
+    if (root == null) return false;
+    if (root.left == null && root.right == null && root.val == sum) return true;
+    
+    int diff = sum - root.val; //Difference 差值。 remainder 剩余，余数。
+    
+    boolean l = hasPathSum(root.left, diff);
+    boolean r = hasPathSum(root.right,diff);
+    return l || r;
+}
+
+//浓缩
 public boolean hasPathSum(TreeNode root, int sum) {
     if (root == null) return false;
     if (root.left == null && root.right == null && root.val == sum) return true;
     return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
+}
+```
+
+类似题目：剑指 34. 二叉树中和为某一值的路径，拓展是输出所有符合的结果
+
+```java
+示例:
+给定如下二叉树，以及目标和 sum = 22，
+      5
+     / \
+    4   8
+   /   / \
+  11  13  4
+ /  \    / \
+7    2  5   1
+
+返回:
+[
+   [5，4，11，2]，
+   [5，8，4，5]
+]
+提示：
+节点总数 <= 10000
+```
+
+题解：双O(n)
+
+```java
+class Solution {
+    LinkedList<List<Integer>> res = new LinkedList<>();
+    //存储每个合适的子结果
+    LinkedList<Integer> path = new LinkedList<>(); 
+    
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        recur(root, sum);
+        return res;
+    }
+    void recur(TreeNode root, int tar) {
+        if(root == null) return;
+        
+        path.add(root.val);
+        tar -= root.val;
+        
+        if(tar == 0 && root.left == null && root.right == null)
+            res.add(new LinkedList(path));
+        //先序遍历
+        recur(root.left, tar);
+        recur(root.right, tar);
+        path.removeLast();//回溯 必须做。
+    }
 }
 ```
 
@@ -232,19 +374,27 @@ Return 3. The paths that sum to 8 are:
 
 路径不一定以 root 开头，也不一定以 leaf 结尾，但是必须连续。
 
+这种需要三重递归。
+
 ```java
 public int pathSum(TreeNode root, int sum) {
     if (root == null) return 0;
-    int ret = pathSumStartWithRoot(root, sum) + pathSum(root.left, sum) + pathSum(root.right, sum);
+    int ret = pathSumStartWithRoot(root, sum) + 
+        	  pathSum(root.left, sum) + 
+              pathSum(root.right, sum);
     return ret;
 }
 
 private int pathSumStartWithRoot(TreeNode root, int sum) {
     if (root == null) return 0;
-    int ret = 0;
-    if (root.val == sum) ret++;
-    ret += pathSumStartWithRoot(root.left, sum - root.val) + pathSumStartWithRoot(root.right, sum - root.val);
-    return ret;
+
+    int cnt = 0;
+    if (root.val == sum) cnt++;
+
+    int diff = sum - root.val;
+
+    cnt = cnt + pathSumStartWithRoot(root.left, diff) + 		                               			 pathSumStartWithRoot(root.right, diff);
+    return cnt;
 }
 ```
 
@@ -299,6 +449,23 @@ private boolean isSubtreeWithRoot(TreeNode s, TreeNode t) {
     if (t.val != s.val) return false;
     return isSubtreeWithRoot(s.left, t.left) && isSubtreeWithRoot(s.right, t.right);
 }
+
+//改了变量名
+public class Solution {
+    public boolean isSubStructure(TreeNode A, TreeNode B) {
+        if (A == null || B == null)
+            return false;
+        return verify(A, B) || 
+            isSubStructure(A.left, B) || 
+            isSubStructure(A.right, B);
+    }
+    private boolean verify(TreeNode A, TreeNode B) {
+        if (B == null) return true;
+        if (A == null) return false;
+        if (A.val != B.val) return false;
+        return verify(A.left, B.left) && verify(A.right, B.right);
+    }
+}
 ```
 
 ### 9. 树的对称
@@ -335,9 +502,46 @@ private boolean isSymmetric(TreeNode t1, TreeNode t2) {
 
 [Leetcode](https://leetcode.com/problems/minimum-depth-of-binary-tree/description/) / [力扣](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/description/)
 
-树的根节点到叶子节点的最小路径长度
+求树的根节点到叶子节点的最小路径长度
+
+- 叶子节点的定义是左孩子和右孩子都为 null 时叫做叶子节点
+- 当 root 节点左右孩子都为空时，返回 1
+- 当 root 节点左右孩子有一个为空时，返回不为空的孩子节点的深度
+- 当 root 节点左右孩子都不为空时，返回左右孩子较小深度的节点值
 
 ```java
+//第一版
+class Solution {
+    public int minDepth(TreeNode root) {
+        if(root == null) return 0;
+        //这道题递归条件里分为三种情况
+        //1.左孩子和有孩子都为空的情况，说明到达了叶子节点，直接返回1即可
+        if(root.left == null && root.right == null) return 1;
+        //2.如果左孩子和右孩子其中一个为空，那么需要返回比较大的那个孩子的深度        
+        int m1 = minDepth(root.left);
+        int m2 = minDepth(root.right);
+        //这里其中一个节点为空，说明m1和m2有一个必然为0，所以可以返回m1 + m2 + 1;
+        if(root.left == null || root.right == null) return m1 + m2 + 1;
+        
+        //3.最后一种情况，也就是左右孩子都不为空，返回最小深度+1即可
+        return Math.min(m1,m2) + 1; 
+    }
+}
+//代码可以进行简化，当左右孩子为空时 m1 和 m2 都为 0
+//可以和情况 2 进行合并，即返回 m1+m2+1
+//简化后代码
+class Solution {
+    public int minDepth(TreeNode root) {
+        if(root == null) return 0;
+        int m1 = minDepth(root.left);
+        int m2 = minDepth(root.right);
+        //1.如果左孩子和右孩子有为空的情况，直接返回m1+m2+1
+        //2.如果都不为空，返回较小深度+1
+        return root.left == null || 
+            root.right == null ? m1 + m2 + 1 : Math.min(m1,m2) + 1;
+    }
+}
+//其他
 public int minDepth(TreeNode root) {
     if (root == null) return 0;
     int left = minDepth(root.left);
@@ -345,7 +549,63 @@ public int minDepth(TreeNode root) {
     if (left == 0 || right == 0) return left + right + 1;
     return Math.min(left, right) + 1;
 }
+//if else
+class Solution {
+    public int minDepth(TreeNode root) {
+        if (root == null) return 0;
+        else if (root.left == null) return minDepth(root.right) + 1;
+        else if (root.right == null) return minDepth(root.left) + 1;
+        else return Math.min(minDepth(root.left), minDepth(root.right)) + 1;
+    }
+}
+
+//bfs
+//当我们找到一个叶子节点时，直接返回这个叶子节点的深度。广度优先搜索的性质保证了最先搜索到的叶子节点的深度一定最小。
+class Solution {
+    class QueueNode {
+        TreeNode node;
+        int depth;
+
+        public QueueNode(TreeNode node, int depth) {
+            this.node = node;
+            this.depth = depth;
+        }
+    }
+
+    public int minDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        Queue<QueueNode> queue = new LinkedList<QueueNode>();
+        queue.offer(new QueueNode(root, 1));
+        while (!queue.isEmpty()) {
+            QueueNode nodeDepth = queue.poll();
+            TreeNode node = nodeDepth.node;
+            int depth = nodeDepth.depth;
+            if (node.left == null && node.right == null) {
+                return depth;
+            }
+            if (node.left != null) {
+                queue.offer(new QueueNode(node.left, depth + 1));
+            }
+            if (node.right != null) {
+                queue.offer(new QueueNode(node.right, depth + 1));
+            }
+        }
+
+        return 0;
+    }
+}
+//bfs作者：LeetCode-Solution
+//链接：https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/solution/er-cha-shu-de-zui-xiao-shen-du-by-leetcode-solutio/
 ```
+
+参考
+
+原题：111、二叉树的最小深度：https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/
+
+题解：https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/solution/li-jie-zhe-dao-ti-de-jie-shu-tiao-jian-by-user7208/
 
 ### 11. 统计左叶子节点的和
 
@@ -360,10 +620,27 @@ public int minDepth(TreeNode root) {
     /  \
    15   7
 
-There are two left leaves in the binary tree, with values 9 and 15 respectively. Return 24.
+There are two left leaves in the binary tree, with values 9 and 15 respectively. 
+Return 24.
+在这个二叉树中，有两个左叶子，分别是 9 和 15，所以返回 24
 ```
 
 ```java
+//官解评论
+class Solution {
+    public int sumOfLeftLeaves(TreeNode root) {
+        if (root == null) return 0;
+
+        int left = sumOfLeftLeaves(root.left);	 //左子树返回结果
+        int right = sumOfLeftLeaves(root.right); //右子树返回结果
+        
+        int leftval = root.left != null && 
+            root.left.left == null && root.left.right == null ? root.left.val : 0;
+
+        return left + right + leftval;// 20里返回15是0+0+15   3里返回9和15是9+15+0    
+    }
+}
+//其他
 public int sumOfLeftLeaves(TreeNode root) {
     if (root == null) return 0;
     if (isLeaf(root.left)) return root.left.val + sumOfLeftLeaves(root.right);
@@ -378,21 +655,67 @@ private boolean isLeaf(TreeNode node){
 
 ### 12. 相同节点值的最大路径长度
 
-687\. Longest Univalue Path (Easy)
+687\. Longest Univalue Path (Easy) 中等
 
 [Leetcode](https://leetcode.com/problems/longest-univalue-path/) / [力扣](https://leetcode-cn.com/problems/longest-univalue-path/)
 
 ```html
-             1
+给定一个二叉树，找到最长的路径，这个路径中的每个节点具有相同值。 这条路径可以经过也可以不经过根节点。
+注意：两个节点之间的路径长度由它们之间的边数表示。
+
+本题中，路径被定义为一条从树中任意节点出发，达到任意节点的序列。该路径至少包含一个节点，且不一定经过根节点。
+
+示例1
+输入：
+              5
+             / \
+            4   5
+           / \   \
+          1   1   5
+输出：2
+
+示例2
+输入：
+			 1
             / \
            4   5
           / \   \
          4   4   5
 
-Output : 2
+输出：2
 ```
 
 ```java
+//官解
+class Solution {
+    int ans;
+
+    public int longestUnivaluePath(TreeNode root) {
+        ans = 0;
+        arrowLength(root);
+        return ans;
+    }
+
+    public int arrowLength(TreeNode node) {
+        if (node == null) return 0;
+        int left = arrowLength(node.left);
+        int right = arrowLength(node.right);
+
+        int arrowLeft = 0, arrowRight = 0;
+
+        if (node.left != null && node.left.val == node.val) {
+            arrowLeft = left;    //累加左节点
+            arrowLeft++;
+        }
+        if (node.right != null && node.right.val == node.val) {
+            arrowRight = right;  //累加右节点
+            arrowRight++;
+        }
+        ans = Math.max(ans, arrowLeft + arrowRight);  //刷新最大值
+        return Math.max(arrowLeft, arrowRight);//向上返回较大的。
+    }
+}
+//其他
 private int path = 0;
 
 public int longestUnivaluePath(TreeNode root) {
@@ -404,12 +727,15 @@ private int dfs(TreeNode root){
     if (root == null) return 0;
     int left = dfs(root.left);
     int right = dfs(root.right);
+    
     int leftPath = root.left != null && root.left.val == root.val ? left + 1 : 0;
     int rightPath = root.right != null && root.right.val == root.val ? right + 1 : 0;
     path = Math.max(path, leftPath + rightPath);
     return Math.max(leftPath, rightPath);
 }
 ```
+
+类似题目：[124. 二叉树中的最大路径和](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/) (困难)
 
 ### 13. 间隔遍历
 
@@ -418,15 +744,103 @@ private int dfs(TreeNode root){
 [Leetcode](https://leetcode.com/problems/house-robber-iii/description/) / [力扣](https://leetcode-cn.com/problems/house-robber-iii/description/)
 
 ```html
+337. 打家劫舍 III
+在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
+计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
+
+示例 1:
+输入: [3,2,3,null,3,null,1]
+
      3
     / \
    2   3
-    \   \
+    \   \ 
      3   1
-Maximum amount of money the thief can rob = 3 + 3 + 1 = 7.
+
+输出: 7 
+解释: 小偷一晚能够盗取的最高金额 = 3 + 3 + 1 = 7.
+
+示例 2:
+输入: [3,4,5,1,3,null,1]
+
+     3
+    / \
+   4   5		//4+5为最大
+  / \   \ 
+ 1   3   1
+
+输出: 9
+解释: 小偷一晚能够盗取的最高金额 = 4 + 5 = 9.
 ```
 
+思路参考
+
+https://leetcode-cn.com/problems/house-robber-iii/solution/san-chong-fang-fa-jie-jue-shu-xing-dong-tai-gui-hu/
+
+**4 个孙子偷的钱 + 爷爷的钱 VS 两个儿子偷的钱 哪个组合钱多，就当做当前节点能偷的最大钱数。这就是动态规划里面的最优子结构** 
+
 ```java
+//解法一
+class Solution {
+    public int rob(TreeNode root) {
+        if (root == null) return 0;
+
+        int money = root.val;		//父节点的钱
+        if (root.left != null) { 	//左儿子的俩孙子
+            money += (rob(root.left.left) + rob(root.left.right));
+        }
+		//继续累加 money
+        if (root.right != null) {	//右儿子的俩孙子
+            money += (rob(root.right.left) + rob(root.right.right));
+        }
+		// 4个孙子偷的钱+爷爷的钱 VS 两个儿子偷的钱
+        return Math.max(money, rob(root.left) + rob(root.right));
+    }
+}
+//解法二：HashMap存树节点和树节点钱的映射，当记忆缓存，优化子问题计算。
+class Solution {
+    public int rob(TreeNode root) {
+        HashMap<TreeNode, Integer> mem = new HashMap<>();
+        return robInternal(root, mem);
+    }
+    public int robInternal(TreeNode root, HashMap<TreeNode, Integer> mem) {
+        if (root == null) return 0;
+        if (mem.containsKey(root)) return mem.get(root);
+        int money = root.val;
+
+        if (root.left != null) {
+            money += (robInternal(root.left.left, mem) + robInternal(root.left.right, mem));
+        }
+        if (root.right != null) {
+            money += (robInternal(root.right.left, mem) + robInternal(root.right.right, mem));
+        }
+        int result = Math.max(money,
+                      robInternal(root.left, mem) + robInternal(root.right, mem));
+        
+        mem.put(root, result);
+        return result;
+    }
+}
+//解法三 用时很短
+class Solution {
+    public int rob(TreeNode root) {
+        int[] result = robInternal(root);
+        return Math.max(result[0], result[1]);
+    }
+    public int[] robInternal(TreeNode root) {
+        if (root == null) return new int[2];
+        int[] result = new int[2];
+
+        int[] left = robInternal(root.left);
+        int[] right = robInternal(root.right);
+
+        result[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        result[1] = left[0] + right[0] + root.val;
+
+        return result;
+    }
+}
+//其他	这个超时的
 public int rob(TreeNode root) {
     if (root == null) return 0;
     int val1 = root.val;
@@ -444,6 +858,12 @@ public int rob(TreeNode root) {
 [Leetcode](https://leetcode.com/problems/second-minimum-node-in-a-binary-tree/description/) / [力扣](https://leetcode-cn.com/problems/second-minimum-node-in-a-binary-tree/description/)
 
 ```html
+给定一个非空特殊的二叉树，每个节点都是正数，并且每个节点的子节点数量只能为 2 或 0。
+
+如果一个节点有两个子节点的话，那么该节点的值等于两个子节点中较小的一个。
+更正式地说，root.val = min(root.left.val, root.right.val) 总成立。
+给出这样的一个二叉树，你需要输出所有节点中的第二小的值。如果第二小的值不存在的话，输出 -1 。
+
 Input:
    2
   / \
@@ -452,23 +872,115 @@ Input:
     5  7
 
 Output: 5
+
+示例：
+一父两子全是2，返回-1，因为不存在倒数第二大。
 ```
 
 一个节点要么具有 0 个或 2 个子节点，如果有子节点，那么根节点是最小的节点。
 
 ```java
+//参考我的思路，简单粗暴。  结果：100 60  实际上空间差不多一样的。
+class Solution {
+    int min = Integer.MAX_VALUE;
+    int ret = Integer.MAX_VALUE;
+    boolean b = true;
+    public int findSecondMinimumValue(TreeNode root) {
+        find(root);//看树的节点是不是全一样，一样返回-1
+        if (b) return -1;
+        find1(root);//找最小值
+        find2(root);//找次小值
+        return ret;
+    }
+    public void find1(TreeNode root) {
+        if (root == null) return;
+        if (root.val < min) {
+            min = root.val;
+            b = false;
+        }
+        find1(root.left);
+        find1(root.right);
+    }
+    public void find2(TreeNode root) {
+        if (root == null) return;
+        if (root.val < ret && root.val != min) ret = root.val;
+        find2(root.left);
+        find2(root.right);
+    }
+    public void find(TreeNode root) {
+        if (root == null) return;
+        find(root.left);
+        find(root.right);
+        if (root.left != null && root.val != root.left.val || 
+            root.right != null && root.val != root.right.val ||
+            root.left != null && root.right != null && root.left.val != root.right.val) {
+            b = false;
+        }
+    }
+}
+//思路不明 来自官解评论
+class Solution {
+   public int findSecondMinimumValue(TreeNode root) {
+        if (root == null) return -1;
+        return help(root, root.val);
+    }
+
+    private int help(TreeNode root, int min) {
+
+        if (root == null) return -1;
+        if (root.val > min) return root.val;
+
+        int left = help(root.left, min);
+        int right = help(root.right, min);
+
+        if (left == -1) return right;
+        if (right == -1) return left;
+        
+        return Math.min(left, right);
+    }
+}
+
+//其他
 public int findSecondMinimumValue(TreeNode root) {
     if (root == null) return -1;
     if (root.left == null && root.right == null) return -1;
+    
     int leftVal = root.left.val;
     int rightVal = root.right.val;
+    
     if (leftVal == root.val) leftVal = findSecondMinimumValue(root.left);
     if (rightVal == root.val) rightVal = findSecondMinimumValue(root.right);
+    
     if (leftVal != -1 && rightVal != -1) return Math.min(leftVal, rightVal);
     if (leftVal != -1) return leftVal;
+    
     return rightVal;
 }
 ```
+
+类似参考：[100. 相同的树](https://leetcode-cn.com/problems/same-tree/)
+
+判断树 p 和 q 是否是完全一样
+
+```java
+class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
+            return true;
+        } else if (p == null || q == null) {
+            return false;
+        } else if (p.val != q.val) {
+            return false;
+        } else {
+            return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+        }
+    }
+}
+//作者：LeetCode-Solution   bfs太长了
+//链接：https://leetcode-cn.com/problems/same-tree/solution/xiang-tong-de-shu-by-leetcode-solution/
+```
+
+
 
 ## 层次遍历
 
@@ -1048,7 +1560,6 @@ private void inOrder(TreeNode node, List<Integer> nums) {
 ## Trie
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/5c638d59-d4ae-4ba4-ad44-80bdc30f38dd.jpg"/> </div><br>
-
 Trie，又称前缀树或字典树，用于判断字符串是否存在或者是否具有某种字符串前缀。
 
 ### 1. 实现一个 Trie
