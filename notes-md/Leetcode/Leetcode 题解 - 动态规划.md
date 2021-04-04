@@ -121,12 +121,13 @@ public int rob(int[] nums) {
     if (n == 1) {
         return nums[0];
     }
+    // 先保证n - 2有意义，再处理环形。分别处理0到倒数第二个，1到倒数第一个就是最后一个。处理两次
     return Math.max(rob(nums, 0, n - 2), rob(nums, 1, n - 1));
 }
 
 private int rob(int[] nums, int first, int last) {
     int pre2 = 0, pre1 = 0;
-    for (int i = first; i <= last; i++) {
+    for (int i = first; i <= last; i++) {//这里是等于，i <= last
         int cur = Math.max(pre1, pre2 + nums[i]);
         pre2 = pre1;
         pre1 = cur;
@@ -139,7 +140,9 @@ private int rob(int[] nums, int first, int last) {
 
 题目描述：有 N 个 信 和 信封，它们被打乱，求错误装信方式的数量。
 
-定义一个数组 dp 存储错误方式数量，dp[i] 表示前 i 个信和信封的错误方式数量。假设第 i 个信装到第 j 个信封里面，而第 j 个信装到第 k 个信封里面。根据 i 和 k 是否相等，有两种情况：
+定义一个数组 dp 存储错误方式数量，dp[i] 表示前 i 个信和信封的错误方式数量。
+
+假设第 i 个信装到第 j 个信封里面，而第 j 个信装到第 k 个信封里面。根据 i 和 k 是否相等，有两种情况：
 
 - i==k，交换 i 和 j 的信后，它们的信和信封在正确的位置，但是其余 i-2 封信有 dp[i-2] 种错误装信的方式。由于 j 有 i-1 种取值，因此共有 (i-1)\*dp[i-2] 种错误装信方式。
 - i != k，交换 i 和 j 的信后，第 i 个信和信封在正确的位置，其余 i-1 封信有 dp[i-1] 种错误装信方式。由于 j 有 i-1 种取值，因此共有 (i-1)\*dp[i-1] 种错误装信方式。
@@ -149,17 +152,152 @@ private int rob(int[] nums, int first, int last) {
 <!--<div align="center"><img src="https://latex.codecogs.com/gif.latex?dp[i]=(i-1)*dp[i-2]+(i-1)*dp[i-1]" class="mathjax-pic"/></div> <br>-->
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/da1f96b9-fd4d-44ca-8925-fb14c5733388.png" width="350px"> </div><br>
+参考
+
+力扣会员题目：[Leetcode] 634. Find the Derangement of An Array 解题报告
+
+https://blog.csdn.net/magicbean2/article/details/79112988
+
+优化参考：【Leetcode】634. Find the Derangement of An Array
+
+https://blog.csdn.net/qq_46105170/article/details/113707003
+
+题目
+
+在组合数学中，排列是一组元素的排列，因此没有元素出现在其原始位置。
+
+最初有一个数组，其中包含从1到n的n个整数，按升序排列，您需要找到它可以产生的排列数。
+
+另外，由于答案可能非常大，因此您应该返回输出 mod 109 + 7。
+
+
+
+思路：
+
+组合数学中的错排问题。当n个编号元素放在n个编号位置，元素编号与位置编号各不对应的方法数用D(n)表示。
+
+那么D(n-1)就表示n-1个编号元素放在n-1个编号位置，各不对应的方法数，其它类推。推导方法如下：
+
+1、把第n个元素放在某一个位置，比如位置k，那么一共有(n-1)中放法。
+
+2、放编号为k的元素，此时有两种情况：
+
+​	a）把k放到位置n，那么对于剩下的n-2个元素，就一共有D(n-2)种放法；
+
+​	b）第k个元素不放在位置n，这时 k 连同其余的n-2个元素都各有一个位置不能放，所以有D(n-1)种放法。
+
+因此，D(n) = (n - 1) (D(n - 2) + D(n - 1))，特别地，有D(1) = 0, D(2) = 1。于是，这道题目就变成了动态规划。
+
+
+
+范例1：
+
+输入：3				2			1
+
+输出：2				1			0
+
+说明：原始数组为[1,2,3]。 这两个排列分别是[2,3,1]和[3,1,2]。
+
+```java
+class Solution {
+    public static void main(String[] args) {
+        System.out.println(findDerangement(3));
+    }
+    public static int findDerangement(int n) {
+        long dn2 = 0, dn1 = 1;
+        long res = (n == 1) ? 0 : 1;
+        for (int i = 3; i <= n; ++i) {
+            res = ((i - 1) * (dn1 + dn2)) % 1000000007;
+            dn2 = dn1;
+            dn1 = res;
+        }
+        return (int)res;
+    }
+}
+```
+
 ### 5. 母牛生产
 
 [程序员代码面试指南-P181](#)
 
-题目描述：假设农场中成熟的母牛每年都会生 1 头小母牛，并且永远不会死。第一年有 1 只小母牛，从第二年开始，母牛开始生小母牛。每只小母牛 3 年之后成熟又可以生小母牛。给定整数 N，求 N 年后牛的数量。
+题目描述：
+
+假设农场中成熟的母牛每年都会生 1 头小母牛，并且永远不会死。
+
+第一年有 1 只小母牛，从第二年开始，母牛开始生小母牛。
+
+每只小母牛 3 年之后成熟又可以生小母牛。给定整数 N，求 N 年后牛的数量。
 
 第 i 年成熟的牛的数量为：
 
 <!--<div align="center"><img src="https://latex.codecogs.com/gif.latex?dp[i]=dp[i-1]+dp[i-3]" class="mathjax-pic"/></div> <br>-->
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/879814ee-48b5-4bcb-86f5-dcc400cb81ad.png" width="250px"> </div><br>
+参考：https://blog.csdn.net/weixin_30832143/article/details/96741056
+
+```java
+public  int cowNums(int n){
+    int[] dp=new int [n+1];
+    if(n==0)
+        return 0;
+    if(n==1)
+        return 1;
+    if(n==2)
+        return 2;
+    if(n==3)
+        return 3;
+    dp[0]=0;
+    dp[1]=1;
+    dp[2]=2;
+    dp[3]=3;
+    for(int i=4;i<=n;i++){
+        dp[i]=dp[i-1]+dp[i-3];
+    }
+    return dp[n];
+}
+```
+
+变式参考：[母牛生小牛问题](https://www.cnblogs.com/AndyJee/p/4457411.html)
+
+题目：
+
+一头刚出生的小母牛，4年后生一头小母牛，以后每年生一头，现有一头刚出生的小母牛，问20年后共有多少头牛？
+
+思路：
+
+列举前n年的情况：1、1、1、2、3、4、6、8、11。。。
+
+将规律抽象成公式：F(1)=1	F(2)=1	F(3)=1	**F(n)=F(n-1)+F(n-3)** 
+
+F(n):表示第n年共有多少头牛
+
+F(n-1):表示第n-1年共有多少头牛
+
+F(n-3):表示第(n-3)年出生的母牛在第n年生的小母牛数
+
+```java
+// recursive method
+int NumOfCow(int n){
+    if(n<=3)
+        return 1;
+    return NumOfCow(n-1)+NumOfCow(n-3);
+}
+
+// dynamic programming method
+int NumOfCow2(int n){
+    int num[n+1];
+    for(int i=1;i<=n;i++){
+        if(i<=3) num[i]=1;
+        else num[i]=num[i-1]+num[i-3];
+    }
+    return num[n];
+}
+```
+
+变形：假设母牛只有十年寿命，那么**减去十年前出生的母牛数量即可**。 
+
+参考：LeetCode刷题之动态规划（一）：https://juejin.cn/post/6844904023196172295#heading-5
+
 ## 矩阵路径
 
 ### 1. 矩阵的最小路径和
@@ -175,7 +313,7 @@ private int rob(int[] nums, int first, int last) {
 Given the above grid map, return 7. Because the path 1→3→1→1→1 minimizes the sum.
 ```
 
-题目描述：求从矩阵的左上角到右下角的最小路径和，每次只能向右和向下移动。
+题目描述：求从矩阵的左上角到右下角的最小路径和，每次只能**向右和向下**移动。
 
 ```java
 public int minPathSum(int[][] grid) {
@@ -200,6 +338,50 @@ public int minPathSum(int[][] grid) {
 }
 ```
 
+类似题目，参考：剑指 47、礼物的最大值，只是改了一下最大值和最小值。上边是一个空间优化。
+
+```java
+class Solution {
+    public int minPathSum(int[][] grid) {
+        if (grid.length == 0 || grid[0].length == 0) {
+            return 0;
+        }
+        int m = grid.length, n = grid[0].length;
+        int[] dp = new int[n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if(i == 0 && j == 0) continue;
+                if(i == 0) grid[i][j] += grid[i][j - 1] ;
+                else if(j == 0) grid[i][j] += grid[i - 1][j];
+                else grid[i][j] += Math.min(grid[i][j - 1], grid[i - 1][j]);
+            }
+        }
+        return grid[m - 1][n - 1];
+    }
+}
+```
+
+
+
+每次只需要上一层的结果的话，内存可以再优化一下 。
+
+```java
+class Solution {
+    public int maxValue(int[][] grid) {
+        int[] dp = new int[grid[0].length];
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (j == 0) dp[j] += grid[i][j];//第一列
+                else dp[j] = Math.max(dp[j - 1], dp[j]) + grid[i][j];
+            }
+        }
+        return dp[dp.length - 1];
+    }
+}
+```
+
+
+
 ### 2. 矩阵的总路径数
 
 62\. Unique Paths (Medium)
@@ -209,9 +391,76 @@ public int minPathSum(int[][] grid) {
 题目描述：统计从矩阵左上角到右下角的路径总数，每次只能向右或者向下移动。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/dc82f0f3-c1d4-4ac8-90ac-d5b32a9bd75a.jpg" width=""> </div><br>
+```
+输入：m = 3, n = 7
+输出：28
+
+输入：m = 3, n = 2
+输出：3
+解释：
+从左上角开始，总共有 3 条路径可以到达右下角。
+1. 向右 -> 向下 -> 向下
+2. 向下 -> 向下 -> 向右
+3. 向下 -> 向右 -> 向下
+
+输入：m = 7, n = 3
+输出：28
+
+输入：m = 3, n = 3
+输出：6
+```
+
+题解
+
+参考：https://leetcode-cn.com/problems/unique-paths/solution/dong-tai-gui-hua-by-powcai-2/
+
+这是个[杨辉三角形](https://www.mathsisfun.com/pascals-triangle.html)，每个位置的路径 = 该位置左边的路径 + 该位置上边的路径 
+
+
+
+**排列组合思路**
+
+![1617450568548](../../assets/1617450568548.png)
+
+
+
+**动态规划** 
+
+我们令dp\[i][j]是到达i，j最多路径
+
+动态方程:dp[i][j]= dp\[i-1][j] + dp\[i][j-1]
+
+注意，对于第一行|dp\[o][j]，或者第一列dp\[i][0]，由于都是在边界，所以只能为1
+
+时间复杂度:O(m * 7)
+
+空间复杂度:O(m * 7)
+
+优化:因为我们每次只需要dp\[i-1][j, dp\[i][j-1]
+
+所以我们只要记录这两个数，直接看代码吧!
+
+```java
+class Solution {
+    public int uniquePaths(int m, int n) {
+        int[][] dp = new int[m][n];
+        for (int i = 0; i < n; i++) dp[0][i] = 1;
+        for (int i = 0; i < m; i++) dp[i][0] = 1;
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+        return dp[m - 1][n - 1];  
+    }
+}
+```
+
+空间优化到O(N)
+
 ```java
 public int uniquePaths(int m, int n) {
-    int[] dp = new int[n];
+    int[] dp = new int[n];//和列大小一样
     Arrays.fill(dp, 1);
     for (int i = 1; i < m; i++) {
         for (int j = 1; j < n; j++) {
@@ -236,6 +485,8 @@ public int uniquePaths(int m, int n) {
 }
 ```
 
+
+
 ## 数组区间
 
 ### 1. 数组区间和
@@ -247,30 +498,57 @@ public int uniquePaths(int m, int n) {
 ```html
 Given nums = [-2, 0, 3, -5, 2, -1]
 
-sumRange(0, 2) -> 1
-sumRange(2, 5) -> -1
+sumRange(0, 2) -> 1		-2+0+3
+sumRange(2, 5) -> -1	3+ -5 +2+ -1 = -1 ，下标2加到下标5：0+1+2+3+4+5 - 0+1
 sumRange(0, 5) -> -3
 ```
 
-求区间 i \~ j 的和，可以转换为 sum[j + 1] - sum[i]，其中 sum[i] 为 0 \~ i - 1 的和。
+将前缀和数组sums的长度设为n + 1的目的是为了方便计算sumRange(i,j),不需要对i = 0的情况特殊处理。
+
+此时有：sumRange(i,j)= sums[j + 1] - sums[i]
 
 ```java
 class NumArray {
+    int[] sums;
 
+    public NumArray(int[] nums) {
+        int n = nums.length;
+        sums = new int[n + 1];
+        for (int i = 0; i < n; i++) {		    	// [1, 2, 3, 4,  5, 6]
+            //就等于前一个sums和当前的 nums相加。sums[0]不要管,sum[i] 为 0 ~ i - 1 的和
+            sums[i + 1] = sums[i] + nums[i];    	// [0, 1, 3, 6, 10, 15,21]
+        }
+    }
+    
+    public int sumRange(int i, int j) {	//nums2~nums5 => 2+3+4+5 
+        return sums[j + 1] - sums[i];	//sums[6]-sums[2] 012345-01
+    }
+}
+```
+
+其他
+
+求区间 i \~ j 的和，可以转换为 sum[j + 1] - sum[i]，其中 **sum[i] 为 0 \~ i - 1 的和。**
+
+```java
+class NumArray {
+	//要求实现两个函数
     private int[] sums;
 
     public NumArray(int[] nums) {
-        sums = new int[nums.length + 1];
-        for (int i = 1; i <= nums.length; i++) {
-            sums[i] = sums[i - 1] + nums[i - 1];
+        sums = new int[nums.length + 1];		 
+        for (int i = 1; i <= nums.length; i++) { //[-2, 0, 3, -5, 2, -1]
+            sums[i] = sums[i - 1] + nums[i - 1]; //[0, -2,-2, 1,-4,-2,-3]
         }
     }
 
     public int sumRange(int i, int j) {
-        return sums[j + 1] - sums[i];
+        return sums[j + 1] - sums[i];			//sum[0] 用于计算 -0
     }
 }
 ```
+
+
 
 ### 2. 数组中等差递增子区间的个数
 
@@ -282,13 +560,29 @@ class NumArray {
 A = [0, 1, 2, 3, 4]
 
 return: 6, for 3 arithmetic slices in A:
+返回: 6, A 中有三个子等差数组
 
 [0, 1, 2],
+
 [1, 2, 3],
 [0, 1, 2, 3],
+
 [0, 1, 2, 3, 4],
 [ 1, 2, 3, 4],
 [2, 3, 4]
+
+示例1：
+输入：[1,2,3,4]
+输出: 3, A 中有三个子等差数组: [1, 2, 3], [2, 3, 4] 以及自身 [1, 2, 3, 4]。
+
+输入：[1]
+输出：0
+
+输入：[-1,-10]
+输出：0
+
+输入：[1,2,3]
+输出：1
 ```
 
 dp[i] 表示以 A[i] 为结尾的等差递增子区间的个数。
@@ -341,7 +635,41 @@ public int numberOfArithmeticSlices(int[] A) {
 
 题目描述：For example, given n = 2, return 1 (2 = 1 + 1); given n = 10, return 36 (10 = 3 + 3 + 4).
 
+```
+给定一个正整数 n，将其拆分为至少两个正整数的和，并使这些整数的乘积最大化。 返回你可以获得的最大乘积。
+
+示例 1:
+
+输入: 2
+输出: 1
+解释: 2 = 1 + 1, 1 × 1 = 1。
+
+示例 2:
+
+输入: 10
+输出: 36
+解释: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36。
+
+说明: 你可以假设 n 不小于 2 且不大于 58。
+```
+
+
+
 ```java
+//题目：剑指 14、剪绳子 两题一样
+class Solution {
+    public int integerBreak(int n) {
+        if(n <= 3) return n - 1;
+        int a = n / 3, b = n % 3;
+        if(b == 0) return (int)Math.pow(3, a);
+        if(b == 1) return (int)Math.pow(3, a - 1) * 4;
+        return (int)Math.pow(3, a) * 2;
+    }
+}
+//作者：jyd
+//链接：https://leetcode-cn.com/problems/integer-break/solution/343-zheng-shu-chai-fen-tan-xin-by-jyd/
+
+//其他
 public int integerBreak(int n) {
     int[] dp = new int[n + 1];
     dp[1] = 1;
@@ -361,6 +689,37 @@ public int integerBreak(int n) {
 [Leetcode](https://leetcode.com/problems/perfect-squares/description/) / [力扣](https://leetcode-cn.com/problems/perfect-squares/description/)
 
 题目描述：For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9.
+
+```
+给定正整数 n，找到若干个完全平方数（比如 1, 4, 9, 16, ...）使得它们的和等于 n。你需要让组成和的完全平方数的个数最少。
+
+给你一个整数 n ，返回和为 n 的完全平方数的 最少数量 。
+
+完全平方数 是一个整数，其值等于另一个整数的平方；换句话说，其值等于一个整数自乘的积。
+例如，1、4、9 和 16 都是完全平方数，而 3 和 11 不是。
+ 
+示例 1：
+
+输入：n = 12
+输出：3 
+解释：12 = 4 + 4 + 4
+示例 2：
+
+输入：n = 13
+输出：2
+解释：13 = 4 + 9
+ 
+提示：
+1 <= n <= 104
+```
+
+思路：类似零钱找零 [322. 零钱兑换](https://leetcode-cn.com/problems/coin-change/)
+
+参考 dp 思路，有点复杂。
+
+https://leetcode-cn.com/problems/perfect-squares/solution/hua-jie-suan-fa-279-wan-quan-ping-fang-shu-by-guan/
+
+其他题解：
 
 ```java
 public int numSquares(int n) {
@@ -400,6 +759,24 @@ private List<Integer> generateSquareList(int n) {
 
 题目描述：Given encoded message "12", it could be decoded as "AB" (1 2) or "L" (12).
 
+```
+"2101"、1		"06"、0		 "226"、3		
+
+"1"、"2"、"9"、"10"、"99"
+1
+
+"11"、"12"、"26"、
+2
+
+"1201234"
+3
+
+"1123"
+5
+```
+
+题解
+
 ```java
 public int numDecodings(String s) {
     if (s == null || s.length() == 0) {
@@ -408,21 +785,21 @@ public int numDecodings(String s) {
     int n = s.length();
     int[] dp = new int[n + 1];
     dp[0] = 1;
-    dp[1] = s.charAt(0) == '0' ? 0 : 1;
-    for (int i = 2; i <= n; i++) {
-        int one = Integer.valueOf(s.substring(i - 1, i));
+    dp[1] = s.charAt(0) == '0' ? 0 : 1; //"06"  dp[0]=1 dp[1]=0		"1" dp[0]=1 dp[1]=1
+    for (int i = 2; i <= n; i++) {		//"12"  dp[0]=1 dp[1]=1
+        int one = Integer.valueOf(s.substring(i - 1, i));//6	12->2获取字符串第二位。	
         if (one != 0) {
-            dp[i] += dp[i - 1];
+            dp[i] += dp[i - 1];//dp[2]=dp[2]+dp[1]=0+0		dp[2]=dp[2]+dp[1]=0+1
         }
-        if (s.charAt(i - 2) == '0') {
+        if (s.charAt(i - 2) == '0') {//"06" 是true
             continue;
         }
-        int two = Integer.valueOf(s.substring(i - 2, i));
+        int two = Integer.valueOf(s.substring(i - 2, i));//"12"
         if (two <= 26) {
-            dp[i] += dp[i - 2];
+            dp[i] += dp[i - 2];//dp[2]=dp[2]+dp[0]=1+1=2
         }
     }
-    return dp[n];
+    return dp[n];//"1" 就直接返回dp[1]=1		12返回2
 }
 ```
 
