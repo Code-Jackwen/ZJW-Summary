@@ -775,7 +775,167 @@ private List<Integer> generateSquareList(int n) {
 5
 ```
 
-题解
+参考：
+
+https://leetcode-cn.com/problems/decode-ways/solution/c-wo-ren-wei-hen-jian-dan-zhi-guan-de-jie-fa-by-pr/
+
+![1617504293394](../../assets/1617504293394.png)
+
+```java
+//原作者
+class Solution {
+    int numDecodings(String s) {
+        char[] cs = s.toCharArray();
+        if (cs[0] == '0') return 0;
+        int pre = 1, cur = 1;			//dp[-1] = dp[0] = 1
+        for (int i = 1; i < cs.length; i++) {
+            int tmp = cur;
+            if (cs[i] == '0'){
+                if (cs[i - 1] == '1' || cs[i - 1] == '2') cur = pre;
+           		else return 0;
+            }
+            else if (cs[i - 1] == '1' || 
+                    (cs[i - 1] == '2' && cs[i] >= '1' && cs[i] <= '6')){
+                cur = cur + pre;
+            }
+            pre = tmp;
+        }
+        return cur;
+    }
+}
+//没看
+//边界处理复杂
+class Solution {
+    public int numDecodings(String s) {
+        int n = s.length(); //记录s【i】之前的译码数量
+        int[] dp = new int[n]; //不能译码的情况
+        if (s.charAt(0) == '0') return 0;
+        dp[0] = 1;
+        for (int i = 1; i < n; i++) { //s[i-1]和s[i]被唯一译码的情况
+            if (s.charAt(i) != '0') dp[i] += dp[i - 1];
+            if (s.charAt(i - 1) == '1' || (s.charAt(i - 1) == '2' && s.charAt(i) <= '6')) 			  {
+                if (i - 2 >= 0) dp[i] += dp[i - 2];
+                else dp[i]++;
+            }
+        }
+        return dp[n - 1];
+    }
+}
+//没看
+//空间复杂度为O（n）的代码，但感觉更清晰易懂些
+class Solution {
+     int numDecodings(String s) {
+        char[] cs = s.toCharArray();
+        if(cs[0]=='0') return 0;
+        int[] dp =new int[cs.length+1];
+        dp[0]=1;dp[1]=1;
+        for (int i =1; i < cs.length; i++) {
+            if (cs[i] == '0')//1.cs[i]为0的情况
+                if (cs[i - 1] == '1' || cs[i - 1] == '2') //cs[i - 1]等于1或2的情况
+                    dp[i+1] = dp[i-1];//由于s[1]指第二个下标，对应为dp[2],所以dp的下标要比s大1，故为dp[i+1]
+                else
+                    return 0;
+            else //2.cs[i]不为0的情况
+                if (cs[i - 1] == '1' || (cs[i - 1] == '2' && cs[i] <= '6'))//cs[i-1]cs[i]两位数要小于26的情况
+                    dp[i+1] = dp[i]+dp[i-1];
+                else//其他情况
+                    dp[i+1] = dp[i];
+        }
+        return dp[cs.length];
+    }
+}
+```
+
+```java
+//评论
+/**
+    上楼梯的复杂版？推荐
+    如果连续的两位数符合条件，就相当于一个上楼梯的题目，可以有两种选法：
+        1.一位数决定一个字母
+        2.两位数决定一个字母
+        就相当于dp(i) = dp[i-1] + dp[i-2];
+    如果不符合条件，又有两种情况
+        1.当前数字是0：
+            不好意思，这阶楼梯不能单独走，
+            dp[i] = dp[i-2]
+        2.当前数字不是0
+            不好意思，这阶楼梯太宽，走两步容易扯着步子，只能一个一个走
+            dp[i] = dp[i-1];
+    
+*/
+class Solution {
+    public int numDecodings(String s) {
+        int len = s.length();
+        if (len == 0) return 0;
+        if (s.charAt(0) == '0') return 0;
+
+        int[] dp = new int[len + 1];
+        dp[0] = 1;
+
+        for (int i = 0; i < len; i++) {
+            //当前数是0
+            dp[i + 1] = s.charAt(i) == '0' ? 0 : dp[i];
+            //连续两位数符合条件
+            if (i > 0 && (s.charAt(i - 1) == '1' || 
+                         (s.charAt(i - 1) == '2' && s.charAt(i) <= '6'))) {
+                dp[i + 1] += dp[i - 1];
+            }
+        }
+        return dp[len];
+    }
+}
+//上边的滚动变量版本
+class Solution {
+    public int numDecodings(String s) {
+        int len = s.length();
+        if (len == 0) return 0;
+        if (s.charAt(0) == '0') return 0;
+
+        int pre = 1;
+        int cur=0;
+        int prepre=0;
+        for (int i = 0; i < len; i++) {
+            //当前数是0
+            cur = s.charAt(i) == '0' ? 0 : pre;//累加pre是一定的
+            //连续两位数符合条件
+            if (i > 0 && (s.charAt(i - 1) == '1' ||
+             (s.charAt(i - 1) == '2' && s.charAt(i) <= '6'))) {
+                cur += prepre;//cur再累加prepre
+            }
+            prepre=pre;
+            pre=cur;
+        }
+        return cur;
+    }
+}
+//没看
+class Solution {
+    public int numDecodings(String s) {
+        char[] chars = s.toCharArray();
+        int len = chars.length;
+        if (chars[0] == '0') return 0;
+        int[] dp = new int[len+1];
+        dp[0] = 1;
+        dp[1] = 1;
+        for (int i = 1; i < len; i++) {
+            if (chars[i] != '0') {
+                dp[i+1] = dp[i];
+                int x = 10 * (chars[i-1] - '0') + (chars[i] - '0');
+                if (x > 9 && x < 27) dp[i+1] = dp[i] + dp[i-1];
+            } else {
+                int x = 10 * (chars[i-1] - '0') + (chars[i] - '0');
+                if (x > 26 || chars[i] == chars[i-1]) return 0;
+
+                dp[i+1] = dp[i-1];
+            }
+        }
+        return dp[len];
+    }
+}
+
+```
+
+其他题解
 
 ```java
 public int numDecodings(String s) {
@@ -823,6 +983,57 @@ public int numDecodings(String s) {
 300\. Longest Increasing Subsequence (Medium)
 
 [Leetcode](https://leetcode.com/problems/longest-increasing-subsequence/description/) / [力扣](https://leetcode-cn.com/problems/longest-increasing-subsequence/description/)
+
+```javascript
+示例 1：
+
+输入：nums = [10,9,2,5,3,7,101,18]
+输出：4
+解释：最长递增子序列是 [2,3,7,101]，因此长度为 4 。
+示例 2：
+
+输入：nums = [0,1,0,3,2,3]
+输出：4
+示例 3：
+
+输入：nums = [7,7,7,7,7,7,7]
+输出：1
+
+提示：
+
+1 <= nums.length <= 2500
+-104 <= nums[i] <= 104
+
+进阶：
+你可以设计时间复杂度为 O(n2) 的解决方案吗？
+你能将算法的时间复杂度降低到 O(n log(n)) 吗?
+```
+
+![1617517324248](../../assets/1617517324248.png)
+
+```java
+// Dynamic programming.
+// 时间O(N*N) 空间O(N)
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        if(nums.length == 0) return 0;
+        int[] dp = new int[nums.length];
+        int res = 0;
+        Arrays.fill(dp, 1);
+        for(int i = 0; i < nums.length; i++) {
+            for(int j = 0; j < i; j++) {
+                if(nums[j] < nums[i]) dp[i] = Math.max(dp[i], dp[j] + 1);
+            }
+            res = Math.max(res, dp[i]);
+        }
+        return res;
+    }
+}
+//作者：jyd
+//链接：https://leetcode-cn.com/problems/longest-increasing-subsequence/solution/zui-chang-shang-sheng-zi-xu-lie-dong-tai-gui-hua-2/
+```
+
+其他题解
 
 ```java
 public int lengthOfLIS(int[] nums) {
@@ -890,10 +1101,10 @@ private int binarySearch(int[] tails, int len, int key) {
     int l = 0, h = len;
     while (l < h) {
         int mid = l + (h - l) / 2;
-        if (tails[mid] == key) {
+        if (key == tails[mid]) {
             return mid;
-        } else if (tails[mid] > key) {
-            h = mid;
+        } else if (key < tails[mid]) {
+            h = mid;			//
         } else {
             l = mid + 1;
         }
@@ -903,6 +1114,12 @@ private int binarySearch(int[] tails, int len, int key) {
 ```
 
 ### 2. 一组整数对能够构成的最长链
+
+类似题目参考：
+
+https://leetcode-cn.com/problems/maximum-length-of-pair-chain/solution/chuan-shang-yi-fu-wo-jiu-bu-ren-shi-ni-liao-lai--2/
+
+作者力扣题解仓库：https://github.com/azl397985856/leetcode
 
 646\. Maximum Length of Pair Chain (Medium)
 
@@ -933,7 +1150,32 @@ public int findLongestChain(int[][] pairs) {
         }
     }
     return Arrays.stream(dp).max().orElse(0);
+    //orElse(0)需要加，否则 OptionalInt cannot be converted to int
 }
+
+//二维数组排序Demo：Arrays.sort(pairs, (a, b) -> (a[0] - b[0]));
+public static void main(String[] args) {
+	int[][] nums = new int[][]{{1,3},{1,2},{4,5},{3,7}};
+	Arrays.sort(nums, new Comparator<int[]>() {
+		public int compare(int[] a, int[] b){
+			if(a[0]==b[0]){
+				return a[1] - b[1];
+			}else {
+				return a[0] - b[0];
+			}
+		}
+	});
+	for(int i=0;i<nums.length; i++){
+		System.out.println(Arrays.toString(nums[i]));
+	}
+	/*输出：
+		[1, 2]
+		[1, 3]
+		[3, 7]
+		[4, 5]
+	*/
+}
+
 ```
 
 ### 3. 最长摆动子序列
@@ -943,21 +1185,41 @@ public int findLongestChain(int[][] pairs) {
 [Leetcode](https://leetcode.com/problems/wiggle-subsequence/description/) / [力扣](https://leetcode-cn.com/problems/wiggle-subsequence/description/)
 
 ```html
-Input: [1,7,4,9,2,5]
-Output: 6
-The entire sequence is a wiggle sequence.
+如果连续数字之间的差严格地在正数和负数之间交替，则数字序列称为摆动序列。
+第一个差（如果存在的话）可能是正数或负数。少于两个元素的序列也是摆动序列。
 
-Input: [1,17,5,10,13,15,10,5,16,8]
-Output: 7
-There are several subsequences that achieve this length. One is [1,17,10,13,10,16,8].
+例如， [1,7,4,9,2,5] 是一个摆动序列，因为差值 (6,-3,5,-7,3) 是正负交替出现的。
+相反, [1,4,7,2,5] 和 [1,7,4,5,5] 不是摆动序列，第一个序列是因为它的前两个差值都是正数，第二个序列是因为它的最后一个差值为零。
 
-Input: [1,2,3,4,5,6,7,8,9]
-Output: 2
+给定一个整数序列，返回作为摆动序列的最长子序列的长度。 通过从原始序列中删除一些（也可以不删除）元素来获得子序列，剩下的元素保持其原始顺序。
+
+示例 1:
+输入: [1,7,4,9,2,5]
+输出: 6 
+解释: 整个序列均为摆动序列。
+
+示例 2:
+输入: [1,17,5,10,13,15,10,5,16,8]
+输出: 7
+解释: 这个序列包含几个长度为 7 摆动序列，其中一个可为[1,17,10,13,10,16,8]。
+
+示例 3:
+输入: [1,2,3,4,5,6,7,8,9]
+输出: 2
+
+进阶:
+你能否用 O(n) 时间复杂度完成此题?
 ```
 
-要求：使用 O(N) 时间复杂度求解。
+参考：
+
+https://leetcode-cn.com/problems/wiggle-subsequence/solution/tan-xin-si-lu-qing-xi-er-zheng-que-de-ti-jie-by-lg/
+
+![1617540883020](../../assets/1617540883020.png)
 
 ```java
+//其他
+//要求：使用 O(N) 时间复杂度求解。
 public int wiggleMaxLength(int[] nums) {
     if (nums == null || nums.length == 0) {
         return 0;
@@ -978,17 +1240,17 @@ public int wiggleMaxLength(int[] nums) {
 
 对于两个子序列 S1 和 S2，找出它们最长的公共子序列。
 
-定义一个二维数组 dp 用来存储最长公共子序列的长度，其中 dp[i][j] 表示 S1 的前 i 个字符与 S2 的前 j 个字符最长公共子序列的长度。考虑 S1<sub>i</sub> 与 S2<sub>j</sub> 值是否相等，分为两种情况：
+定义一个二维数组 dp 用来存储最长公共子序列的长度，其中 **dp\[i][j] 表示 S1 的前 i 个字符与 S2 的前 j 个字符最长公共子序列的长度**。考虑 S1<sub>i</sub> 与 S2<sub>j</sub> 值是否相等，分为两种情况：
 
-- 当 S1<sub>i</sub>==S2<sub>j</sub> 时，那么就能在 S1 的前 i-1 个字符与 S2 的前 j-1 个字符最长公共子序列的基础上再加上 S1<sub>i</sub> 这个值，最长公共子序列长度加 1，即 dp[i][j] = dp[i-1][j-1] + 1。
-- 当 S1<sub>i</sub> != S2<sub>j</sub> 时，此时最长公共子序列为 S1 的前 i-1 个字符和 S2 的前 j 个字符最长公共子序列，或者 S1 的前 i 个字符和 S2 的前 j-1 个字符最长公共子序列，取它们的最大者，即 dp[i][j] = max{ dp[i-1][j], dp[i][j-1] }。
+- 当 S1<sub>i</sub>==S2<sub>j</sub> 时，那么就能在 S1 的前 i-1 个字符与 S2 的前 j-1 个字符最长公共子序列的基础上再加上 S1<sub>i</sub> 这个值，最长公共子序列长度加 1，即 dp\[i][j] = dp\[i-1][j-1] + 1。
+- 当 S1<sub>i</sub> != S2<sub>j</sub> 时，此时最长公共子序列为 S1 的前 i-1 个字符和 S2 的前 j 个字符最长公共子序列，或者 S1 的前 i 个字符和 S2 的前 j-1 个字符最长公共子序列，取它们的最大者，即 dp\[i][j] = max{ dp\[i-1][j], dp\[i][j-1] }。
 
 综上，最长公共子序列的状态转移方程为：
 
 <!--<div align="center"><img src="https://latex.codecogs.com/gif.latex?dp[i][j]=\left\{\begin{array}{rcl}dp[i-1][j-1]&&{S1_i==S2_j}\\max(dp[i-1][j],dp[i][j-1])&&{S1_i<>S2_j}\end{array}\right." class="mathjax-pic"/></div> <br>-->
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/ecd89a22-c075-4716-8423-e0ba89230e9a.jpg" width="450px"> </div><br>
-对于长度为 N 的序列 S<sub>1</sub> 和长度为 M 的序列 S<sub>2</sub>，dp[N][M] 就是序列 S<sub>1</sub> 和序列 S<sub>2</sub> 的最长公共子序列长度。
+对于长度为 N 的序列 S<sub>1</sub> 和长度为 M 的序列 S<sub>2</sub>，dp\[N][M] 就是序列 S<sub>1</sub> 和序列 S<sub>2</sub> 的最长公共子序列长度。
 
 与最长递增子序列相比，最长公共子序列有以下不同点：
 
@@ -1023,10 +1285,10 @@ public int wiggleMaxLength(int[] nums) {
 
 有一个容量为 N 的背包，要用这个背包装下物品的价值最大，这些物品有两个属性：体积 w 和价值 v。
 
-定义一个二维数组 dp 存储最大价值，其中 dp[i][j] 表示前 i 件物品体积不超过 j 的情况下能达到的最大价值。设第 i 件物品体积为 w，价值为 v，根据第 i 件物品是否添加到背包中，可以分两种情况讨论：
+定义一个二维数组 dp 存储最大价值，其中 dp\[i][j] 表示前 i 件物品体积不超过 j 的情况下能达到的最大价值。设第 i 件物品体积为 w，价值为 v，根据第 i 件物品是否添加到背包中，可以分两种情况讨论：
 
-- 第 i 件物品没添加到背包，总体积不超过 j 的前 i 件物品的最大价值就是总体积不超过 j 的前 i-1 件物品的最大价值，dp[i][j] = dp[i-1][j]。
-- 第 i 件物品添加到背包中，dp[i][j] = dp[i-1][j-w] + v。
+- 第 i 件物品没添加到背包，总体积不超过 j 的前 i 件物品的最大价值就是总体积不超过 j 的前 i-1 件物品的最大价值，dp\[i][j] = dp\[i-1][j]。
+- 第 i 件物品添加到背包中，dp\[i][j] = dp\[i-1][j-w] + v。
 
 第 i 件物品可添加也可以不添加，取决于哪种情况下最大价值更大。因此，0-1 背包的状态转移方程为：
 
@@ -1056,12 +1318,12 @@ public int knapsack(int W, int N, int[] weights, int[] values) {
 
 **空间优化**  
 
-在程序实现时可以对 0-1 背包做优化。观察状态转移方程可以知道，前 i 件物品的状态仅与前 i-1 件物品的状态有关，因此可以将 dp 定义为一维数组，其中 dp[j] 既可以表示 dp[i-1][j] 也可以表示 dp[i][j]。此时，
+在程序实现时可以对 0-1 背包做优化。观察状态转移方程可以知道，前 i 件物品的状态仅与前 i-1 件物品的状态有关，因此可以将 dp 定义为一维数组，其中 dp[j] 既可以表示 dp\[i-1][j] 也可以表示 dp\[i][j]。此时，
 
 <!--<div align="center"><img src="https://latex.codecogs.com/gif.latex?dp[j]=max(dp[j],dp[j-w]+v)" class="mathjax-pic"/></div> <br>-->
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/9ae89f16-7905-4a6f-88a2-874b4cac91f4.jpg" width="300px"> </div><br>
-因为 dp[j-w] 表示 dp[i-1][j-w]，因此不能先求 dp[i][j-w]，防止将 dp[i-1][j-w] 覆盖。也就是说要先计算 dp[i][j] 再计算 dp[i][j-w]，在程序实现时需要按倒序来循环求解。
+因为 dp[j-w] 表示 dp\[i-1][j-w]，因此不能先求 dp\[i][j-w]，防止将 dp\[i-1][j-w] 覆盖。也就是说要先计算 dp\[i][j] 再计算 dp\[i][j-w]，在程序实现时需要按倒序来循环求解。
 
 ```java
 public int knapsack(int W, int N, int[] weights, int[] values) {

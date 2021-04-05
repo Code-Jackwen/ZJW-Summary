@@ -1304,8 +1304,6 @@ Profile 用来分析 sql 性能的消耗分布情况。当用 explain 无法解�
 
 **中间件代理**：在应⽤和数据中间加了⼀个代理层。分⽚逻辑统⼀维护在中间件服务中。我们现在谈的**Mycat**、360的Atlas、⽹易的DDB等等都是这种架构的实现。
 
-
-
 大表优化参考：
 
 https://segmentfault.com/a/1190000006158186
@@ -1332,15 +1330,19 @@ SQL 等执行过程分为两类，一类对于**查询**等过程如下：
 
 分析器----》权限校验----》执行器---》引擎---redo log prepare---》binlog---》redo log commit 
 
+## sql执行顺序
 
+1、from、join、on、where、group by(开始使用select中的别名，后面的语句中都可以使用)、avg,sum.... 、having 、select 、distinct 、order by、limit 
+
+关于sql和MySQL的语句执行顺序：https://blog.csdn.net/u014044812/article/details/51004754
+
+sql语句的执行顺序以及流程（证明）：https://blog.csdn.net/qq_26442553/article/details/79467243
 
 参考：
 
-https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485097&idx=1&sn=84c89da477b1338bdf3e9fcd65514ac1&chksm=cea24962f9d5c074d8d3ff1ab04ee8f0d6486e3d015cfd783503685986485c11738ccb542ba7&token=79317275&lang=zh_CN%23rd
+[一条SQL语句在MySQL中如何执行的](https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485097&idx=1&sn=84c89da477b1338bdf3e9fcd65514ac1&chksm=cea24962f9d5c074d8d3ff1ab04ee8f0d6486e3d015cfd783503685986485c11738ccb542ba7&token=79317275&lang=zh_CN%23rd)
 
-## MySQL优化规范建议
-
-https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485117&idx=1&sn=92361755b7c3de488b415ec4c5f46d73&chksm=cea24976f9d5c060babe50c3747616cce63df5d50947903a262704988143c2eeb4069ae45420&token=79317275&lang=zh_CN%23rd
+MySQL优化规范建议：https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485117&idx=1&sn=92361755b7c3de488b415ec4c5f46d73&chksm=cea24976f9d5c060babe50c3747616cce63df5d50947903a262704988143c2eeb4069ae45420&token=79317275&lang=zh_CN%23rd
 
 
 
