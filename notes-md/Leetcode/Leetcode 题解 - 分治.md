@@ -12,13 +12,27 @@
 
 [Leetcode](https://leetcode.com/problems/different-ways-to-add-parentheses/description/) / [力扣](https://leetcode-cn.com/problems/different-ways-to-add-parentheses/description/)
 
-```html
-Input: "2-1-1".
+```javascript
+给定一个含有数字和运算符(有效的运算符号包含 +, - 以及 * 。)的字符串，为表达式添加括号，改变其运算优先级以求出不同的结果。你需要给出所有可能的组合的结果。
 
-((2-1)-1) = 0
+示例 1:
+
+输入: "2-1-1"
+输出: [0, 2]
+解释: 
+((2-1)-1) = 0 
 (2-(1-1)) = 2
 
-Output : [0, 2]
+示例 2:
+
+输入: "2*3-4*5"
+输出: [-34, -14, -10, -10, 10]
+解释: 
+(2*(3-(4*5))) = -34 
+((2*3)-(4*5)) = -14 
+((2*(3-4))*5) = -10 
+(2*((3-4)*5)) = -10 
+(((2*3)-4)*5) = 10
 ```
 
 ```java
@@ -59,7 +73,7 @@ public List<Integer> diffWaysToCompute(String input) {
 
 [Leetcode](https://leetcode.com/problems/unique-binary-search-trees-ii/description/) / [力扣](https://leetcode-cn.com/problems/unique-binary-search-trees-ii/description/)
 
-给定一个数字 n，要求生成所有值为 1...n 的二叉搜索树。
+给定一个数字 n，要求生成所有值为 1...n 的**二叉搜索树(BST)**。
 
 ```html
 Input: 3

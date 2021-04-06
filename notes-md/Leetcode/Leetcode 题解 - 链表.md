@@ -1,5 +1,6 @@
 # Leetcode 题解 - 链表
 <!-- GFM-TOC -->
+
 * [Leetcode 题解 - 链表](#leetcode-题解---链表)
     * [1. 找出两个链表的交点](#1-找出两个链表的交点)
     * [2. 链表反转](#2-链表反转)
@@ -141,7 +142,29 @@ public ListNode deleteDuplicates(ListNode head) {
     head.next = deleteDuplicates(head.next);
     return head.val == head.next.val ? head.next : head;
 }
+
+//来自评论
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        head.next = deleteDuplicates(head.next);
+        if(head.val == head.next.val) head = head.next;
+        return head;//返回的是下一层的cur
+    }
+}
 ```
+
+##### 递归套路解决链表问题小结
+
+1、找终止条件：当head指向链表只剩一个元素的时候，自然是不可能重复的，因此return
+
+2、想想应该返回什么值：应该返回的自然是已经去重的链表的头节点
+
+3、每一步要做什么：宏观上考虑，此时head.next已经指向一个去重的链表了，而根据第二步，我应该返回一个去重的链表的头节点。因此这一步应该做的是判断当前的head和head.next是否相等，如果相等则说明重了，返回head.next，否则返回head
+
+参考：三道题套路解决递归问题：https://lyl0724.github.io/2020/01/25/1/
 
 ##  5. 删除链表的倒数第 n 个节点
 
