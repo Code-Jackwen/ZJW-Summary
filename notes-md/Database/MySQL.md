@@ -1286,6 +1286,77 @@ mysql 中的 **in 语句是把外表和内表作 hash 连接**，而 **exists �
 - 如果使用 UNION ALL，不会合并重复的记录行，二Union相当于自带去重。
 - 效率 UNION 高于 UNION ALL
 
+## count()
+
+ 使用count（列名）当某列出现null值的时候，count（*）仍然会计算，但是count(列名)不会。 
+
+## having 和 where
+
+使用having字句对分组后的结果进行筛选，语法和where差不多，having + 条件表达式。
+
+group by 字句也和where条件语句结合在一起使用。当结合在一起时，where在前，group by 在后。即先对select xx from xx 的记录集合用 where 进行筛选，然后再使用 group by 对筛选后的结果进行分组 使用having字句对分组后的结果进行筛选。
+
+需要注意having和where的用法区别：
+
+1、having只能用在group by之后，对分组后的结果进行筛选(即使用having的前提条件是分组)。
+
+2、where肯定在group by 之前，即也在having之前。
+
+3、where后的条件表达式里不允许使用聚合函数（count(),sum(),avg(),max(),min()），而having可以。
+
+4、where不能和聚合函数一起使用，以及where不能对表中没有的新生生成列进行过滤，因为select语句执行在where之后。 但是可以通过处理嵌套查询来弥补处理。
+
+当一个查询语句同时出现了where,group by,having,order by的时候，执行顺序和编写顺序是：
+
+- 执行where xx对全表数据做筛选，返回第1个结果集。
+
+- 针对第1个结果集使用group by分组，返回第2个结果集。
+
+- 针对第2个结果集中的每1组数据执行select xx，有几组就执行几次，返回第3个结果集。
+
+- 针对第3个结集执行having xx进行筛选，返回第4个结果集。
+
+- 针对第4个结果集排序。
+
+sql 例子：
+
+完成一个复杂的查询语句，需求如下：
+按由高到低的顺序显示个人平均分在70分以上的学生姓名和平均分，为了尽可能地提高平均分，在计算平均分前不包括分数在60分以下的成绩，并且也不计算贱人（jr）的成绩。 
+
+分析：
+1、要求显示学生姓名和平均分
+select s_name,avg(score) from student
+
+2、计算平均分前不包括分数在60分以下的成绩，并且也不计算贱人（jr）的成绩
+where score>=60 and s_name!=’jr’ 
+
+3、显示个人平均分，相同名字的学生（同一个学生）考了多门科目，因此按姓名分组。
+group by s_name
+
+4、显示个人平均分在70分以上
+having avg(s_score)>=70 
+
+5．按由高到低的顺序
+order by avg(s_score) desc
+
+## GROUP BY 
+
+GROUP BY的规定：
+
+1、GROUP BY 后面可以包含多个列，这就是嵌套。
+
+2、如果GROUP BY进行了嵌套，数据将在最后一个分组上进行汇总。
+
+3、GROUP BY子句中列出来的每个列必须是检索列或有效的表达式（但不能是聚集函数），如果在SELECT中使用了表达式，则必须在GROUP BY子句中指定相同的表达式。不能使用别名。
+
+4、除了聚集语句外，SELECT语句中的每一个列都必须在GROUP BY子句中给出。（部分情况不是）
+
+5、如果分组列中有NULL值，则NULL将作为一个分组返回。如果列中有多个NULL，它们将作为一个分组返回。
+
+6、GROUP BY子句必须在WHERE 子句之后，ORDER BY 子句之前。
+
+常规的顺序：SELECT、FROM、WHERE、GROUP BY、HAVING、ORDER BY、LIMIT
+
 ## profile的意义以及使用场景
 
 Profile 用来分析 sql 性能的消耗分布情况。当用 explain 无法解决慢 SQL 的时候，需要用profile 来对 sql 进行更细致的分析，**找出 sql 所花的时间大部分消耗在哪个部分，确认 sql的性能瓶颈**。

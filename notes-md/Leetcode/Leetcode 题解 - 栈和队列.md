@@ -174,6 +174,25 @@ class MinStack {
 ```
 
 ```java
+//推荐
+class Solution {
+    public boolean isValid(String s) {
+        if (s.isEmpty()) return true;
+        Stack<Character> stack = new Stack<>();
+        for (char c : s.toCharArray()) {
+            if (c == '(')
+                stack.push(')');
+            else if (c == '{')
+                stack.push('}');
+            else if (c == '[')
+                stack.push(']');
+            else if (stack.empty() || c != stack.pop())// stack.empty()处理情 "]"和空栈异常
+                return false;
+        }
+        return stack.empty();
+    }
+}
+//其他
 class Solution {
     public boolean isValid(String s) {
         Stack<Character> stack = new Stack<>();
@@ -196,6 +215,7 @@ class Solution {
         return stack.isEmpty();				//执行String长度次后，空的就是对的。
     }
 }
+
 ```
 
 ## 5. 数组中元素与下一个比它大的元素之间的距离
@@ -209,7 +229,7 @@ class Solution {
 
 例如:
 Input: 	[73, 74, 75, 71, 69, 72, 76, 73]
-Output: [1,   1,  4,  2,  1,  1,  0,  0]
+Output: [ 1,  1,  4,  2,  1,  1,  0,  0]
 
 提示：气温 列表长度的范围是 [1, 30000]。每个气温的值的均为华氏度，都是在 [30, 100] 范围内的整数。
 ```
@@ -228,22 +248,48 @@ Output: [1,   1,  4,  2,  1,  1,  0,  0]
 
 题解：单调栈
 
+顺序遍历，栈里面存的是老元素的下标索引值。本题是  **递减栈** ：栈里只有递减元素。 
+
+本题单调栈解决了求数组中元素与下一个比它大的元素之间的距离的问题。
+
+图解：
+
+<img src="../../assets/1617771362601.png" alt="1617771362601" style="zoom:67%;" />
+
+上图，单调递减栈，栈底元素最大。
+
+```
+单调递减栈
+while (!stack.isEmpty()&& temperatures[curIndex] > temperatures[stack.peek()]) {}    
+单调递增栈
+while (!stack.isEmpty()&& temperatures[curIndex] < temperatures[stack.peek()]) {}   
+也可以不严格单调递增
+while (!stack.isEmpty()&& temperatures[curIndex] <= temperatures[stack.peek()]) {}  
+```
+
+
+
+<img src="../../assets/1617770803242.png" alt="1617770803242" style="zoom:67%;" />
+
+图中下一个处理的是下标为2的75，处于代码中的while循环处。
+
+最后的76、73都在栈里面，出不来了，是最后的默认值0。
+
 ```java
 class Solution {
     public int[] dailyTemperatures(int[] temperatures) {
         int n = temperatures.length;
-        int[] dist = new int[n];
-        Stack<Integer> indexs = new Stack<>();
+        int[] ret = new int[n];
+        Stack<Integer> stack = new Stack<>();
         for (int curIndex = 0; curIndex < n; curIndex++) {
-            while (!indexs.isEmpty() 
-                   && temperatures[curIndex] > temperatures[indexs.peek()]) {
-                
-                int preIndex = indexs.pop();
-                dist[preIndex] = curIndex - preIndex;
+            while (!stack.isEmpty()
+             && temperatures[curIndex] > temperatures[stack.peek()]) {
+                int preIndex = stack.pop();
+                ret[preIndex] = curIndex - preIndex;
             }
-            indexs.add(curIndex);
+            stack.push(curIndex);
         }
-        return dist;
+        return ret;
     }
 }
 ```
@@ -251,8 +297,8 @@ class Solution {
 解法二：
 
 ```js
-时间复杂度：O(nm)，其中 n 是温度列表的长度，m 是数组 next 的长度，在本题中温度不超过 100，所以 m 的值为 100。反向遍历温度列表一遍，对于温度列表中的每个值，都要遍历数组 next 一遍。
-空间复杂度：O(m)，其中 m 是数组 next 的长度。除了返回值以外，需要维护长度为 m 的数组 next 记录每个温度第一次出现的下标位置。
+时间：O(N*N)
+空间：O(1)
 ```
 
 题解：暴力
@@ -260,62 +306,87 @@ class Solution {
 ```java
 class Solution {
     public int[] dailyTemperatures(int[] T) {
-        int length = T.length;
-        int[] ans = new int[length];
-        int[] next = new int[101];
-        Arrays.fill(next, Integer.MAX_VALUE);
-        for (int i = length - 1; i >= 0; --i) {
-            int warmerIndex = Integer.MAX_VALUE;
-            for (int t = T[i] + 1; t <= 100; ++t) {
-                if (next[t] < warmerIndex) {
-                    warmerIndex = next[t];
+        int len = T.length;
+        int[] ret = new int[len];
+        for (int l = 0; l < len; l++) {
+            int cur = T[l];
+            for (int r = l + 1; r < len; r++) {
+                if (T[r] > cur) {
+                    ret[l] = r - l;
+                    break;
                 }
             }
-            if (warmerIndex < Integer.MAX_VALUE) {
-                ans[i] = warmerIndex - i;
-            }
-            next[T[i]] = i;
         }
-        return ans;
+        return ret;
     }
 }
-//作者：LeetCode-Solution
-//链接：https://leetcode-cn.com/problems/daily-temperatures/solution/mei-ri-wen-du-by-leetcode-solution/
 ```
 
+堆栈问题关联：
 
+- 求解算术表达式的结果（LeetCode 224、227、772、770)
+- 求解直方图里最大的矩形区域（LeetCode 84）
 
 ## 6. 循环数组中比当前元素大的下一个元素
 
 503\. Next Greater Element II (Medium)
 
-[Leetcode](https://leetcode.com/problems/next-greater-element-ii/description/) / [力扣](https://leetcode-cn.com/problems/next-greater-element-ii/description/)
+[Leetcode](https://leetcode.com/problems/next-greater-element-ii/description/) / [503. 下一个更大元素 II](https://leetcode-cn.com/problems/next-greater-element-ii/)
 
-```text
-Input: [1,2,1]
-Output: [2,-1,2]
-Explanation: The first 1's next greater number is 2;
-The number 2 can't find next greater number;
-The second 1's next greater number needs to search circularly, which is also 2.
+```js
+给定一个循环数组（最后一个元素的下一个元素是数组的第一个元素），输出每个元素的下一个更大元素。
+数字 x 的下一个更大的元素是按数组遍历顺序，这个数字之后的第一个比它更大的数，这意味着你应该循环地搜索它的下一个更大的数。如果不存在，则输出 -1。
+
+示例 1:
+
+输入: [1,2,1]
+输出: [2,-1,2]
+解释: 第一个 1 的下一个更大的数是 2；
+数字 2 找不到下一个更大的数； 
+第二个 1 的下一个最大的数需要循环搜索，结果也是 2。
+注意: 输入数组的长度不会超过 10000。
 ```
 
 与 739. Daily Temperatures (Medium) 不同的是，数组是循环数组，并且最后要求的不是距离而是下一个元素。
 
+题解：
+
+例子：
+
+<img src="../../assets/1617776670515.png" alt="1617776670515"  />
+
+```js
+时间复杂度: O(n)，其中 n 是序列的长度。我们需要遍历该数组中每个元素最多 2 次，每个元素出栈与入栈的总次数也不超过 4 次。
+空间复杂度: O(n)，其中 n 是序列的长度。空间复杂度主要取决于栈的大小，栈的大小至多为 2n−1。
+```
+
 ```java
-public int[] nextGreaterElements(int[] nums) {
-    int n = nums.length;
-    int[] next = new int[n];
-    Arrays.fill(next, -1);
-    Stack<Integer> pre = new Stack<>();
-    for (int i = 0; i < n * 2; i++) {
-        int num = nums[i % n];
-        while (!pre.isEmpty() && nums[pre.peek()] < num) {
-            next[pre.pop()] = num;
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        int n = nums.length;
+        int[] next = new int[n];
+        Arrays.fill(next, -1);				//默认值弄好
+        Stack<Integer> pre = new Stack<>();
+        for (int i = 0; i < n * 2; i++) {	//第二轮处理下栈中残余的大值。
+            int num = nums[i % n];
+            while (!pre.isEmpty() && num > nums[pre.peek()]) {
+                next[pre.pop()] = num;
+            }
+            if (i < n) {					//只第一轮添加,单调递减栈
+                pre.push(i);
+            }
         }
-        if (i < n){
-            pre.push(i);
-        }
+        return next;
     }
-    return next;
 }
 ```
+
+其他单调栈题目：
+
+[84. Largest Rectangle in Histogram](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)
+
+[739. Daily Temperatures](https://leetcode-cn.com/problems/daily-temperatures/)
+
+[1673. Find the Most Competitive Subsequence](https://leetcode-cn.com/problems/find-the-most-competitive-subsequence/)
+
+[496. 下一个更大元素 I](https://leetcode-cn.com/problems/next-greater-element-i/) 

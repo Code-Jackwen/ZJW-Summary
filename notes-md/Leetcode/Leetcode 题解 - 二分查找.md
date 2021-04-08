@@ -100,7 +100,7 @@ l   m   h
 
 69\. Sqrt(x) (Easy)
 
-[Leetcode](https://leetcode.com/problems/sqrtx/description/) / [力扣](https://leetcode-cn.com/problems/sqrtx/description/)
+[Leetcode](https://leetcode.com/problems/sqrtx/description/) / [69. x 的平方根](https://leetcode-cn.com/problems/sqrtx/)
 
 ```html
 Input: 4
@@ -116,23 +116,48 @@ Explanation: The square root of 8 is 2.82842..., and since we want to return an 
 对于 x = 8，它的开方是 2.82842...，最后应该返回 2 而不是 3。在循环条件为 l \<= h 并且循环退出时，h 总是比 l 小 1，也就是说 h = 2，l = 3，因此最后的返回值应该为 h 而不是 l。
 
 ```java
-public int mySqrt(int x) {
-    if (x <= 1) {
-        return x;
-    }
-    int l = 1, h = x;
-    while (l <= h) {
-        int mid = l + (h - l) / 2;
-        int sqrt = x / mid;
-        if (sqrt == mid) {
-            return mid;
-        } else if (mid > sqrt) {
-            h = mid - 1;
-        } else {
-            l = mid + 1;
+//写法1
+public class Solution {
+    public int mySqrt(int x) {
+        int l = 0;
+        int r = x;
+        while (l <= r) {
+            long m = (l + r) / 2;	  //int m = l + (r - l) / 2;
+            if (m * m == x)			  //int的话 46341*46341=-2147479015 
+                return (int) m;
+            else if (m * m < x)
+                l = (int) (m + 1);
+            else if (m * m > x)
+                r = (int) (m - 1);
         }
+        return r;
     }
-    return h;
+}
+//08-4
+//03-2
+//33-3
+//32返回2
+
+//写法2
+public class Solution {
+    public int mySqrt(int x) {
+        if (x <= 1) {
+            return x;
+        }
+        int l = 1, h = x;
+        while (l <= h) {
+            int mid = l + (h - l) / 2;
+            int sqrt = x / mid;
+            if (sqrt == mid) {
+                return mid;
+            } else if (mid > sqrt) {
+                h = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return h;
+    }
 }
 ```
 
@@ -140,47 +165,98 @@ public int mySqrt(int x) {
 
 744\. Find Smallest Letter Greater Than Target (Easy)
 
-[Leetcode](https://leetcode.com/problems/find-smallest-letter-greater-than-target/description/) / [力扣](https://leetcode-cn.com/problems/find-smallest-letter-greater-than-target/description/)
+[Leetcode](https://leetcode.com/problems/find-smallest-letter-greater-than-target/description/) / [744. 寻找比目标字母大的最小字母](https://leetcode-cn.com/problems/find-smallest-letter-greater-than-target/)
 
-```html
-Input:
-letters = ["c", "f", "j"]
-target = "d"
-Output: "f"
+```js
+给你一个排序后的字符列表 letters ，列表中只包含小写英文字母。另给出一个目标字母 target，请你寻找在这一有序列表里比目标字母大的最小字母。
 
-Input:
+在比较时，字母是依序循环出现的。举个例子：
+如果目标字母 target = 'z' 并且字符列表为 letters = ['a', 'b']，则答案返回 'a'
+ 
+示例：
+
+输入:
 letters = ["c", "f", "j"]
-target = "k"
-Output: "c"
+target = "a"
+输出: "c"
+
+输入:
+letters = ["c", "f", "j"]
+target = "c"
+输出: "f"
+
+输入:
+letters = ["c", "f", "j"]
+target = "g"
+输出: "j"
+
+输入:
+letters = ["c", "f", "j"]
+target = "j"  
+输出: "c"		 
+
+提示：
+letters长度范围在[2, 10000]区间内。
+letters 仅由小写字母组成，最少包含两个不同的字母。
+目标字母target 是一个小写字母。
 ```
 
 题目描述：给定一个有序的字符数组 letters 和一个字符 target，要求找出 letters 中大于 target 的最小字符，如果找不到就返回第 1 个字符。
 
 ```java
-public char nextGreatestLetter(char[] letters, char target) {
-    int n = letters.length;
-    int l = 0, h = n - 1;
-    while (l <= h) {
-        int m = l + (h - l) / 2;
-        if (letters[m] <= target) {
-            l = m + 1;
-        } else {
-            h = m - 1;
+//这个思路是找target的最右边界，但是故意返回l
+class Solution {
+    public char nextGreatestLetter(char[] letters, char target) {
+        int n = letters.length;
+        int l = 0, h = n - 1;
+        while (l <= h) {
+            int m = l + (h - l) / 2;
+            if (letters[m] <= target) {
+                l = m + 1;     //找到目标值以后，认为这个目标值是小的，继续扩大l向右边找。
+            } else {
+                h = m - 1;
+            }
         }
+        return l < n ? letters[l] : letters[0];//找的是最右边界，但是故意返回l
     }
-    return l < n ? letters[l] : letters[0];
 }
+
+//我的思路，二分查找找target+1的最左边界。
+class Solution {
+    public char nextGreatestLetter(char[] letters, char target) {
+        int n = letters.length;
+        int l = 0, h = n - 1;
+        while (l <= h) {
+            int m = l + (h - l) / 2;
+            if (letters[m] < (target+1)) {
+                l = m + 1;     
+            } else {
+                h = m - 1;
+            }
+        }
+        return l < n ? letters[l] : letters[0];//找的是最右边界，但是故意返回l
+    }
+}
+
 ```
 
 ## 3. 有序数组的 Single Element
 
 540\. Single Element in a Sorted Array (Medium)
 
-[Leetcode](https://leetcode.com/problems/single-element-in-a-sorted-array/description/) / [力扣](https://leetcode-cn.com/problems/single-element-in-a-sorted-array/description/)
+[Leetcode](https://leetcode.com/problems/single-element-in-a-sorted-array/description/) / [540. 有序数组中的单一元素](https://leetcode-cn.com/problems/single-element-in-a-sorted-array/)
 
-```html
-Input: [1, 1, 2, 3, 3, 4, 4, 8, 8]
-Output: 2
+```js
+给定一个只包含整数的有序数组，每个元素都会出现两次，唯有一个数只会出现一次，找出这个数。
+
+示例 1:
+输入: [1,1,2,3,3,4,4,8,8]
+输出: 2
+
+示例 2:
+输入: [3,3,7,7,10,11,11]
+输出: 10
+注意: 您的方案应该在 O(log n)时间复杂度和 O(1)空间复杂度中运行。
 ```
 
 题目描述：一个有序数组只有一个数不出现两次，找出这个数。
@@ -208,6 +284,26 @@ public int singleNonDuplicate(int[] nums) {
         }
     }
     return nums[l];
+}
+```
+
+暴力
+
+注意：只遍历到倒数第二个就可以了，i < nums.length - 1 也防止 if (nums[i] != nums[i + 1]) 的数组越界。
+
+- 时间复杂度：O(n)。我们的线性搜索只查看每个元素一次。
+- 空间复杂度：O(1)，只使用了常数的额外空间。
+
+```js
+class Solution {
+    public int singleNonDuplicate(int[] nums) {
+        for (int i = 0; i < nums.length - 1; i+=2) {
+            if (nums[i] != nums[i + 1]) {			//i < nums.length - 1
+                return nums[i];
+            }
+        }
+        return nums[nums.length - 1];
+    }
 }
 ```
 
