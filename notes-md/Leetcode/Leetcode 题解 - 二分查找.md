@@ -204,23 +204,6 @@ letters 仅由小写字母组成，最少包含两个不同的字母。
 题目描述：给定一个有序的字符数组 letters 和一个字符 target，要求找出 letters 中大于 target 的最小字符，如果找不到就返回第 1 个字符。
 
 ```java
-//这个思路是找target的最右边界，但是故意返回l
-class Solution {
-    public char nextGreatestLetter(char[] letters, char target) {
-        int n = letters.length;
-        int l = 0, h = n - 1;
-        while (l <= h) {
-            int m = l + (h - l) / 2;
-            if (letters[m] <= target) {
-                l = m + 1;     //找到目标值以后，认为这个目标值是小的，继续扩大l向右边找。
-            } else {
-                h = m - 1;
-            }
-        }
-        return l < n ? letters[l] : letters[0];//找的是最右边界，但是故意返回l
-    }
-}
-
 //我的思路，二分查找找target+1的最左边界。
 class Solution {
     public char nextGreatestLetter(char[] letters, char target) {
@@ -238,6 +221,22 @@ class Solution {
     }
 }
 
+//这个思路是找target的最右边界，但是故意返回l
+class Solution {
+    public char nextGreatestLetter(char[] letters, char target) {
+        int n = letters.length;
+        int l = 0, h = n - 1;
+        while (l <= h) {
+            int m = l + (h - l) / 2;
+            if (letters[m] <= target) {
+                l = m + 1;     //找到目标值以后，认为这个目标值是小的，继续扩大l向右边找。
+            } else {
+                h = m - 1;
+            }
+        }
+        return l < n ? letters[l] : letters[0];//找的是最右边界，但是故意返回l
+    }
+}
 ```
 
 ## 3. 有序数组的 Single Element
@@ -269,25 +268,89 @@ class Solution {
 
 因为 h 的赋值表达式为 h = m，那么循环条件也就只能使用 l \< h 这种形式。
 
+
+
+#### 思路1：
+
+对二分情况分析：
+
+![1617855697094](../../assets/1617855697094.png)
+
+**复杂度分析**
+
+- 时间复杂度：O(log n)。在每次循环迭代中，我们将搜索空间减少了一半。
+- 空间复杂度：O(1)，仅使用了常数空间。
+
+发现即使数组没有经过排序，只要将同一元素放在一起，该算法仍然起作用（例：[10, 10, 4, 4, 7, 11, 11, 12, 12, 2, 2]）。他们的顺序无关紧要，重要的是含有单个元素的子数组元素个数为奇数。
+
 ```java
-public int singleNonDuplicate(int[] nums) {
-    int l = 0, h = nums.length - 1;
-    while (l < h) {
-        int m = l + (h - l) / 2;
-        if (m % 2 == 1) {
-            m--;   // 保证 l/h/m 都在偶数位，使得查找区间大小一直都是奇数
+//这个代码，时间还可再优化，看下边。
+class Solution {
+    public int singleNonDuplicate(int[] nums) {
+        int l = 0;
+        int h = nums.length - 1;
+        while (l < h) {
+            int m = l + (h - l) / 2;
+            boolean halvesAreEven = (h - m) % 2 == 0;
+            if (nums[m + 1] == nums[m]) {
+                if (halvesAreEven) {
+                    l = m + 2;
+                } else {
+                    h = m - 1;
+                }
+            } else if (nums[m - 1] == nums[m]) {
+                if (halvesAreEven) {
+                    h = m - 2;
+                } else {
+                    l = m + 1;
+                }
+            } else {
+                return nums[m];
+            }
         }
-        if (nums[m] == nums[m + 1]) {
-            l = m + 2;
-        } else {
-            h = m;
-        }
+        return nums[l];
     }
-    return nums[l];
 }
 ```
 
-暴力
+#### 思路2：
+
+是思路1 的优化。
+
+```js
+时间复杂度：O(logN/2)=O(logN)。我们仅对元素的一半进行二分搜索。
+空间复杂度：O(1)，仅用了常数的空间。
+```
+
+在单个元素的后面，则成对的元素变为奇数索引后跟他们的同一元素。说明我们在检索单个元素后面的偶数索引时，其后都没有它的同一元素。因此，我们可以通过偶数索引确定单个元素在左侧还是右侧。
+
+- 奇数长度的数组首尾元素索引都为偶数，因此我们可以将 l 和 h 设置为数组首尾。
+- 我们需要确保 m是偶数，如果为奇数，则将其减 1。
+- 然后，我们检查 m的元素是否与其后面的索引相同。
+- 如果相同，则我们知道 m不是单个元素。且单个元素在 m之后。则我们将 l设置为 m+ 2。
+- 如果不是，则我们知道单个元素位于 m，或者在 m之前。我们将 h 设置为 m。不能大范围的改 h。
+- 一旦 l==h，则当前搜索空间为 1 个元素，那么该元素为单个元素，我们将返回它。
+
+```java
+class Solution {
+    public int singleNonDuplicate(int[] nums) {
+        int l = 0;
+        int r = nums.length - 1;
+        while (l < r) {						//退出时l=r
+            int m = l + (r - l) / 2;
+            if (m % 2 == 1) m--;			//用m++，不好写。[1,1,2,3,3,4,4,8,8]超时。
+            if (nums[m] == nums[m + 1]) {   //和下一位比较。
+                l = m + 2;
+            } else {
+                r = m;						//这里是实际改为 r = m - 1;也是能过。	
+            }
+        }
+        return nums[l];
+    }
+}
+```
+
+#### 暴力
 
 注意：只遍历到倒数第二个就可以了，i < nums.length - 1 也防止 if (nums[i] != nums[i + 1]) 的数组越界。
 
@@ -311,7 +374,7 @@ class Solution {
 
 278\. First Bad Version (Easy)
 
-[Leetcode](https://leetcode.com/problems/first-bad-version/description/) / [力扣](https://leetcode-cn.com/problems/first-bad-version/description/)
+[Leetcode](https://leetcode.com/problems/first-bad-version/description/) / [278. 第一个错误的版本](https://leetcode-cn.com/problems/first-bad-version/)
 
 题目描述：给定一个元素 n 代表有 [1, 2, ..., n] 版本，在第 x 位置开始出现错误版本，导致后面的版本都错误。可以调用 isBadVersion(int x) 知道某个版本是否错误，要求找到第一个错误的版本。
 
@@ -319,18 +382,31 @@ class Solution {
 
 因为 h 的赋值表达式为 h = m，因此循环条件为 l \< h。
 
+```js
+示例:
+给定 n = 5，并且 version = 4 是第一个错误的版本。
+调用 isBadVersion(3) -> false
+调用 isBadVersion(5) -> true
+调用 isBadVersion(4) -> true
+所以，4 是第一个错误的版本。 
+```
+
 ```java
-public int firstBadVersion(int n) {
-    int l = 1, h = n;
-    while (l < h) {
-        int mid = l + (h - l) / 2;
-        if (isBadVersion(mid)) {
-            h = mid;
-        } else {
-            l = mid + 1;
+/* The isBadVersion API is defined in the parent class VersionControl.
+      boolean isBadVersion(int version); */
+public class Solution extends VersionControl {
+    public int firstBadVersion(int n) {
+        int l = 1, h = n;
+        while (l < h) {
+            int mid = l + (h - l) / 2;
+            if (isBadVersion(mid)) {  //代表错误
+                h = mid;
+            } else {     			  //代表正确
+                l = mid + 1;
+            }
         }
+        return l;
     }
-    return l;
 }
 ```
 
@@ -338,25 +414,95 @@ public int firstBadVersion(int n) {
 
 153\. Find Minimum in Rotated Sorted Array (Medium)
 
-[Leetcode](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/) / [力扣](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/description/)
+[Leetcode](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/) / [153. 寻找旋转排序数组中的最小值](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
 
-```html
-Input: [3,4,5,1,2],
-Output: 1
+[剑指 Offer 11. 旋转数组的最小数字](https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/)
+
+[154. 寻找旋转排序数组中的最小值 II](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/)
+
+```js
+示例 1：
+
+输入：nums = [3,4,5,1,2]
+输出：1
+解释：原数组为 [1,2,3,4,5] ，旋转 3 次得到输入数组。
+示例 2：
+
+输入：nums = [4,5,6,7,0,1,2]
+输出：0
+解释：原数组为 [0,1,2,4,5,6,7] ，旋转 4 次得到输入数组。
+示例 3：
+
+输入：nums = [11,13,15,17]
+输出：11
+解释：原数组为 [11,13,15,17] ，旋转 4 次得到输入数组。
+ 
+提示：
+n == nums.length
+1 <= n <= 5000
+-5000 <= nums[i] <= 5000
+nums 原来是一个升序排序的数组，并进行了 1 至 n 次旋转
+
+nums 中的所有整数 互不相同，这点很关键。
 ```
 
 ```java
-public int findMin(int[] nums) {
-    int l = 0, h = nums.length - 1;
-    while (l < h) {
-        int m = l + (h - l) / 2;
-        if (nums[m] <= nums[h]) {
-            h = m;
-        } else {
-            l = m + 1;
+//其他，针对153题，有重复的过不去。
+class Solution {
+    public int findMin(int[] nums) {
+        int l = 0, h = nums.length - 1;
+        while (l < h) {					//注意条件
+            int m = l + (h - l) / 2;
+            if (nums[m] <= nums[h]) {	//注意这里的小于等于都不敢-1的。
+                h = m;
+            } else {
+                l = m + 1;
+            }
         }
+        return nums[l];
     }
-    return nums[l];
+}
+```
+
+下边代码上边的题目都可以过，可以处理掉重复值的问题。
+
+```java
+class Solution {
+    public int minArray(int[] nums) {
+        int l = 0, r = nums.length - 1;
+        while (l < r) {								//条件
+            int m = (l + r) / 2;
+            if (nums[m] > nums[r]) l = m + 1;
+            else if (nums[m] < nums[r]) r = m;		//r不敢动
+            else if (nums[m] == nums[r]) r--;		//r--这一行处理数组重复值的情况
+        }
+        return nums[l];
+    }
+}
+```
+
+但是当出现 nums[m] = nums[j] 时，一定有区间 [i, m] 内所有元素相等 或 区间 [m, j] 内所有元素相等（或两者皆满足），可以举例子说明的。对于寻找此类数组的最小值问题，可直接放弃二分查找，而使用**线性查找替代**。
+
+优化版本
+
+```java
+class Solution {
+    public int minArray(int[] nums) {
+        int l = 0, r = nums.length - 1;
+        while (l < r) {
+            int m = (l + r) / 2;
+            if (nums[m] > nums[r]) l = m + 1;
+            else if (nums[m] < nums[r]) r = m;
+            else if (nums[m] == nums[r]){
+                int x = l;
+                for(int k = l + 1; k < r; k++) {
+                    if(nums[k] < nums[x]) x = k;
+                }
+                return nums[x];
+            }
+        }
+        return nums[l];
+    }
 }
 ```
 
@@ -364,49 +510,52 @@ public int findMin(int[] nums) {
 
 34\. Find First and Last Position of Element in Sorted Array
 
-[Leetcode](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/) / [力扣](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+[Leetcode](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/) / [34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 
-```html
-Input: nums = [5,7,7,8,8,10], target = 8
-Output: [3,4]
+```js
+如果数组中不存在目标值 target，返回 [-1, -1]。
+进阶：你可以设计并实现时间复杂度为 O(log n) 的算法解决此问题吗？
 
-Input: nums = [5,7,7,8,8,10], target = 6
-Output: [-1,-1]
+示例 1：
+
+输入：nums = [5,7,7,8,8,10], target = 8
+输出：[3,4]
+示例 2：
+
+输入：nums = [5,7,7,8,8,10], target = 6
+输出：[-1,-1]
+示例 3：
+
+输入：nums = [], target = 0
+输出：[-1,-1]
 ```
 
 题目描述：给定一个有序数组 nums 和一个目标 target，要求找到 target 在 nums 中的第一个位置和最后一个位置。
 
-可以用二分查找找出第一个位置和最后一个位置，但是寻找的方法有所不同，需要实现两个二分查找。我们将寻找  target 最后一个位置，转换成寻找 target+1 第一个位置，再往前移动一个位置。这样我们只需要实现一个二分查找代码即可。
+可以用二分查找找出第一个位置和最后一个位置，但是寻找的方法有所不同，需要实现两个二分查找。
+
+我们将寻找  target 最后一个位置，转换成寻找 target+1 第一个位置，再往前移动一个位置。这样我们只需要实现一个二分查找代码即可。
 
 ```java
-public int[] searchRange(int[] nums, int target) {
-    int first = findFirst(nums, target);
-    int last = findFirst(nums, target + 1) - 1;
-    if (first == nums.length || nums[first] != target) {
-        return new int[]{-1, -1};
-    } else {
-        return new int[]{first, Math.max(first, last)};
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int l = helper(nums, target);
+        int r = helper(nums, target + 1);
+        if (l >= nums.length || nums[l] != target)
+            return new int[]{-1, -1};
+        return new int[]{l, r - 1};
     }
-}
-
-private int findFirst(int[] nums, int target) {
-    int l = 0, h = nums.length; // 注意 h 的初始值
-    while (l < h) {
-        int m = l + (h - l) / 2;
-        if (nums[m] >= target) {
-            h = m;
-        } else {
-            l = m + 1;
+    int helper(int[] nums, int tar) {	
+        int l = 0, r = nums.length - 1;
+        while (l <= r) {
+            int m = (l + r) / 2;
+            if (nums[m] >= tar) r = m - 1;	//找最左边界
+            else l = m + 1;
         }
+        return l;
     }
-    return l;
 }
 ```
 
-在寻找第一个位置的二分查找代码中，需要注意 h 的取值为 nums.length，而不是 nums.length - 1。先看以下示例：
 
-```
-nums = [2,2], target = 2
-```
 
-如果 h 的取值为 nums.length - 1，那么 last = findFirst(nums, target + 1) - 1 = 1 - 1 = 0。这是因为 findLeft 只会返回 [0, nums.length - 1] 范围的值，对于 findFirst([2,2], 3) ，我们希望返回 3 插入 nums 中的位置，也就是数组最后一个位置再往后一个位置，即 nums.length。所以我们需要将 h 取值为 nums.length，从而使得 findFirst返回的区间更大，能够覆盖 target 大于 nums 最后一个元素的情况。
