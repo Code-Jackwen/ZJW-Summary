@@ -21,11 +21,34 @@
 
 455\. Assign Cookies (Easy)
 
-[Leetcode](https://leetcode.com/problems/assign-cookies/description/) / [力扣](https://leetcode-cn.com/problems/assign-cookies/description/)
+[Leetcode](https://leetcode.com/problems/assign-cookies/description/) / [455. 分发饼干](https://leetcode-cn.com/problems/assign-cookies/)
 
-```html
-Input: grid[1,3], size[1,2,4]
-Output: 2
+```js
+假设你是一位很棒的家长，想要给你的孩子们一些小饼干。但是，每个孩子最多只能给一块饼干。
+对每个孩子 i，都有一个胃口值 g[i]，这是能让孩子们满足胃口的饼干的最小尺寸；并且每块饼干 j，都有一个尺寸 s[j] 。如果 s[j] >= g[i]，我们可以将这个饼干 j 分配给孩子 i ，这个孩子会得到满足。
+你的目标是尽可能满足越多数量的孩子，并输出这个最大数值。
+ 
+示例 1:
+输入: g = [1,2,3], s = [1,1]
+输出: 1
+解释: 
+#g代笔每个孩子的胃口大小，s代笔每个饼干以及大小。
+你有三个孩子和两块小饼干，3个孩子的胃口值分别是：1,2,3。
+虽然你有两块小饼干，由于他们的尺寸都是1，你只能让胃口值是1的孩子满足。
+所以你应该输出1。
+
+示例 2:
+输入: g = [1,2], s = [1,2,3]
+输出: 2
+解释: 
+你有两个孩子和三块小饼干，2个孩子的胃口值分别是1,2。
+你拥有的饼干数量和尺寸都足以让所有孩子满足。
+所以你应该输出2.
+ 
+提示：
+1 <= g.length <= 3 * 104
+0 <= s.length <= 3 * 104
+1 <= g[i], s[j] <= 231 - 1
 ```
 
 题目描述：每个孩子都有一个满足度 grid，每个饼干都有一个大小 size，只有饼干的大小大于等于一个孩子的满足度，该孩子才会获得满足。求解最多可以获得满足的孩子数量。
@@ -38,20 +61,21 @@ Output: 2
 证明：假设在某次选择中，贪心策略选择给当前满足度最小的孩子分配第 m 个饼干，第 m 个饼干为可以满足该孩子的最小饼干。假设存在一种最优策略，可以给该孩子分配第 n 个饼干，并且 m \< n。我们可以发现，经过这一轮分配，贪心策略分配后剩下的饼干一定有一个比最优策略来得大。因此在后续的分配中，贪心策略一定能满足更多的孩子。也就是说不存在比贪心策略更优的策略，即贪心策略就是最优策略。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/e69537d2-a016-4676-b169-9ea17eeb9037.gif" width="430px"> </div><br>
-
 ```java
-public int findContentChildren(int[] grid, int[] size) {
-    if (grid == null || size == null) return 0;
-    Arrays.sort(grid);
-    Arrays.sort(size);
-    int gi = 0, si = 0;
-    while (gi < grid.length && si < size.length) {
-        if (grid[gi] <= size[si]) {
-            gi++;
+class Solution {
+    public int findContentChildren(int[] grid, int[] size) {
+        if (grid == null || size == null) return 0;
+        Arrays.sort(grid);
+        Arrays.sort(size);
+        int gi = 0, si = 0;	//g代笔每个孩子的胃口大小，s代笔每个饼干以及大小。
+        while (gi < grid.length && si < size.length) {	//孩子吃饱前，饼干发完前。
+            if (grid[gi] <= size[si]) {					
+                gi++;					//吃饱了换下一个孩子。
+            }						
+            si++;						//不管饼干是否能满足孩子，换下一个大饼干。会有饼干剩余。
         }
-        si++;
+        return gi;
     }
-    return gi;
 }
 ```
 
@@ -59,48 +83,55 @@ public int findContentChildren(int[] grid, int[] size) {
 
 435\. Non-overlapping Intervals (Medium)
 
-[Leetcode](https://leetcode.com/problems/non-overlapping-intervals/description/) / [力扣](https://leetcode-cn.com/problems/non-overlapping-intervals/description/)
+[Leetcode](https://leetcode.com/problems/non-overlapping-intervals/description/) / [435. 无重叠区间](https://leetcode-cn.com/problems/non-overlapping-intervals/)
 
-```html
-Input: [ [1,2], [1,2], [1,2] ]
+```js
+给定一个区间的集合，移除区间部分区间，使剩余区间互不重叠，找到需要移除区间的#最小数量。
+注意:可以认为区间的终点总是大于它的起点。区间 [1,2] 和 [2,3] 的边界相互“接触”，但没有相互重叠。
 
-Output: 2
+示例 1:
+输入: [ [1,2], [2,3], [3,4], [1,3] ]
+输出: 1
+解释: 移除 [1,3] 后，剩下的区间没有重叠。
 
-Explanation: You need to remove two [1,2] to make the rest of intervals non-overlapping.
-```
+示例 2:
+输入: [ [1,2], [1,2], [1,2] ]
+输出: 2
+解释: 你需要移除两个 [1,2] 来使剩下的区间没有重叠。
 
-```html
-Input: [ [1,2], [2,3] ]
-
-Output: 0
-
-Explanation: You don't need to remove any of the intervals since they're already non-overlapping.
+示例 3:
+输入: [ [1,2], [2,3] ]
+输出: 0
+解释: 你不需要移除任何区间，因为它们已经是无重叠的了。
 ```
 
 题目描述：计算让一组区间不重叠所需要移除的区间个数。
 
-先计算最多能组成的不重叠区间个数，然后用区间总个数减去不重叠区间的个数。
+**先计算最多能组成的不重叠区间个数，然后用区间总个数减去不重叠区间的个数。**
 
 在每次选择中，区间的结尾最为重要，选择的区间结尾越小，留给后面的区间的空间越大，那么后面能够选择的区间个数也就越大。
 
 按区间的结尾进行排序，每次选择结尾最小，并且和前一个区间不重叠的区间。
 
 ```java
-public int eraseOverlapIntervals(int[][] intervals) {
-    if (intervals.length == 0) {
-        return 0;
-    }
-    Arrays.sort(intervals, Comparator.comparingInt(o -> o[1]));
-    int cnt = 1;
-    int end = intervals[0][1];
-    for (int i = 1; i < intervals.length; i++) {
-        if (intervals[i][0] < end) {
-            continue;
+class Solution {
+    public int eraseOverlapIntervals(int[][] intervals) {
+        if (intervals.length == 0) {
+            return 0;
         }
-        end = intervals[i][1];
-        cnt++;
+        Arrays.sort(intervals, Comparator.comparingInt(o -> o[1]));
+        int cnt = 1;
+        int end = intervals[0][1];
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] < end) {
+                continue;
+            }
+            //下一个数组的第一位可以等于、大于，上一个数组的第二位。
+            end = intervals[i][1];
+            cnt++;
+        }
+        return intervals.length - cnt;
     }
-    return intervals.length - cnt;
 }
 ```
 
@@ -121,35 +152,56 @@ Arrays.sort(intervals, new Comparator<int[]>() {
 
 452\. Minimum Number of Arrows to Burst Balloons (Medium)
 
-[Leetcode](https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/description/) / [力扣](https://leetcode-cn.com/problems/minimum-number-of-arrows-to-burst-balloons/description/)
+[Leetcode](https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/description/) / [452. 用最少数量的箭引爆气球](https://leetcode-cn.com/problems/minimum-number-of-arrows-to-burst-balloons/)
 
-```
-Input:
-[[10,16], [2,8], [1,6], [7,12]]
+```js
+在二维空间中有许多球形的气球。对于每个气球，提供的输入是水平方向上，气球直径的开始和结束坐标。
+由于它是水平的，所以纵坐标并不重要，因此只要知道开始和结束的横坐标就足够了。开始坐标总是小于结束坐标。
 
-Output:
-2
+一支弓箭可以沿着 x 轴从不同点完全垂直地射出。在坐标 x 处射出一支箭，若有一个气球的直径的开始和结束坐标为 xstart，xend， 且满足  xstart ≤ x ≤ xend，则该气球会被引爆。可以射出的弓箭的数量没有限制。 弓箭一旦被射出之后，可以无限地前进。我们想找到使得所有气球全部被引爆，所需的弓箭的最小数量。
+
+给你一个数组 points ，其中 points [i] = [xstart,xend] ，返回引爆所有气球所必须射出的#最小弓箭数。
+
+示例 1：
+输入：points = [[10,16],[2,8],[1,6],[7,12]]
+输出：2
+解释：对于该样例，射一次 x = 6 的箭可以射爆 [2,8],[1,6] 两个气球，以及 x = 11 射爆另外两个气球。
+
+示例 2：
+输入：points = [[1,2],[3,4],[5,6],[7,8]]
+输出：4
+
+示例 3：
+输入：points = [[1,2],[2,3],[3,4],[4,5]]
+输出：2		解释：两支，x=2，x=4
+
+提示：
+0 <= points.length <= 104
+points[i].length == 2
+-231 <= xstart < xend <= 231 - 1
 ```
 
 题目描述：气球在一个水平数轴上摆放，可以重叠，飞镖垂直投向坐标轴，使得路径上的气球都被刺破。求解最小的投飞镖次数使所有气球都被刺破。
 
-也是计算不重叠的区间个数，不过和 Non-overlapping Intervals 的区别在于，[1, 2] 和 [2, 3] 在本题中算是重叠区间。
+也是计算不重叠的区间个数，不过和 Non-overlapping Intervals(3.不重叠的区间个数) 的区别在于，[1, 2] 和 [2, 3] 在本题中算是重叠区间。
 
 ```java
-public int findMinArrowShots(int[][] points) {
-    if (points.length == 0) {
-        return 0;
-    }
-    Arrays.sort(points, Comparator.comparingInt(o -> o[1]));
-    int cnt = 1, end = points[0][1];
-    for (int i = 1; i < points.length; i++) {
-        if (points[i][0] <= end) {
-            continue;
+class Solution {
+    public int findMinArrowShots(int[][] points) {
+        if (points.length == 0) {
+            return 0;
         }
-        cnt++;
-        end = points[i][1];
+        Arrays.sort(points, Comparator.comparingInt(o -> o[1]));
+        int cnt = 1, end = points[0][1];
+        for (int i = 1; i < points.length; i++) {
+            if (points[i][0] <= end) {	//当前的比之前的end小的或者等于的，都可算作1箭解决。
+                continue;
+            }
+            cnt++;						//记录不重叠次数
+            end = points[i][1];
+        }
+        return cnt;
     }
-    return cnt;
 }
 ```
 

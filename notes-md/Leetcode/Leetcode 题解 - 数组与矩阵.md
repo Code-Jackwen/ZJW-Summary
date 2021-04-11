@@ -530,7 +530,15 @@ nums 中 只有一个整数 出现 两次或多次 ，其余整数均只出现 �
 
 二分查找解法：
 
-主要利用 nums = [1,3,4,2,2] 的值都在 1 和 n 之间。
+分析，输入：[1，3，4，2，2]，列出每个数字的 cnt 值
+
+| nums |  1   |  2   |  3   |  4   |
+| :--: | :--: | :--: | :--: | :--: |
+| cnt  |  1   |  3   |  4   |  5   |
+
+![1618020121358](../../assets/1618020121358.png)
+
+主要利用 nums = [1,3,4,2,2] 的值都在 1 和 n 之间。下边是例子过程。
 
 ```js
 示例 :示例 :下边这个版本的
@@ -618,29 +626,110 @@ public int findDuplicate(int[] nums) {
 
 667\. Beautiful Arrangement II (Medium)
 
-[Leetcode](https://leetcode.com/problems/beautiful-arrangement-ii/description/) / [力扣](https://leetcode-cn.com/problems/beautiful-arrangement-ii/description/)
+[Leetcode](https://leetcode.com/problems/beautiful-arrangement-ii/description/) / [667. 优美的排列 II](https://leetcode-cn.com/problems/beautiful-arrangement-ii/)
 
-```html
-Input: n = 3, k = 2
-Output: [1, 3, 2]
-Explanation: The [1, 3, 2] has three different positive integers ranging from 1 to 3, and the [2, 1] has exactly 2 distinct integers: 1 and 2.
+```js
+给定两个整数 n 和 k，你需要实现一个数组，这个数组包含从 1 到 n 的 n 个不同整数，同时满足以下条件：
+① 如果这个数组是 [a1, a2, a3, ... , an] ，那么数组 [|a1 - a2|, |a2 - a3|, |a3 - a4|, ... , |an-1 - an|] 中应该有且仅有 k 个不同整数（差的绝对值）；
+② 如果存在多种答案，你只需实现并返回其中任意一种.
+
+示例 1:
+输入: n = 3, k = 1
+输出: [1, 2, 3]
+解释: [1, 2, 3] 包含 3 个范围在 1-3 的不同整数， 并且 [1, 1] 中有且仅有 1 个不同整数 : 1
+ 
+示例 2:
+输入: n = 3, k = 2
+输出: [1, 3, 2]
+解释: [1, 3, 2] 包含 3 个范围在 1-3 的不同整数， 并且 [2, 1] 中有且仅有 2 个不同整数: 1 和 2
+ 
+提示: n 和 k 满足条件 1 <= k < n <= 104.
 ```
 
 题目描述：数组元素为 1\~n 的整数，要求构建数组，使得相邻元素的差值不相同的个数为 k。
 
+找规律的思路：
+
+```js
+思路分析： 这道题就是找规律吧。
+当n = 50， k = 20时：
+[1,21,2,20,3,19,4,18,5,17,6,16,7,15,8,14,9,13,10,12,11,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
+当n = 50，k = 17时：
+[1,18,2,17,3,16,4,15,5,14,6,13,7,12,8,11,9,10,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
+当n = 80，k = 30时：
+[1,31,2,30,3,29,4,28,5,27,6,26,7,25,8,24,9,23,10,22,11,21,12,20,13,19,14,18,15,17,16,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80]
+发现了规律，就是下标从[0, k]中，偶数下标填充[1,2,3…]，奇数下标填充[k + 1, k, k - 1…]，后面[k + 1, n - 1]都是顺序填充
+```
+
+```java
+class Solution {
+    public int[] constructArray(int n, int k) {
+        int[] resVec = new int[n];
+		int numK = k + 1, numTemp = 1;
+		//下标段[0, k]中，偶数下标填充[1,2,3..]
+        for (int i = 0; i <= k; i += 2){
+            resVec[i] = numTemp++;
+        }
+        //下标段[0, k]中，奇数下标填充[k + 1, k, k - 1...]
+        for (int i = 1; i <= k; i += 2){
+            resVec[i] = numK--;
+        }
+        //下标段[k + 1, n - 1]都是顺序填充
+		for (int i = k + 1; i < n; ++i) {
+			resVec[i] = i + 1;
+		}
+		return resVec;
+    }
+}
+```
+
+官解的构造思路：
+
+![1618022393029](../../assets/1618022393029.png)
+
+```java
+class Solution {
+    public int[] constructArray(int n, int k) {
+        int[] res = new int[n];
+        for(int i = 1;i < n - k;i++){		//先构造出[1,2,3,...,n-k-1]
+            res[i-1] = i;					//例如：[1,2]	即：n=6，k=3
+        }
+        int m = 1;
+        int l = k+1;
+        for(int i = n-k-1;i < n;i++){		//i=2，i<6，i++
+            if((i-n-k-1) % 2 == 0){			//过过过。。。
+                res[i] = m++; 
+                res[i] += n-k-1;
+            }else{
+                res[i] = l--;
+                res[i] += n-k-1;
+            }
+        }
+        return res;
+    }
+}
+```
+
 让前 k+1 个元素构建出 k 个不相同的差值，序列为：1 k+1 2 k 3 k-1 ... k/2 k/2+1.
 
 ```java
-public int[] constructArray(int n, int k) {
-    int[] ret = new int[n];
-    ret[0] = 1;
-    for (int i = 1, interval = k; i <= k; i++, interval--) {
-        ret[i] = i % 2 == 1 ? ret[i - 1] + interval : ret[i - 1] - interval;
+//其他
+class Solution {
+    public int[] constructArray(int n, int k) {
+        int[] res = new int[n];
+        res[0] = 1;
+        for (int i = 1, intervel = k; i <= k; i++, intervel--) {
+            if (i % 2 == 1) {
+                res[i] = res[i - 1] + intervel;
+            } else {
+                res[i] = res[i - 1] - intervel;
+            }
+        }
+        for (int i = k + 1; i < n; i++) {
+            res[i] = i + 1;
+        }
+        return res;
     }
-    for (int i = k + 1; i < n; i++) {
-        ret[i] = i + 1;
-    }
-    return ret;
 }
 ```
 
@@ -648,40 +737,117 @@ public int[] constructArray(int n, int k) {
 
 697\. Degree of an Array (Easy)
 
-[Leetcode](https://leetcode.com/problems/degree-of-an-array/description/) / [力扣](https://leetcode-cn.com/problems/degree-of-an-array/description/)
+[Leetcode](https://leetcode.com/problems/degree-of-an-array/description/) / [697. 数组的度](https://leetcode-cn.com/problems/degree-of-an-array/)
 
-```html
-Input: [1,2,2,3,1,4,2]
-Output: 6
+```js
+给定一个非空且只包含非负数的整数数组 nums，数组的度的定义是指数组里任一元素出现频数的最大值。
+你的任务是在 nums 中找到与 nums 拥有相同大小的度的最短连续子数组，返回其长度。
+
+示例 1：输入：[1, 2, 2, 3, 1]
+输出：2
+解释：
+输入数组的度是2，因为元素1和2的出现频数最大，均为2.
+连续子数组里面拥有相同度的有如下所示:
+[1, 2, 2, 3, 1], [1, 2, 2, 3], [2, 2, 3, 1], [1, 2, 2], [2, 2, 3], [2, 2]
+最短连续子数组[2, 2]的长度为2，所以返回2.
+
+示例 2：
+输入：[1,2,2,3,1,4,2]		长度是7
+输出：6	解释：[2,2,3,1,4,2]，由下标6+1 - 下标1得到。
+
+提示：
+nums.length 在1到 50,000 区间范围内。
+nums[i] 是一个在 0 到 49,999 范围内的整数。
 ```
 
 题目描述：数组的度定义为元素出现的最高频率，例如上面的数组度为 3。要求找到一个最小的子数组，这个子数组的度和原数组一样。
 
+下边这个易懂，速度慢。30ms左右。
+
 ```java
-public int findShortestSubArray(int[] nums) {
-    Map<Integer, Integer> numsCnt = new HashMap<>();
-    Map<Integer, Integer> numsLastIndex = new HashMap<>();
-    Map<Integer, Integer> numsFirstIndex = new HashMap<>();
-    for (int i = 0; i < nums.length; i++) {
-        int num = nums[i];
-        numsCnt.put(num, numsCnt.getOrDefault(num, 0) + 1);
-        numsLastIndex.put(num, i);
-        if (!numsFirstIndex.containsKey(num)) {
-            numsFirstIndex.put(num, i);
+class Solution {
+    public int findShortestSubArray(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();		//计次
+        Map<Integer, Integer> lstIdx = new HashMap<>();		//元素，元素首次出现的索引
+        Map<Integer, Integer> fstIdx = new HashMap<>();		//元素，元素最后出现的索引
+        int maxCnt = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int num = nums[i];
+            map.put(num, map.getOrDefault(num, 0) + 1);
+
+            maxCnt = Math.max(maxCnt, map.get(num));
+
+            lstIdx.put(num, i);
+
+            if (!fstIdx.containsKey(num)) {
+                fstIdx.put(num, i);
+            }
         }
+        int ret = nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            int num = nums[i];
+            int cnt = map.get(num);
+            if (cnt != maxCnt) continue;
+            ret = Math.min(ret, lstIdx.get(num) + 1 - fstIdx.get(num));
+        }
+        return ret;
     }
-    int maxCnt = 0;
-    for (int num : nums) {
-        maxCnt = Math.max(maxCnt, numsCnt.get(num));
+}
+```
+
+和上边思路一样，23ms，40%左右。
+
+```java
+class Solution {
+    public static int findShortestSubArray(int[] nums) {
+        // key -> int[]{次数，key最小下标，key最大下标}
+        Map<Integer, int[]> map = new HashMap<Integer, int[]>();
+        int n = nums.length;
+        int maxCnt = 0;
+        for (int i = 0; i < n; i++) {
+            if (map.containsKey(nums[i])) {
+                map.get(nums[i])[0]++;
+                map.get(nums[i])[2] = i;
+            } else {
+                map.put(nums[i], new int[]{1, i, i});
+            }
+            maxCnt = Math.max(maxCnt, map.get(nums[i])[0]);
+        }
+        int ret = nums.length;	//或者 int最大值都可以。
+        for (Map.Entry<Integer, int[]> entry : map.entrySet()) {
+            int[] cur = entry.getValue();
+            if (cur[0] != maxCnt) continue;
+            ret = Math.min(ret, cur[2] + 1 - cur[1]);
+        }
+        return ret;
     }
-    int ret = nums.length;
-    for (int i = 0; i < nums.length; i++) {
-        int num = nums[i];
-        int cnt = numsCnt.get(num);
-        if (cnt != maxCnt) continue;
-        ret = Math.min(ret, numsLastIndex.get(num) - numsFirstIndex.get(num) + 1);
+}
+```
+
+数组计数，由于已知值的范围是 `[0, 49999]`。 10ms，90%左右。
+
+```java
+class Solution {
+    int N = 50009;
+    public int findShortestSubArray(int[] nums) {
+        int n = nums.length;
+        int[] cnt = new int[N];
+        int[] first = new int[N], last = new int[N];
+        Arrays.fill(first, -1);
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            int num = nums[i];
+            max = Math.max(max, ++cnt[num]);
+            if (first[num] == -1) first[num] = i;
+            last[num] = i;
+        }
+        int ret = Integer.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            int num = nums[i];
+            if (cnt[num] == max) ret = Math.min(ret, last[num] + 1 - first[num]);
+        }
+        return ret;
     }
-    return ret;
 }
 ```
 
@@ -689,39 +855,61 @@ public int findShortestSubArray(int[] nums) {
 
 766\. Toeplitz Matrix (Easy)
 
-[Leetcode](https://leetcode.com/problems/toeplitz-matrix/description/) / [力扣](https://leetcode-cn.com/problems/toeplitz-matrix/description/)
+[Leetcode](https://leetcode.com/problems/toeplitz-matrix/description/) / [766. 托普利茨矩阵](https://leetcode-cn.com/problems/toeplitz-matrix/)
 
-```html
-1234
-5123
-9512
-
-In the above grid, the diagonals are "[9]", "[5, 5]", "[1, 1, 1]", "[2, 2, 2]", "[3, 3]", "[4]", and in each diagonal all elements are the same, so the answer is True.
+```js
+给你一个 m x n 的矩阵 matrix 。如果这个矩阵是托普利茨矩阵，返回 true ；否则，返回 false 。
+如果矩阵上每一条由左上到右下的对角线上的元素都相同，那么这个矩阵是 托普利茨矩阵 。
+提示：
+1 <= m, n <= 20
+0 <= matrix[i][j] <= 99
 ```
 
-```java
-public boolean isToeplitzMatrix(int[][] matrix) {
-    for (int i = 0; i < matrix[0].length; i++) {
-        if (!check(matrix, matrix[0][i], 0, i)) {
-            return false;
-        }
-    }
-    for (int i = 0; i < matrix.length; i++) {
-        if (!check(matrix, matrix[i][0], i, 0)) {
-            return false;
-        }
-    }
-    return true;
-}
+<img src="../../assets/1618026933938.png" alt="1618026933938" style="zoom:50%;" />
 
-private boolean check(int[][] matrix, int expectValue, int row, int col) {
-    if (row >= matrix.length || col >= matrix[0].length) {
+- 时间 O(M*N)
+
+```java
+class Solution {
+    public boolean isToeplitzMatrix(int[][] matrix) {
+        int m = matrix.length, n = matrix[0].length;
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (matrix[i][j] != matrix[i - 1][j - 1]) return false;
+            }
+        }
         return true;
     }
-    if (matrix[row][col] != expectValue) {
-        return false;
+}
+```
+
+其他，时间都是1ms
+
+```java
+class Solution {
+    public boolean isToeplitzMatrix(int[][] matrix) {
+        for (int i = 0; i < matrix[0].length; i++) {
+            if (!check(matrix, matrix[0][i], 0, i)) {
+                return false;
+            }
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            if (!check(matrix, matrix[i][0], i, 0)) {
+                return false;
+            }
+        }
+        return true;
     }
-    return check(matrix, expectValue, row + 1, col + 1);
+
+    private boolean check(int[][] matrix, int expectValue, int row, int col) {
+        if (row >= matrix.length || col >= matrix[0].length) {
+            return true;
+        }
+        if (matrix[row][col] != expectValue) {
+            return false;
+        }
+        return check(matrix, expectValue, row + 1, col + 1);
+    }
 }
 ```
 
@@ -729,35 +917,69 @@ private boolean check(int[][] matrix, int expectValue, int row, int col) {
 
 565\. Array Nesting (Medium)
 
-[Leetcode](https://leetcode.com/problems/array-nesting/description/) / [力扣](https://leetcode-cn.com/problems/array-nesting/description/)
+[Leetcode](https://leetcode.com/problems/array-nesting/description/) / [565. 数组嵌套](https://leetcode-cn.com/problems/array-nesting/)
 
-```html
-Input: A = [5,4,0,3,1,6,2]
-Output: 4
-Explanation:
+```js
+索引从0开始长度为N的数组A，包含0到N - 1的所有整数。找到最大的集合S并返回其大小，其中 S[i] = {A[i], A[A[i]], A[A[A[i]]], ... }且遵守以下的规则。
+假设选择索引为i的元素A[i]为S的第一个元素，S的下一个元素应该是A[A[i]]，之后是A[A[A[i]]]... 以此类推，不断添加直到S出现重复的元素。
+
+示例 1:
+输入: A = [5,4,0,3,1,6,2]		7个元素
+输出: 4
+解释: 
 A[0] = 5, A[1] = 4, A[2] = 0, A[3] = 3, A[4] = 1, A[5] = 6, A[6] = 2.
-
-One of the longest S[K]:
+其中一种最长的 S[K]:
 S[0] = {A[0], A[5], A[6], A[2]} = {5, 6, 2, 0}
+ 
+提示：
+N是[1,20000]之间的整数。A中不含有重复的元素。A中的元素大小在[0, N-1]之间。
 ```
 
-题目描述：S[i] 表示一个集合，集合的第一个元素是 A[i]，第二个元素是 A[A[i]]，如此嵌套下去。求最大的 S[i]。
+题目描述：S[i] 表示一个集合，集合的第一个元素是 A[i]，第二个元素是 A[A[i]]，如此嵌套下去。求最大嵌套数组的 S[i]。
+
+<img src="../../assets/1618034029382.png" alt="1618034029382" style="zoom: 67%;" />
+
+- 时间O(N) / 空间O(1)
 
 ```java
-public int arrayNesting(int[] nums) {
-    int max = 0;
-    for (int i = 0; i < nums.length; i++) {
-        int cnt = 0;
-        for (int j = i; nums[j] != -1; ) {
-            cnt++;
-            int t = nums[j];
-            nums[j] = -1; // 标记该位置已经被访问
-            j = t;
+public class Solution {
+    public int arrayNesting(int[] nums) {
+        int res = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == -1) continue;				// 或者等价于 if(nums[i] != -1)
+            int cur = nums[i];
+            int cnt = 0;
+            while (nums[cur] != -1) {					//或者弄一个布尔数组表示访问过的。
+                int tem = cur;							//缓存cur
+                cur = nums[cur];						//相当于更新了cur=cur.next
+                nums[tem] = -1;							//把上一个节点相当于删除。
+                cnt++;
+            }
+            res = Math.max(res, cnt);
+        }
+        return res;
+    }
+}
+```
+
+暴力，不通过。
+
+```java
+public class Solution {
+    public int arrayNesting(int[] nums) {
+        int res = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int start = nums[i], count = 0;
+            do {
+                count++;
+                start = nums[start];
+            }
+            while (start != nums[i]);
+            res = Math.max(res, count);
 
         }
-        max = Math.max(max, cnt);
+        return res;
     }
-    return max;
 }
 ```
 
@@ -765,27 +987,53 @@ public int arrayNesting(int[] nums) {
 
 769\. Max Chunks To Make Sorted (Medium)
 
-[Leetcode](https://leetcode.com/problems/max-chunks-to-make-sorted/description/) / [力扣](https://leetcode-cn.com/problems/max-chunks-to-make-sorted/description/)
+[Leetcode](https://leetcode.com/problems/max-chunks-to-make-sorted/description/) / [769. 最多能完成排序的块](https://leetcode-cn.com/problems/max-chunks-to-make-sorted/)
 
-```html
-Input: arr = [1,0,2,3,4]
-Output: 4
-Explanation:
-We can split into two chunks, such as [1, 0], [2, 3, 4].
-However, splitting into [1, 0], [2], [3], [4] is the highest number of chunks possible.
+```js
+数组arr是[0, 1, ..., arr.length - 1]的一种排列，我们将这个数组分割成几个“块”，并将这些块分别进行排序。之后再连接起来，使得连接的结果和按升序排序后的原数组相同。我们最多能将数组分成多少块？
+
+示例 1:
+输入: arr = [4,3,2,1,0]
+输出: 1
+解释:
+将数组分成2块或者更多块，都无法得到所需的结果。
+例如，分成 [4, 3], [2, 1, 0] 的结果是 [3, 4, 0, 1, 2]，这不是有序的数组。
+
+示例 2:
+输入: arr = [1,0,2,3,4]
+输出: 4
+解释:
+我们可以把它分成两块，例如 [1, 0], [2, 3, 4]。
+然而，分成 [1, 0], [2], [3], [4] 可以得到最多的块数。
+
+注意: arr 的长度在 [1, 10] 之间。arr[i]是 [0, 1, ..., arr.length - 1]的一种排列。
+其他用例：
+        if(Arrays.toString(arr).equals("[0]")) return 1;
+        if(Arrays.toString(arr).equals("[0, 1]")) return 2;
+        if(Arrays.toString(arr).equals("[1, 0]")) return 1;
+        if(Arrays.toString(arr).equals("[0, 2, 1]")) return 2;
+        if(Arrays.toString(arr).equals("[2, 0, 1]")) return 1;
+        if(Arrays.toString(arr).equals("[1, 0, 2]")) return 2;
 ```
 
 题目描述：分隔数组，使得对每部分排序后数组就为有序。
 
+```cpp
+//当遍历到第i个位置时，如果可以切分为块，那前i个位置的最大值一定等于i。
+//否则，一定有比i小的数划分到后面的块，那块排序后，一定不满足升序。
+```
+
 ```java
-public int maxChunksToSorted(int[] arr) {
-    if (arr == null) return 0;
-    int ret = 0;
-    int right = arr[0];
-    for (int i = 0; i < arr.length; i++) {
-        right = Math.max(right, arr[i]);
-        if (right == i) ret++;
+class Solution {
+    public int maxChunksToSorted(int[] arr) {
+        if (arr == null) return 0;	
+        int ret = 0;
+        int right = arr[0];
+        for (int i = 0; i < arr.length; i++) {
+            right = Math.max(right, arr[i]);		//统计前i个位置的最大元素
+            if (right == i) ret++;
+        }
+        return ret;
     }
-    return ret;
 }
 ```
