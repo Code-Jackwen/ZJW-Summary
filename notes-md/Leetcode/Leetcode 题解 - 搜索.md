@@ -35,7 +35,6 @@
 ## BFS
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/95903878-725b-4ed9-bded-bc4aae0792a9.jpg"/> </div><br>
-
 广度优先搜索一层一层地进行遍历，每层遍历都是以上一层遍历的结果作为起点，遍历一个距离能访问到的所有节点。需要注意的是，遍历过的节点不能再次被遍历。
 
 第一层：
@@ -54,7 +53,7 @@
 - 4 -\> {}
 - 3 -\> {}
 
-每一层遍历的节点都与根节点距离相同。设 d<sub>i</sub> 表示第 i 个节点与根节点的距离，推导出一个结论：对于先遍历的节点 i 与后遍历的节点 j，有 d<sub>i</sub> <= d<sub>j</sub>。利用这个结论，可以求解最短路径等   **最优解**   问题：第一次遍历到目的节点，其所经过的路径为最短路径。应该注意的是，使用 BFS 只能求解无权图的最短路径，无权图是指从一个节点到另一个节点的代价都记为 1。
+每一层遍历的节点都与根节点距离相同。设 d<sub>i</sub> 表示第 i 个节点与根节点的距离，推导出一个结论：对于先遍历的节点 i 与后遍历的节点 j，有 d<sub>i</sub> <= d<sub>j</sub>。利用这个结论，可以求解最短路径等   **最优解**   问题：第一次遍历到目的节点，其所经过的路径为最短路径。应该注意的是，使用 **BFS 只能求解无权图的最短路径，无权图是指从一个节点到另一个节点的代价都记为 1。**
 
 在程序实现 BFS 时需要考虑以下问题：
 
@@ -68,13 +67,120 @@
 [Leetcode](https://leetcode.com/problems/shortest-path-in-binary-matrix/) / [力扣](https://leetcode-cn.com/problems/shortest-path-in-binary-matrix/)
 
 ```html
-[[1,1,0,1],
- [1,0,1,0],
- [1,1,1,1],
- [1,0,1,1]]
+给你一个 n x n 的二进制矩阵 grid 中，返回矩阵中最短 畅通路径 的长度。如果不存在这样的路径，返回 -1 。
+
+二进制矩阵中的 畅通路径 是一条从 左上角 单元格（即，(0, 0)）到 右下角 单元格（即，(n - 1, n - 1)）的路径，该路径同时满足下述要求：
+
+1、路径途经的所有单元格都的值都是 0 。
+2、路径中所有相邻的单元格应当在 8 个方向之一 上连通（即，相邻两单元之间彼此不同且共享一条边或者一个角）。
+3、畅通路径的长度 是该路径途经的单元格总数。
+
+示例 3：
+输入：grid = [[1,0,0],[1,1,0],[1,1,0]]
+输出：-1
+
+提示：
+n == grid.length
+n == grid[i].length
+1 <= n <= 100
+grid[i][j] 为 0 或 1
 ```
 
+```js
+示例 1：
+输入：grid = [[0,1],[1,0]]
+输出：2
+```
+
+<img src="../../assets/1618125364615.png" alt="1618125364615" style="zoom: 50%;" />
+
+```js
+示例 2：
+输入：grid = [[0,0,0],[1,1,0],[1,1,0]]
+输出：4
+```
+
+<img src="../../assets/1618125417485.png" alt="1618125417485" style="zoom:50%;" />
+
 题目描述：0 表示可以经过某个位置，求解从左上角到右下角的最短路径长度。
+
+```java
+class Solution {
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        if(grid[0][0]==1 || grid[grid.length-1][grid[0].length-1]==1) return -1;
+        grid[0][0] = 1;
+        Queue<int[]> q=new LinkedList<>();
+        q.add(new int[]{0, 0});
+        int len = q.size();										// 队列长度
+        int c = 0;												// c要和队列长度比
+        int[][] dir = {{1, 0}, {1, 1}, {1,-1}, {0, 1}, 			// 定义八个方向
+                       {0, -1}, {-1, 0},{-1, -1}, {-1, 1}};
+        int path = 1;											// 定义最短路径长度
+        while(!q.isEmpty()){
+            int[] data = q.poll();
+            int x = data[0];									// x、y代表当前的坐标（x，y）
+            int y = data[1];
+            if(x == m - 1 && y == n - 1)  return path;			// 先到先返回
+            for(int[] d : dir){
+                int x1 = x + d[0];								// 移动后的坐标（x1，y1）
+                int y1 = y + d[1];
+                if(x1 >= 0 && y1 >= 0 && x1 < m && y1 < n && grid[x1][y1] == 0){
+                    q.add(new int[]{x1, y1});					// 将可走的步添加进队列
+                    grid[x1][y1] = 1;							//标记
+                }
+            }
+            c++;												//计算步数的核心
+            if(c == len){	//判断的逻辑是把上次队列存储全部节点处理完毕后，path++
+                c = 0;		//len等于这层节点的数量
+                path++;
+                len = q.size();
+            }
+        }
+        return -1;
+    }
+}
+```
+
+下边这个也是上边的思路好理解一些
+
+<img src="../../assets/1618135273853.png" alt="1618135273853" style="zoom:50%;" />
+
+```java
+class Solution {
+     public int shortestPathBinaryMatrix(int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+        if (grid[0][0] == 1 || grid[n - 1][m - 1] == 1) return -1;
+        if (n == 1 && m == 1) return 1;
+        int[] dx = new int[]{-1, -1, -1,  0, 0, 1, 1, 1};
+        int[] dy = new int[]{-1,  0,  1, -1, 1,-1, 0, 1};
+        grid[0][0] = 1;
+        Queue<int[]> queue = new LinkedList<>();				//一维数组节点
+        queue.add(new int[]{0, 0});
+        int count = 0;
+        while (!queue.isEmpty()) {
+            count++;
+            int queueSize = queue.size();
+            for (int i = 0; i < queueSize; i++) {				//一层的节点数处理完后
+                int[] data = queue.poll();						//count++;
+                if (data[0] == n - 1 && data[1] == m - 1) return count;
+                for (int j = 0; j < 8; j++) {
+                    int x = data[0] + dx[j];
+                    int y = data[1] + dy[j];
+                    if (x >= 0 && x < n && y >= 0 && y < m && grid[x][y] == 0 ) {
+                        queue.add(new int[]{x, y});
+                        grid[x][y] = 1;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+}
+```
+
+其他
 
 ```java
 public int shortestPathBinaryMatrix(int[][] grids) {
@@ -116,13 +222,28 @@ public int shortestPathBinaryMatrix(int[][] grids) {
 
 279\. Perfect Squares (Medium)
 
-[Leetcode](https://leetcode.com/problems/perfect-squares/description/) / [力扣](https://leetcode-cn.com/problems/perfect-squares/description/)
+[Leetcode](https://leetcode.com/problems/perfect-squares/description/) / [279. 完全平方数](https://leetcode-cn.com/problems/perfect-squares/)
 
-```html
-For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9.
+```js
+给定正整数 n，找到若干个完全平方数（比如 1, 4, 9, 16, ...）使得它们的和等于 n。
+你需要让组成和的完全平方数的个数最少。
+给你一个整数 n ，返回#和为 n 的完全平方数的 最少数量 。
+完全平方数 是一个整数，其值等于另一个整数的平方；换句话说，其值等于一个整数自乘的积。例如，1、4、9 和 16 都是完全平方数，而 3 和 11 不是。
+
+示例 1：
+输入：n = 12
+输出：3 
+解释：12 = 4 + 4 + 4
+
+示例 2：
+输入：n = 13
+输出：2
+解释：13 = 4 + 9
+ 
+提示：1 <= n <= 104
 ```
 
-可以将每个整数看成图中的一个节点，如果两个整数之差为一个平方数，那么这两个整数所在的节点就有一条边。
+可以将每个整数看成**图**中的一个节点，如果两个整数之差为一个平方数，那么这两个整数所在的节点就有一条边。
 
 要求解最小的平方数数量，就是求解从节点 n 到节点 0 的最短路径。
 
@@ -162,7 +283,7 @@ public int numSquares(int n) {
 
 /**
  * 生成小于 n 的平方数序列
- * @return 1,4,9,...
+ * @return 1,4,9,16...
  */
 private List<Integer> generateSquares(int n) {
     List<Integer> squares = new ArrayList<>();
@@ -181,32 +302,58 @@ private List<Integer> generateSquares(int n) {
 
 127\. Word Ladder (Medium)
 
-[Leetcode](https://leetcode.com/problems/word-ladder/description/) / [力扣](https://leetcode-cn.com/problems/word-ladder/description/)
+[Leetcode](https://leetcode.com/problems/word-ladder/description/) / [127. 单词接龙](https://leetcode-cn.com/problems/word-ladder/)
 
-```html
-Input:
-beginWord = "hit",
-endWord = "cog",
-wordList = ["hot","dot","dog","lot","log","cog"]
+```js
+字典 wordList 中从单词 beginWord 和 endWord 的 转换序列 是一个按下述规格形成的序列：
+1、序列中第一个单词是 beginWord 。
+2、序列中最后一个单词是 endWord 。
+3、每次转换只能改变一个字母。
+4、转换过程中的中间单词必须是字典 wordList 中的单词。
+给你两个单词 beginWord 和 endWord 和一个字典 wordList ，找到从 beginWord 到 endWord 的 最短转换序列 中的 单词数目 。如果不存在这样的转换序列，返回 0。
+ 
+示例 1：
+输入：beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]
+输出：5
+解释：一个最短转换序列是 "hit" -> "hot" -> "dot" -> "dog" -> "cog", 返回它的长度 5。
+i编程o，h变成d，t变成g，d变成c
 
-Output: 5
+示例 2：
+输入：beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log"]
+输出：0
+解释：endWord "cog" 不在字典中，所以无法进行转换。
 
-Explanation: As one shortest transformation is "hit" -> "hot" -> "dot" -> "dog" -> "cog",
-return its length 5.
-```
-
-```html
-Input:
-beginWord = "hit"
-endWord = "cog"
-wordList = ["hot","dot","dog","lot","log"]
-
-Output: 0
-
-Explanation: The endWord "cog" is not in wordList, therefore no possible transformation.
+提示：
+1 <= beginWord.length <= 10
+endWord.length == beginWord.length
+1 <= wordList.length <= 5000
+wordList[i].length == beginWord.length
+beginWord、endWord 和 wordList[i] 由小写英文字母组成
+beginWord != endWord
+wordList 中的所有字符串 互不相同
 ```
 
 题目描述：找出一条从 beginWord 到 endWord 的最短路径，每次移动规定为改变一个字符，并且改变之后的字符串必须在 wordList 中。
+
+```js
+
+```
+
+题解
+
+- 无向图中两个顶点之间的最短路径的长度，可以通过广度优先遍历得到；
+- 为什么 BFS 得到的路径最短？可以把起点和终点所在的路径拉直来看，两点之间线段最短；
+- 已知目标顶点的情况下，可以分别从起点和目标顶点（终点）执行广度优先遍历，直到遍历的部分有交集，是双向广度优先遍历的思想。
+
+### todo
+
+参考：BFS、双向BFS
+
+https://leetcode-cn.com/problems/word-ladder/solution/yan-du-you-xian-bian-li-shuang-xiang-yan-du-you-2/
+
+
+
+其他，这个1000+ms，太慢了
 
 ```java
 public int ladderLength(String beginWord, String endWord, List<String> wordList) {
@@ -278,7 +425,6 @@ private int getShortestPath(List<Integer>[] graphic, int start, int end) {
 ## DFS
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/74dc31eb-6baa-47ea-ab1c-d27a0ca35093.png"/> </div><br>
-
 广度优先搜索一层一层遍历，每一层得到的所有新节点，要用队列存储起来以备下一层遍历的时候再遍历。
 
 而深度优先搜索在得到一个新节点时立即对新节点进行遍历：从节点 0 出发开始遍历，得到到新节点 6 时，立马对新节点 6 进行遍历，得到新节点 4；如此反复以这种方式遍历新节点，直到没有新节点了，此时返回。返回到根节点 0 的情况是，继续对根节点 0 进行遍历，得到新节点 2，然后继续以上步骤。
@@ -294,48 +440,102 @@ private int getShortestPath(List<Integer>[] graphic, int start, int end) {
 
 695\. Max Area of Island (Medium)
 
-[Leetcode](https://leetcode.com/problems/max-area-of-island/description/) / [力扣](https://leetcode-cn.com/problems/max-area-of-island/description/)
+[Leetcode](https://leetcode.com/problems/max-area-of-island/description/) / [695. 岛屿的最大面积](https://leetcode-cn.com/problems/max-area-of-island/)
 
-```html
+```js
+给定一个包含了一些 0 和 1 的非空二维数组 grid 。
+一个 岛屿 是由一些相邻的 1 (代表土地) 构成的组合，#「相邻」要求两个 1 必须在水平或者竖直方向上相邻。
+你可以假设 grid 的四个边缘都被 0（代表水）包围着。
+找到给定的二维数组中最大的岛屿面积。(如果没有岛屿，则返回面积为 0 。)
+
+示例 1:
 [[0,0,1,0,0,0,0,1,0,0,0,0,0],
  [0,0,0,0,0,0,0,1,1,1,0,0,0],
  [0,1,1,0,1,0,0,0,0,0,0,0,0],
- [0,1,0,0,1,1,0,0,1,0,1,0,0],
- [0,1,0,0,1,1,0,0,1,1,1,0,0],
- [0,0,0,0,0,0,0,0,0,0,1,0,0],
+ [0,1,0,0,1,1,0,0,#1,0,1,0,0],
+ [0,1,0,0,1,1,0,0,#1,1,1,0,0],
+ [0,0,0,0,0,0,0,0,#0,0,1,0,0],
  [0,0,0,0,0,0,0,1,1,1,0,0,0],
  [0,0,0,0,0,0,0,1,1,0,0,0,0]]
+对于上面这个给定矩阵应返回 6。注意答案不应该是 11 ，因为岛屿只能包含水平或垂直的四个方向的 1 。
+
+示例：	返回4
+[[1,1,0,0,0],
+ [1,1,0,0,0],
+ [0,0,0,1,1],
+ [0,0,0,1,1]]
+求的是各个岛屿中最大的一个面积，而不是岛屿个数。
+
+注意: 给定的矩阵grid 的长度和宽度都不超过 50。
 ```
 
+标准DFS，这个更快。
+
 ```java
-private int m, n;
-private int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-
-public int maxAreaOfIsland(int[][] grid) {
-    if (grid == null || grid.length == 0) {
-        return 0;
-    }
-    m = grid.length;
-    n = grid[0].length;
-    int maxArea = 0;
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) {
-            maxArea = Math.max(maxArea, dfs(grid, i, j));
+class Solution {
+    public int maxAreaOfIsland(int[][] grid) {
+        int res = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] == 1) {
+                    res = Math.max(res, dfs(i, j, grid));
+                }
+            }
         }
+        return res;
     }
-    return maxArea;
-}
+    // 每次调用的时候默认num为1，进入后判断如果不是岛屿，则直接返回0，就可以避免预防错误的情况。
+    // 每次找到岛屿，则直接把找到的岛屿改成0，这是传说中的沉岛思想，就是遇到岛屿就把他和周围的全部沉默。
+    // ps：如果能用沉岛思想，那么自然可以用朋友圈思想。有兴趣的朋友可以去尝试。
+    private int dfs(int i, int j, int[][] grid) {
+        if (i < 0 || j < 0 || i >= grid.length || j >= grid[i].length
+         || grid[i][j] == 0) {	return 0;  }
+        
+        grid[i][j] = 0;
+        int s = 1;
+        s += dfs(i + 1, j, grid);
+        s += dfs(i - 1, j, grid);
+        s += dfs(i, j + 1, grid);
+        s += dfs(i, j - 1, grid);
+        return s;
 
-private int dfs(int[][] grid, int r, int c) {
-    if (r < 0 || r >= m || c < 0 || c >= n || grid[r][c] == 0) {
-        return 0;
     }
-    grid[r][c] = 0;
-    int area = 1;
-    for (int[] d : direction) {
-        area += dfs(grid, r + d[0], c + d[1]);
+}
+```
+
+其他
+
+```java
+class Solution {
+    private int m, n;
+    private int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    public int maxAreaOfIsland(int[][] grid) {
+        if (grid == null || grid.length == 0) {
+            return 0;
+        }
+        m = grid.length;
+        n = grid[0].length;
+        int maxArea = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                maxArea = Math.max(maxArea, dfs(grid, i, j));
+            }
+        }
+        return maxArea;
     }
-    return area;
+
+    private int dfs(int[][] grid, int r, int c) {
+        if (r < 0 || r >= m || c < 0 || c >= n || grid[r][c] == 0) {
+            return 0;
+        }
+        grid[r][c] = 0;
+        int area = 1;
+        for (int[] d : direction) {
+            area += dfs(grid, r + d[0], c + d[1]);
+        }
+        return area;
+    }
 }
 ```
 
@@ -343,49 +543,98 @@ private int dfs(int[][] grid, int r, int c) {
 
 200\. Number of Islands (Medium)
 
-[Leetcode](https://leetcode.com/problems/number-of-islands/description/) / [力扣](https://leetcode-cn.com/problems/number-of-islands/description/)
+[Leetcode](https://leetcode.com/problems/number-of-islands/description/) / [200. 岛屿数量](https://leetcode-cn.com/problems/number-of-islands/)
 
 ```html
-Input:
-11000
-11000
-00100
-00011
+给你一个由 '1'（陆地）和 '0'（水）组成的的二维网格，请你计算网格中岛屿的数量。
+岛屿总是被水包围，并且每座岛屿只能由水平方向和/或竖直方向上相邻的陆地连接形成。
+此外，你可以假设该网格的四条边均被水包围。
 
-Output: 3
+示例 1：
+输入：grid = [
+  ["1","1","1","1","0"],
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
+]
+输出：1
+
+示例 2：
+输入：grid = [
+  ["1","1","0","0","0"],
+  ["1","1","0","0","0"],
+  ["0","0","1","0","0"],
+  ["0","0","0","1","1"]
+]
+输出：3
+
+提示：
+m == grid.length
+n == grid[i].length
+1 <= m, n <= 300
+grid[i][j] 的值为 '0' 或 '1'
 ```
 
-可以将矩阵表示看成一张有向图。
-
 ```java
-private int m, n;
-private int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-
-public int numIslands(char[][] grid) {
-    if (grid == null || grid.length == 0) {
-        return 0;
-    }
-    m = grid.length;
-    n = grid[0].length;
-    int islandsNum = 0;
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) {
-            if (grid[i][j] != '0') {
-                dfs(grid, i, j);
-                islandsNum++;
+class Solution {
+    public int numIslands(char[][] grid) {
+        int count = 0;
+        for(int i = 0; i < grid.length; i++) {
+            for(int j = 0; j < grid[0].length; j++) {
+                if(grid[i][j] == '1'){
+                    dfs(grid, i, j);
+                    count++;
+                }
             }
         }
+        return count;
     }
-    return islandsNum;
+    private void dfs(char[][] grid, int i, int j){
+        if(i < 0 || j < 0 || i >= grid.length || j >= grid[0].length 
+           		 || grid[i][j] == '0') return;
+        grid[i][j] = '0';
+        dfs(grid, i + 1, j);
+        dfs(grid, i, j + 1);
+        dfs(grid, i - 1, j);
+        dfs(grid, i, j - 1);
+    }
 }
+```
 
-private void dfs(char[][] grid, int i, int j) {
-    if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == '0') {
-        return;
+其他，可以将矩阵表示看成一张有向图。
+
+```java
+//思路其实一样
+class Solution {
+    private int m, n;
+    private int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0) {
+            return 0;
+        }
+        m = grid.length;
+        n = grid[0].length;
+        int islandsNum = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] != '0') {
+                    dfs(grid, i, j);
+                    islandsNum++;
+                }
+            }
+        }
+        return islandsNum;
     }
-    grid[i][j] = '0';
-    for (int[] d : direction) {
-        dfs(grid, i + d[0], j + d[1]);
+
+    private void dfs(char[][] grid, int i, int j) {
+        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == '0') {
+            return;
+        }
+        grid[i][j] = '0';
+        for (int[] d : direction) {
+            dfs(grid, i + d[0], j + d[1]);
+        }
     }
 }
 ```
@@ -600,7 +849,6 @@ Backtracking（回溯）属于 DFS。
 [Leetcode](https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/) / [力扣](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/description/)
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/9823768c-212b-4b1a-b69a-b3f59e07b977.jpg"/> </div><br>
-
 ```html
 Input:Digit string "23"
 Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
@@ -1203,7 +1451,6 @@ private boolean isPalindrome(String s, int begin, int end) {
 [Leetcode](https://leetcode.com/problems/sudoku-solver/description/) / [力扣](https://leetcode-cn.com/problems/sudoku-solver/description/)
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/0e8fdc96-83c1-4798-9abe-45fc91d70b9d.png"/> </div><br>
-
 ```java
 private boolean[][] rowsUsed = new boolean[9][10];
 private boolean[][] colsUsed = new boolean[9][10];
@@ -1262,7 +1509,6 @@ private int cubeNum(int i, int j) {
 [Leetcode](https://leetcode.com/problems/n-queens/description/) / [力扣](https://leetcode-cn.com/problems/n-queens/description/)
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/067b310c-6877-40fe-9dcf-10654e737485.jpg"/> </div><br>
-
 在 n\*n 的矩阵中摆放 n 个皇后，并且每个皇后不能在同一行，同一列，同一对角线上，求所有的 n 皇后的解。
 
 一行一行地摆放，在确定一行中的那个皇后应该摆在哪一列时，需要用三个标记数组来确定某一列是否合法，这三个标记数组分别为：列标记数组、45 度对角线标记数组和 135 度对角线标记数组。
@@ -1271,11 +1517,9 @@ private int cubeNum(int i, int j) {
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/9c422923-1447-4a3b-a4e1-97e663738187.jpg" width="300px"> </div><br>
 
-
 135 度对角线标记数组的长度也是 2 \* n - 1，(r, c) 的位置所在的数组下标为 n - 1 - (r - c)。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/7a85e285-e152-4116-b6dc-3fab27ba9437.jpg" width="300px"> </div><br>
-
 ```java
 private List<List<String>> solutions;
 private char[][] nQueens;
