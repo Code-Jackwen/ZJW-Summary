@@ -643,111 +643,187 @@ class Solution {
 
 547\. Friend Circles (Medium)
 
-[Leetcode](https://leetcode.com/problems/friend-circles/description/) / [力扣](https://leetcode-cn.com/problems/friend-circles/description/)
+[Leetcode](https://leetcode.com/problems/friend-circles/description/) / [547. 省份数量](https://leetcode-cn.com/problems/number-of-provinces/)
 
-```html
-Input:
-[[1,1,0],
+```js
+有 n 个城市，其中一些彼此相连，另一些没有相连。如果城市 a 与城市 b 直接相连，且城市 b 与城市 c 直接相连，那么城市 a 与城市 c 间接相连。
+省份 是一组直接或间接相连的城市，组内不含其他没有相连的城市。
+给你一个 n x n 的矩阵 isConnected ，其中 isConnected[i][j] = 1 表示第 i 个城市和第 j 个城市直接相连，而 isConnected[i][j] = 0 表示二者不直接相连。
+返回矩阵中 省份 的数量。
+
+提示：
+1 <= n <= 200
+n == isConnected.length、n == isConnected[i].length、矩阵都是正方形
+isConnected[i][j] 为 1 或 0
+isConnected[i][i] == 1
+isConnected[i][j] == isConnected[j][i]
+```
+
+示例 1：
+
+<img src="../../assets/1618193276869.png" alt="1618193276869" style="zoom:50%;" />
+
+```
+输入：
+isConnected = 
+[[1,1,0], 
  [1,1,0],
  [0,0,1]]
-
-Output: 2
-
-Explanation:The 0th and 1st students are direct friends, so they are in a friend circle.
-The 2nd student himself is in a friend circle. So return 2.
+输出：2
 ```
 
-题目描述：好友关系可以看成是一个无向图，例如第 0 个人与第 1 个人是好友，那么 M[0][1] 和 M[1][0] 的值都为 1。
+示例 2：
+
+<img src="../../assets/1618193254926.png" alt="1618193254926" style="zoom:50%;" />
+
+```
+输入：
+isConnected = 
+[[1,0,0],
+ [0,1,0],
+ [0,0,1]]
+输出：3
+
+输入：
+{ {1,1,1},
+  {1,1,1},
+  {1,1,1} };
+输出：1     
+
+输入：
+{ {0,0,0},
+  {0,0,0},
+  {0,0,0} };
+输出：3
+```
+
+题目描述：好友关系可看成是一个无向图，例第 0 个人与第 1 个人是好友，那么 M\[0][1] 和 M\[1][0] 的值都为 1。
+
+应该找一找图解的，没找到DFS的图解。
 
 ```java
-private int n;
-
-public int findCircleNum(int[][] M) {
-    n = M.length;
-    int circleNum = 0;
-    boolean[] hasVisited = new boolean[n];
-    for (int i = 0; i < n; i++) {
-        if (!hasVisited[i]) {
-            dfs(M, i, hasVisited);
-            circleNum++;
+class Solution {
+    public int findCircleNum(int[][] isConnected) {
+        // int[][] isConnected 是无向图的邻接矩阵，n 为无向图的顶点数量
+        int n = isConnected.length;
+        boolean[] visited = new boolean[n];					//标识的是行，是否访问过。
+        int cnt = 0;										//累计遍历过的连通域的数量
+        for (int i = 0; i < n; i++) {
+            // 若当前顶点 i 未被访问，说明又是一个新的连通域，则遍历新的连通域且cnt+=1.
+            if (!visited[i]) { 
+                cnt++;
+                dfs(i, isConnected, visited);
+            }
         }
+        return cnt;
     }
-    return circleNum;
-}
 
-private void dfs(int[][] M, int i, boolean[] hasVisited) {
-    hasVisited[i] = true;
-    for (int k = 0; k < n; k++) {
-        if (M[i][k] == 1 && !hasVisited[k]) {
-            dfs(M, k, hasVisited);
+    private void dfs(int i, int[][] isConnected, boolean[] visited) {
+        visited[i] = true;									// 对当前顶点 i 进行访问标记
+        for (int j = 0; j < isConnected.length; j++) {		// 继续遍历与顶点 i 相邻的顶点
+            if (isConnected[i][j] == 1 && !visited[j]) {	//这里visited是j
+                dfs(j, isConnected, visited);				//这里访问的是j
+            }
         }
     }
 }
 ```
+
+BFS、并查集（解法比较典型），解法参考：https://leetcode-cn.com/problems/number-of-provinces/solution/dfs-bfs-bing-cha-ji-3-chong-fang-fa-ji-s-edkl/
 
 ### 4. 填充封闭区域
 
 130\. Surrounded Regions (Medium)
 
-[Leetcode](https://leetcode.com/problems/surrounded-regions/description/) / [力扣](https://leetcode-cn.com/problems/surrounded-regions/description/)
+[Leetcode](https://leetcode.com/problems/surrounded-regions/description/) / [130. 被围绕的区域](https://leetcode-cn.com/problems/surrounded-regions/)
 
-```html
-For example,
-X X X X
-X O O X
-X X O X
-X O X X
+```js
+给你一个 m x n 的矩阵 board ，由若干字符 'X' 和 'O' ，找到所有被 'X' 围绕的区域，并将这些区域里所有的 'O' 用 'X' 填充。
 
-After running your function, the board should be:
-X X X X
-X X X X
-X X X X
-X O X X
+示例 1：
+输入：board = 
+    [["X","X","X","X"],
+     ["X","O","O","X"],
+     ["X","X","O","X"],
+     ["X","O","X","X"]]
+
+输出：[["X","X","X","X"],
+      ["X","X","X","X"],
+      ["X","X","X","X"],
+      ["X","O","X","X"]]
+
+解释：
+被围绕的区间不会存在于边界上，换句话说，任何边界上的 'O' 都不会被填充为 'X'。 
+任何不在边界上，或不与边界上的 'O' 相连的 'O' 最终都会被填充为 'X'。
+如果两个元素在水平或垂直方向相邻，则称它们是“相连”的。
+
+提示：
+m == board.length
+n == board[i].length
+1 <= m, n <= 200
+board[i][j] 为 'X' 或 'O'
 ```
 
-题目描述：使被 'X' 包围的 'O' 转换为 'X'。
+题目描述：使被 'X' 包围的 'O' 转换为 'X'。思路，先填充最外侧，剩下的就是里侧了。
 
-先填充最外侧，剩下的就是里侧了。
+本题给定的矩阵中有三种元素：
+
+- 字母 `X`；
+- 被字母 `X` 包围的字母 `O`；
+- 没有被字母 `X` 包围的字母 `O`。
+
+本题要求将所有被字母 X 包围的字母 O都变为字母 X ，但很难判断哪些 O 是被包围的，哪些 O 不是被包围的。
+
+注意到题目解释中提到：任何边界上的 O 都不会被填充为 X。 
+
+我们可以想到，所有的不被包围的 O 都直接或间接与边界上的 O 相连。我们可以利用这个性质判断 O 是否在边界上，具体地说：
+
+- 对于每一个边界上的 O，我们以它为起点，标记所有与它直接或间接相连的字母 O；
+- 最后我们遍历这个矩阵，对于每一个字母：
+  - 如果该字母被标记过，则该字母为没有被字母 X 包围的字母 O，我们将其还原为字母 O；
+  - 如果该字母没有被标记过，则该字母为被字母 X 包围的字母 O，我们将其修改为字母 X。
+
+思路及解法
+
+先把和边界4个方向相连接的所有O 修改为字母 `T`，然后全局遍历，等于T的变成O，等于O的变成X。
+
+其他：DFS、并查集，参考：https://leetcode-cn.com/problems/surrounded-regions/solution/bfsdi-gui-dfsfei-di-gui-dfsbing-cha-ji-by-ac_pipe/
 
 ```java
-private int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-private int m, n;
-
-public void solve(char[][] board) {
-    if (board == null || board.length == 0) {
-        return;
-    }
-
-    m = board.length;
-    n = board[0].length;
-
-    for (int i = 0; i < m; i++) {
-        dfs(board, i, 0);
-        dfs(board, i, n - 1);
-    }
-    for (int i = 0; i < n; i++) {
-        dfs(board, 0, i);
-        dfs(board, m - 1, i);
-    }
-
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) {
-            if (board[i][j] == 'T') {
-                board[i][j] = 'O';
-            } else if (board[i][j] == 'O') {
-                board[i][j] = 'X';
+class Solution {
+    int r, c;										//全局的行、列
+    public void solve(char[][] board) {
+        r = board.length;
+        if (r == 0) return;
+        c = board[0].length;
+        for (int i = 0; i < r; i++) {				//最左和最右列
+            dfs(board, i, 0);
+            dfs(board, i, c - 1);
+        }
+        for (int j = 1; j < c - 1; j++) {			//第一行和最后一行，分别第二列到倒数第二列。
+            dfs(board, 0, j);
+            dfs(board, r - 1, j);
+        }
+        for (int i = 0; i < r; i++) {				//全部遍历
+            for (int j = 0; j < c; j++) {
+                if (board[i][j] == 'T') {			//等于T的变成O
+                    board[i][j] = 'O';
+                } else if (board[i][j] == 'O') {	//等于O的变成X
+                    board[i][j] = 'X';
+                }
             }
         }
     }
-}
 
-private void dfs(char[][] board, int r, int c) {
-    if (r < 0 || r >= m || c < 0 || c >= n || board[r][c] != 'O') {
-        return;
-    }
-    board[r][c] = 'T';
-    for (int[] d : direction) {
-        dfs(board, r + d[0], c + d[1]);
+    public void dfs(char[][] board, int x, int y) {
+        if (x < 0 || x >= r || y < 0 || y >= c || board[x][y] != 'O') {
+            return;
+        }
+        board[x][y] = 'T';							//常规4个方向的标记遍历
+        dfs(board, x + 1, y);
+        dfs(board, x - 1, y);
+        dfs(board, x, y + 1);
+        dfs(board, x, y - 1);
     }
 }
 ```
@@ -756,76 +832,99 @@ private void dfs(char[][] board, int r, int c) {
 
 417\. Pacific Atlantic Water Flow (Medium)
 
-[Leetcode](https://leetcode.com/problems/pacific-atlantic-water-flow/description/) / [力扣](https://leetcode-cn.com/problems/pacific-atlantic-water-flow/description/)
+[Leetcode](https://leetcode.com/problems/pacific-atlantic-water-flow/description/) / [417. 太平洋大西洋水流问题](https://leetcode-cn.com/problems/pacific-atlantic-water-flow/)
 
-```html
-Given the following 5x5 matrix:
+```js
+给定一个 m x n 的非负整数矩阵来表示一片大陆上各个单元格的高度。“太平洋”处于大陆的左边界和上边界，而“大西洋”处于大陆的右边界和下边界。
+规定水流只能按照上、下、左、右四个方向流动，且只能从高到低或者在同等高度上流动。
+请找出那些水流既可以流动到“太平洋”，又能流动到“大西洋”的陆地单元的坐标。
 
-  Pacific ~   ~   ~   ~   ~
+提示：输出坐标的顺序不重要、m 和 n 都小于150
+
+示例：
+给定下面的 5x5 矩阵:
+  太平洋 ~   ~   ~   ~   ~ 
        ~  1   2   2   3  (5) *
        ~  3   2   3  (4) (4) *
        ~  2   4  (5)  3   1  *
        ~ (6) (7)  1   4   5  *
        ~ (5)  1   1   2   4  *
-          *   *   *   *   * Atlantic
-
-Return:
-[[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (positions with parentheses in above matrix).
+          *   *   *   *   * 大西洋
+返回:
+[[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (上图中带括号的单元).
 ```
 
 左边和上边是太平洋，右边和下边是大西洋，内部的数字代表海拔，海拔高的地方的水能够流到低的地方，求解水能够流到太平洋和大西洋的所有位置。
 
+思路是从海洋开始逆流，如果可以逆流到，就标记为1，然后检查两个海洋都可以逆流到的区域。
+
+BFS ，参考：
+
+https://leetcode-cn.com/problems/pacific-atlantic-water-flow/solution/ni-liu-dfs-yu-bfs-by-fibonacciwh/
+
 ```java
-private int m, n;
-private int[][] matrix;
-private int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+class Solution {
+    int r, c;							  //定义成全局的，减少dfs函数的形参
+    int[][] matrix;
+    public List<List<Integer>> pacificAtlantic(int[][] matrix) {
+        if (matrix.length == 0 || matrix[0].length == 0) {
+            return new ArrayList<>();
+        }
+        this.r = matrix.length;
+        this.c = matrix[0].length;
+        this.matrix = matrix;
+        int[][] tp = new int[r][c];       //太平洋
+        int[][] dx = new int[r][c];       //大西洋
+        //从海洋边界开始
+//        for (int i = 0; i < r; i++) {
+//            for (int j = 0; j < c; j++) {
+//                if (i == 0 || j == 0) {
+//                    dfs( tp, i, j, matrix[i][j]);
+//                }
+//                if (i == r - 1 || j == c - 1) {
+//                    dfs( dx, i, j, matrix[i][j]);
+//                }
+//            }
+//        }
 
-public List<List<Integer>> pacificAtlantic(int[][] matrix) {
-    List<List<Integer>> ret = new ArrayList<>();
-    if (matrix == null || matrix.length == 0) {
-        return ret;
-    }
+        for (int i = 0; i < r && i < c; i++) {
+            dfs(tp, i, 0, matrix[i][0]);    //最左和最右边列
+            dfs(dx, i, c - 1, matrix[i][c - 1]);
 
-    m = matrix.length;
-    n = matrix[0].length;
-    this.matrix = matrix;
-    boolean[][] canReachP = new boolean[m][n];
-    boolean[][] canReachA = new boolean[m][n];
-
-    for (int i = 0; i < m; i++) {
-        dfs(i, 0, canReachP);
-        dfs(i, n - 1, canReachA);
-    }
-    for (int i = 0; i < n; i++) {
-        dfs(0, i, canReachP);
-        dfs(m - 1, i, canReachA);
-    }
-
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) {
-            if (canReachP[i][j] && canReachA[i][j]) {
-                ret.add(Arrays.asList(i, j));
+            dfs(tp, 0, i, matrix[0][i]);    //最上、最下
+            dfs(dx, r - 1, i, matrix[r - 1][i]);
+        }
+        if (r > c) {           //处理剩余
+            for (int i = c; i < r; i++) {
+                dfs(tp, i, 0, matrix[i][0]);      //最左和最右边列
+                dfs(dx, i, c - 1, matrix[i][c - 1]);
+            }
+        } else if (r < c) {
+            for (int i = r; i < c; i++) {
+                dfs(tp, 0, i, matrix[0][i]);            //最上、最下
+                dfs(dx, r - 1, i, matrix[r - 1][i]);
             }
         }
-    }
-
-    return ret;
-}
-
-private void dfs(int r, int c, boolean[][] canReach) {
-    if (canReach[r][c]) {
-        return;
-    }
-    canReach[r][c] = true;
-    for (int[] d : direction) {
-        int nextR = d[0] + r;
-        int nextC = d[1] + c;
-        if (nextR < 0 || nextR >= m || nextC < 0 || nextC >= n
-                || matrix[r][c] > matrix[nextR][nextC]) {
-
-            continue;
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                if (tp[i][j] == 1 && dx[i][j] == 1) {
+                    res.add(Arrays.asList(i, j));
+                }
+            }
         }
-        dfs(nextR, nextC, canReach);
+        return res;
+    }
+    private void dfs(int[][] aux, int i, int j, int pre) {
+        if (i < 0 || j < 0 || i > r - 1 || j > c - 1
+         || aux[i][j] == 1 || matrix[i][j] < pre) { 
+            return;        // 流到过的，还有逆流的延伸的要比原来的大。
+        }
+        aux[i][j] = 1;                              //标记流到过了
+        dfs(aux, i - 1, j, matrix[i][j]);
+        dfs(aux, i + 1, j, matrix[i][j]);
+        dfs(aux, i, j - 1, matrix[i][j]);
+        dfs(aux, i, j + 1, matrix[i][j]);
     }
 }
 ```
@@ -846,37 +945,112 @@ Backtracking（回溯）属于 DFS。
 
 17\. Letter Combinations of a Phone Number (Medium)
 
-[Leetcode](https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/) / [力扣](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/description/)
+[Leetcode](https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/) / [17. 电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/9823768c-212b-4b1a-b69a-b3f59e07b977.jpg"/> </div><br>
-```html
-Input:Digit string "23"
-Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+```js
+给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回。
+给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+
+示例 1：
+输入：digits = "23"
+输出：["ad","ae","af","bd","be","bf","cd","ce","cf"]
+
+示例 2：
+输入：digits = ""
+输出：[]
+
+示例 3：
+输入：digits = "2"
+输出：["a","b","c"]
+
+提示：
+0 <= digits.length <= 4
+digits[i] 是范围 ['2', '9'] 的一个数字。
 ```
 
+<img src="../../assets/1618225891908.png" alt="1618225891908" style="zoom: 67%;" />
+
+字符串不用回溯拼接
+
 ```java
-private static final String[] KEYS = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+class Solution {
+    private String mp[] = {" ", "", //0、1，这个位置都无所谓的
+     "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    private ArrayList<String> res;
 
-public List<String> letterCombinations(String digits) {
-    List<String> combinations = new ArrayList<>();
-    if (digits == null || digits.length() == 0) {
-        return combinations;
+    public List<String> letterCombinations(String digits) {
+        res = new ArrayList<String>();
+        if (digits.equals("")) return res;
+        findCombination(digits, 0, "");
+        return res;
     }
-    doCombination(new StringBuilder(), combinations, digits);
-    return combinations;
-}
 
-private void doCombination(StringBuilder prefix, List<String> combinations, final String digits) {
-    if (prefix.length() == digits.length()) {
-        combinations.add(prefix.toString());
+    private void findCombination(String digits, int idx, String s) {
+        if (idx == digits.length()) {
+            res.add(s);
+            return;
+        }
+        Character numC = digits.charAt(idx);
+        String abc = mp[numC - '0'];
+        for (int i = 0; i < abc.length(); i++) {
+            String cur = s + abc.charAt(i);
+            findCombination(digits, idx + 1, cur);
+        }
         return;
     }
-    int curDigits = digits.charAt(prefix.length()) - '0';
-    String letters = KEYS[curDigits];
-    for (char c : letters.toCharArray()) {
-        prefix.append(c);                         // 添加
-        doCombination(prefix, combinations, digits);
-        prefix.deleteCharAt(prefix.length() - 1); // 删除
+}
+```
+
+StringBuilder 需要回溯删除
+
+```java
+class Solution {
+    int len;
+    String[] map = new String[]{"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    List<String> ans = new ArrayList<>();
+
+    public List<String> letterCombinations(String digits) {
+        if ("".equals(digits)) return ans;
+        len = digits.length();
+        dfs(new StringBuilder(), digits, 0);
+        return ans;
+    }
+
+    public void dfs(StringBuilder sb, String digits, int idx) {
+        if (sb.length() == len) {
+            ans.add(sb.toString());
+            return;
+        }
+        char numC = digits.charAt(idx);
+        String abc = map[numC - '2'];
+        for (int j = 0; j < abc.length(); j++) {
+            sb.append(abc.charAt(j));
+            dfs(sb, digits, idx + 1);
+            sb.deleteCharAt(sb.length() - 1);
+        }
+    }
+}
+```
+
+DFS - 队列
+
+```java
+class Solution {
+    public List<String> letterCombinations(String digits) {
+        LinkedList<String> ans = new LinkedList<String>();
+        if(digits.isEmpty()) return ans;
+        String[] mp = new String[] {"0", "1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        ans.add("");
+        for(int i =0; i<digits.length();i++){
+            int x = Character.getNumericValue(digits.charAt(i));
+            while(ans.peek().length()==i){
+                String t = ans.remove();
+                for(char s : mp[x].toCharArray())
+                    ans.add(t+s);
+            }
+        }
+        return ans;
     }
 }
 ```
