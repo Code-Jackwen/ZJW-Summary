@@ -246,29 +246,42 @@ public int trailingZeroes(int n) {
 
 67\. Add Binary (Easy)
 
-[Leetcode](https://leetcode.com/problems/add-binary/description/) / [力扣](https://leetcode-cn.com/problems/add-binary/description/)
+[Leetcode](https://leetcode.com/problems/add-binary/description/) / [67. 二进制求和](https://leetcode-cn.com/problems/add-binary/)
 
-```html
-a = "11"
-b = "1"
-Return "100".
+```js
+给你两个二进制字符串，返回它们的和（用二进制表示）。
+输入为 非空 字符串且只包含数字 1 和 0。
+
+示例 1:
+
+输入: a = "11", b = "1"
+输出: "100"
+示例 2:
+
+输入: a = "1010", b = "1011"
+输出: "10101"
+ 
+
+提示：
+每个字符串仅由字符 '0' 或 '1' 组成。
+1 <= a.length, b.length <= 10^4
+字符串如果不是 "0" ，就都不含前导零。
 ```
 
 ```java
-public String addBinary(String a, String b) {
-    int i = a.length() - 1, j = b.length() - 1, carry = 0;
-    StringBuilder str = new StringBuilder();
-    while (carry == 1 || i >= 0 || j >= 0) {
-        if (i >= 0 && a.charAt(i--) == '1') {
-            carry++;
+//2ms,99%
+class Solution {
+    public String addBinary(String a, String b) {
+        int i = a.length() - 1, j = b.length() - 1, carry = 0;
+        StringBuilder sb = new StringBuilder();
+        while (carry == 1 || i >= 0 || j >= 0) {
+            if (i >= 0 && a.charAt(i--) == '1') carry++;
+            if (j >= 0 && b.charAt(j--) == '1') carry++;
+            sb.append(carry % 2);
+            carry /= 2;
         }
-        if (j >= 0 && b.charAt(j--) == '1') {
-            carry++;
-        }
-        str.append(carry % 2);
-        carry /= 2;
+        return sb.reverse().toString();
     }
-    return str.reverse().toString();
 }
 ```
 
@@ -276,21 +289,39 @@ public String addBinary(String a, String b) {
 
 415\. Add Strings (Easy)
 
-[Leetcode](https://leetcode.com/problems/add-strings/description/) / [力扣](https://leetcode-cn.com/problems/add-strings/description/)
+[Leetcode](https://leetcode.com/problems/add-strings/description/) / [415. 字符串相加](https://leetcode-cn.com/problems/add-strings/)
+
+```js
+给定两个字符串形式的非负整数 num1 和num2 ，计算它们的和。
+
+输入：
+"11"
+"123"
+输出：
+"134"	解释：123+11=134
+
+提示：
+num1 和num2 的长度都小于 5100
+num1 和num2 都只包含数字 0-9
+num1 和num2 都不包含任何前导零
+你不能使用任何內建 BigInteger 库， 也不能直接将输入的字符串转换为整数形式
+```
 
 字符串的值为非负整数。
 
 ```java
-public String addStrings(String num1, String num2) {
-    StringBuilder str = new StringBuilder();
-    int carry = 0, i = num1.length() - 1, j = num2.length() - 1;
-    while (carry == 1 || i >= 0 || j >= 0) {
-        int x = i < 0 ? 0 : num1.charAt(i--) - '0';
-        int y = j < 0 ? 0 : num2.charAt(j--) - '0';
-        str.append((x + y + carry) % 10);
-        carry = (x + y + carry) / 10;
+class Solution {
+    public String addStrings(String num1, String num2) {
+        StringBuilder sb = new StringBuilder();
+        int carry = 0, i = num1.length() - 1, j = num2.length() - 1;
+        while (carry == 1 || i >= 0 || j >= 0) {
+            int x = i < 0 ? 0 : num1.charAt(i--) - '0';//x<0的时候要刷新x的值，
+            int y = j < 0 ? 0 : num2.charAt(j--) - '0';//否则一直是num1.charAt(0)影响后续计算
+            sb.append((x + y + carry) % 10);
+            carry = (x + y + carry) / 10;
+        }
+        return sb.reverse().toString();
     }
-    return str.reverse().toString();
 }
 ```
 
@@ -300,24 +331,28 @@ public String addStrings(String num1, String num2) {
 
 462\. Minimum Moves to Equal Array Elements II (Medium)
 
-[Leetcode](https://leetcode.com/problems/minimum-moves-to-equal-array-elements-ii/description/) / [力扣](https://leetcode-cn.com/problems/minimum-moves-to-equal-array-elements-ii/description/)
+[Leetcode](https://leetcode.com/problems/minimum-moves-to-equal-array-elements-ii/description/) / [462. 最少移动次数使数组元素相等 II](https://leetcode-cn.com/problems/minimum-moves-to-equal-array-elements-ii/)
 
-```html
-Input:
+```js
+给定一个非空整数数组，找到使所有数组元素相等所需的最小移动数，其中每次移动可将选定的一个元素加1或减1。 
+您可以假设数组的长度最多为10000。
+
+例如:
+输入:
 [1,2,3]
-
-Output:
+输出:
 2
 
-Explanation:
-Only two moves are needed (remember each move increments or decrements one element):
-
+说明：
+只有两个动作是必要的（记得每一步仅可使其中一个元素加1或减1）： 
 [1,2,3]  =>  [2,2,3]  =>  [2,2,2]
 ```
 
 每次可以对一个数组元素加一或者减一，求最小的改变次数。
 
-这是个典型的相遇问题，移动距离最小的方式是所有元素都移动到中位数。理由如下：
+这是个典型的相遇问题，移动距离最小的方式是所有元素都移动到中位数。
+
+理由如下：
 
 设 m 为中位数。a 和 b 是 m 两边的两个元素，且 b \> a。要使 a 和 b 相等，它们总共移动的次数为 b - a，这个值等于 (b - m) + (m - a)，也就是把这两个数移动到中位数的移动次数。
 
@@ -328,16 +363,19 @@ Only two moves are needed (remember each move increments or decrements one eleme
 先排序，时间复杂度：O(NlogN)
 
 ```java
-public int minMoves2(int[] nums) {
-    Arrays.sort(nums);
-    int move = 0;
-    int l = 0, h = nums.length - 1;
-    while (l <= h) {
-        move += nums[h] - nums[l];
-        l++;
-        h--;
+//2ms,99%
+class Solution {
+    public int minMoves2(int[] nums) {
+        Arrays.sort(nums);
+        int move = 0;
+        int l = 0, h = nums.length - 1;
+        while (l <= h) {
+            move += nums[h] - nums[l];
+            l++;
+            h--;
+        }
+        return move;
     }
-    return move;
 }
 ```
 
@@ -346,49 +384,52 @@ public int minMoves2(int[] nums) {
 使用快速选择找到中位数，时间复杂度 O(N)
 
 ```java
-public int minMoves2(int[] nums) {
-    int move = 0;
-    int median = findKthSmallest(nums, nums.length / 2);
-    for (int num : nums) {
-        move += Math.abs(num - median);
-    }
-    return move;
-}
-
-private int findKthSmallest(int[] nums, int k) {
-    int l = 0, h = nums.length - 1;
-    while (l < h) {
-        int j = partition(nums, l, h);
-        if (j == k) {
-            break;
+//74ms,14%
+class Solution {
+    public int minMoves2(int[] nums) {
+        int move = 0;
+        int median = findKthSmallest(nums, nums.length / 2);
+        for (int num : nums) {
+            move += Math.abs(num - median);
         }
-        if (j < k) {
-            l = j + 1;
-        } else {
-            h = j - 1;
-        }
+        return move;
     }
-    return nums[k];
-}
 
-private int partition(int[] nums, int l, int h) {
-    int i = l, j = h + 1;
-    while (true) {
-        while (nums[++i] < nums[l] && i < h) ;
-        while (nums[--j] > nums[l] && j > l) ;
-        if (i >= j) {
-            break;
+    private int findKthSmallest(int[] nums, int k) {
+        int l = 0, h = nums.length - 1;
+        while (l < h) {
+            int j = partition(nums, l, h);
+            if (j == k) {
+                break;
+            }
+            if (j < k) {
+                l = j + 1;
+            } else {
+                h = j - 1;
+            }
         }
-        swap(nums, i, j);
+        return nums[k];
     }
-    swap(nums, l, j);
-    return j;
-}
 
-private void swap(int[] nums, int i, int j) {
-    int tmp = nums[i];
-    nums[i] = nums[j];
-    nums[j] = tmp;
+    private int partition(int[] nums, int l, int h) {
+        int i = l, j = h + 1;
+        while (true) {
+            while (nums[++i] < nums[l] && i < h) ;
+            while (nums[--j] > nums[l] && j > l) ;
+            if (i >= j) {
+                break;
+            }
+            swap(nums, i, j);
+        }
+        swap(nums, l, j);
+        return j;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
 }
 ```
 
