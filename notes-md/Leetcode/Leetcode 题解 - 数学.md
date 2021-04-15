@@ -128,28 +128,40 @@ public int gcd(int a, int b) {
 
 504\. Base 7 (Easy)
 
-[Leetcode](https://leetcode.com/problems/base-7/description/) / [力扣](https://leetcode-cn.com/problems/base-7/description/)
+[Leetcode](https://leetcode.com/problems/base-7/description/) / [504. 七进制数](https://leetcode-cn.com/problems/base-7/)
+
+```js
+给定一个整数，将其转化为7进制，并以字符串形式输出。
+
+示例 1:
+
+输入: 100
+输出: "202"
+示例 2:
+
+输入: -7
+输出: "-10"
+注意: 输入范围是 [-1e7, 1e7] 。
+```
 
 ```java
-public String convertToBase7(int num) {
-    if (num == 0) {
-        return "0";
+class Solution {
+    public String convertToBase7(int num) {
+        if (num == 0) return "0";
+        StringBuilder sb = new StringBuilder();
+        boolean isNegative = num < 0;
+        if (isNegative) num = -num;
+        while (num > 0) {
+            sb.append(num % 7);
+            num /= 7;
+        }
+        String ret = sb.reverse().toString();
+        return isNegative ? "-" + ret : ret;
     }
-    StringBuilder sb = new StringBuilder();
-    boolean isNegative = num < 0;
-    if (isNegative) {
-        num = -num;
-    }
-    while (num > 0) {
-        sb.append(num % 7);
-        num /= 7;
-    }
-    String ret = sb.reverse().toString();
-    return isNegative ? "-" + ret : ret;
 }
 ```
 
-Java 中 static String toString(int num, int radix) 可以将一个整数转换为 radix 进制表示的字符串。
+Java 中 Integer 的 static String toString(int num, int radix) 可以将一个整数转换为 radix 进制表示的字符串。
 
 ```java
 public String convertToBase7(int num) {
@@ -161,34 +173,44 @@ public String convertToBase7(int num) {
 
 405\. Convert a Number to Hexadecimal (Easy)
 
-[Leetcode](https://leetcode.com/problems/convert-a-number-to-hexadecimal/description/) / [力扣](https://leetcode-cn.com/problems/convert-a-number-to-hexadecimal/description/)
+[Leetcode](https://leetcode.com/problems/convert-a-number-to-hexadecimal/description/) / [405. 数字转换为十六进制数](https://leetcode-cn.com/problems/convert-a-number-to-hexadecimal/)
 
-```html
-Input:
+```js
+给定一个整数，编写一个算法将这个数转换为十六进制数。对于负整数，我们通常使用 补码运算 方法。
+
+注意:
+十六进制中所有字母(a-f)都必须是小写。
+十六进制字符串中不能包含多余的前导零。如果要转化的数为0，那么以单个字符'0'来表示；对于其他情况，十六进制字符串中的第一个字符将不会是0字符。 
+给定的数确保在32位有符号整数范围内。
+不能使用任何由库提供的将数字直接转换或格式化为十六进制的方法。
+示例 1：
+
+输入:
 26
-
-Output:
+输出:
 "1a"
+示例 2：
 
-Input:
+输入:
 -1
-
-Output:
+输出:
 "ffffffff"
 ```
 
 负数要用它的补码形式。
 
 ```java
-public String toHex(int num) {
-    char[] map = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-    if (num == 0) return "0";
-    StringBuilder sb = new StringBuilder();
-    while (num != 0) {
-        sb.append(map[num & 0b1111]);
-        num >>>= 4; // 因为考虑的是补码形式，因此符号位就不能有特殊的意义，需要使用无符号右移，左边填 0
+class Solution {
+    public String toHex(int num) {
+        char[] map = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+        if (num == 0) return "0";
+        StringBuilder sb = new StringBuilder();
+        while (num != 0) {
+            sb.append(map[num & 0b1111]);
+            num >>>= 4; // 考虑到时补码形式，因此符号位就不能有特殊的意义，需要使用无符号右移，左边填 0
+        }
+        return sb.reverse().toString();
     }
-    return sb.reverse().toString();
 }
 ```
 
@@ -196,7 +218,7 @@ public String toHex(int num) {
 
 168\. Excel Sheet Column Title (Easy)
 
-[Leetcode](https://leetcode.com/problems/excel-sheet-column-title/description/) / [力扣](https://leetcode-cn.com/problems/excel-sheet-column-title/description/)
+[Leetcode](https://leetcode.com/problems/excel-sheet-column-title/description/) / [168. Excel表列名称](https://leetcode-cn.com/problems/excel-sheet-column-title/)
 
 ```html
 1 -> A
@@ -211,12 +233,69 @@ public String toHex(int num) {
 因为是从 1 开始计算的，而不是从 0 开始，因此需要对 n 执行 -1 操作。
 
 ```java
-public String convertToTitle(int n) {
-    if (n == 0) {
-        return "";
+给定一个正整数，返回它在 Excel 表中相对应的列名称。
+例如，
+    1 -> A
+    2 -> B
+    3 -> C
+    ...
+    26 -> Z
+    27 -> AA
+    28 -> AB 
+    ...
+示例 1:
+
+输入: 1
+输出: "A"
+示例 2:
+
+输入: 28
+输出: "AB"
+示例 3:
+
+输入: 701
+输出: "ZY"	26*26+25=676+25=701
+```
+
+```java
+//9ms，10%
+class Solution {
+    public String convertToTitle(int n) {
+        if (n == 0) return "";
+        n--;
+        return convertToTitle(n / 26) + (char) (n % 26 + 'A');
     }
-    n--;
-    return convertToTitle(n / 26) + (char) (n % 26 + 'A');
+}
+```
+
+```java
+//99%
+class Solution {
+    public String convertToTitle(int n) {
+        char[] c = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+                    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+        StringBuilder sb = new StringBuilder();
+        while (n > 0) {
+            --n;							// 必须n--才能和数组对上号。
+            sb = sb.append(c[n % 26]);
+            n /= 26;
+        }
+        return sb.reverse().toString();
+    }
+}
+```
+
+```java
+class Solution {
+    public String convertToTitle(int n) {
+        StringBuilder sb = new StringBuilder();
+        while (n > 0) {
+            int diff = (n - 1) % 26;		//省去字符数组
+            n = (n - 1) / 26;
+            sb.append((char)('A' + diff));
+        }
+        return sb.reverse().toString();
+    }
 }
 ```
 
