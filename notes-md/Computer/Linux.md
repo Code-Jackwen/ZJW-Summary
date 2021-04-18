@@ -864,7 +864,7 @@ linux 文件的几种时间 (以 find 为例):
 
 atime 最后一次**访问**时间, 如 ls, more 等, 但 chmod, chown, ls, stat 等不会修改些时间, 使用 **ls -utl 可以按此时间顺序查看;**
 
-ctime 最后一次**状态修改**时间, 如 chmod, chown 等状态时间改变但修改时间不会改变, 使用 **stat file** 可以查看;
+ctime 最后一次**状态修改**时间, 如 **chmod, chown 等状态**时间改变但修改时间不会改变, 使用 **stat file** 可以查看;
 
 mtime 最后一次**内容修改**时间, 如 vi 保存后等, 修改时间发生改变的话, atime 和 ctime 也相应跟着发生改变.
 

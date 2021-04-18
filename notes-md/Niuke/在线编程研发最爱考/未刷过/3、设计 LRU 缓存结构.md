@@ -62,7 +62,7 @@ LinkHashMap面试中如果明确不给用。 使用队列和HashMap 可以，或
 
 使用 LinkedHashMap ， 当然可以直接重写 removeEldestEntry() 方法，这里暂忽略此写法。
 
-这里用 LinkedHashMap 有具有顺序HashMap的特点。
+需要有顺序的键值对，也就是 LinkedHashMap ，
 
 ````java
 public class LRUCache{
@@ -75,11 +75,10 @@ public class LRUCache{
     }
 
     public int get(int key) {
-        if (!map.containsKey(key)) {
+        if (!map.containsKey(key)) {				//获取，检查是否存在，存在返回-1
             return -1;
         }
-        // 先删除旧的位置，再放入新位置。
-        Integer value = map.remove(key);
+        Integer value = map.remove(key);			//获取时，存在就先删除后添加。
         map.put(key, value);
         return value;
     }
@@ -87,13 +86,12 @@ public class LRUCache{
     public void put(int key, int value) {
         if (map.containsKey(key)) {	// 这里可以写成上边调用 get 方法的形式
             map.remove(key);
-            map.put(key, value);
-            return;
+            map.put(key, value);					//添加或者修改时，也先检查是否存在
+            return;								    //存在就先删除后添加，
         }
-        map.put(key, value);
-        // 超出capacity，删除最久没用的。利用迭代器找到第一个key并删除。
+        map.put(key, value);						//然后判断是否超出容量，选择删除最久没用的，也就是用迭代器找到第一个key，并删除。
         if (map.size() > capacity) {
-            map.remove(map.entrySet().iterator().next().getKey());
+            map.remove(map.entrySet().iterator().next().getKey());//直接next(),不会报错。
         }
     }
 }
@@ -255,15 +253,37 @@ public class LRUCache{
 }
 ```
 
+## 解法四：LinkedHashMap 自带
+
+```java
+class LRUCache {
+    // 定义一个缓存容器，直接使用LinkedHashMap
+    private LinkedHashMap<Integer,Integer> lh;
+
+    public LRUCache(int capacity) {
+        // linkedHashMap自带LRU功能。直接实现，若容量超过设置容量，则删除最近最少使用的数据。
+        lh = new LinkedHashMap<Integer, Integer>(capacity,0.75f,true){
+            
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
+                return super.size()>capacity;
+            }
+        };
+    }
+    // 这里要改一下，当不存在数据时，返回-1
+    public int get(int key) {
+        return null != lh.get(key) ? lh.get(key) : -1;
+    }
+    // 直接用linkedHashMap自带的put
+    public void put(int key, int value) {
+        lh.put(key,value);
+    }
+}
+```
+
 ## 参考：
 
 [146. LRU 缓存机制](https://leetcode-cn.com/problems/lru-cache/)
-
-
-
-
-
-
 
 
 

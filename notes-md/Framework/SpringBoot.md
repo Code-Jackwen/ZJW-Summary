@@ -1007,3 +1007,48 @@ public abstract class TestBase {
 _暂时总结到这里吧！虽然花了挺长时间才写完，不过可能还是会一些常用的注解的被漏掉，所以，我将文章也同步到了 Github 上去，Github 地址： 欢迎完善！_
 
 本文已经收录进我的 75K Star 的 Java 开源项目 JavaGuide：[https://github.com/Snailclimb/JavaGuide](https://github.com/Snailclimb/JavaGuide)。
+
+## 一、 SpringBoot之自动装配
+
+ 1、@SpringBootApplication ： 
+
+包含了@SpringBootConfiguration，@EnableAutoConfiguration，@ComponentScan，此处@ComponentScan由于没有指定扫描包，因此它默认扫描的是与该类同级的类或者同级包下的所有类，另外@SpringBootConfiguration，通过源码得知它是一个@Configuration: 
+
+2、@EnableAutoConfiguration
+
+ 一旦加上此注解，那么将会开启自动装配功能，简单点讲，Spring会试图在你的classpath下找到所有配置的Bean然后进行装配。当然装配Bean时，会根据若干个(Conditional)定制规则来进行初始化。我们看一下它的源码： 
+
+3、`@ComponentScan` 注解
+
+```js
+basePackages：指定多个包名进行扫描
+basePackageClasses：对指定的类和接口所属的#包进行扫
+excludeFilters：指定不扫描的过滤器
+includeFilters：指定扫描的#过滤器
+lazyInit：是否对注册扫描的bean设置为#懒加载
+nameGenerator：#为扫描到的bean自动命名
+resourcePattern：控制可用于扫描的类文件
+scopedProxy：指定代理是否应该被扫描
+scopeResolver：指定扫描bean的范围
+useDefaultFilters：是否开启对@Component，@Repository，@Service，@Controller的类进行检测
+```
+
+3、SpringFactoryiesLoader
+
+它会读取**META-INF/spring.factories**下的**EnableAutoConfiguration的配置**，紧接着在进行**排除与过滤**，进而得到需要装配的类。最后让所有配置在META-INF/spring.factories下的AutoConfigurationImportListener执行AutoConfigurationImportEvent事件 
+
+总结：
+
+　　1）自动装配**过程**分析？自动装配还是利用了**SpringFactoriesLoader**来加载**META-INF/spring.factoires文件**里所有配置的**EnableAutoConfgruation**，它会经过exclude和**filter**等操作，**最终确定要装配的类**
+
+**Spring Boot 通过`@EnableAutoConfiguration`开启自动装配，通过 SpringFactoriesLoader 最终加载`META-INF/spring.factories`中的自动配置类实现自动装配，自动配置类其实就是通过`@Conditional`按需加载的配置类，想要其生效必须引入`spring-boot-starter-xxx`包实现起步依赖** 
+
+
+
+　　2)  **何时**进行自动装配？处理@Configuration的核心还是ConfigurationClassPostProcessor，这个类实现了BeanFactoryPostProcessor, 因此当AbstractApplicationContext执行**refresh**方法里的invokeBeanFactoryPostProcessors(beanFactory)方法时会执行自动装配
+
+参考：
+
+https://www.cnblogs.com/javaguide/p/springboot-auto-config.html
+
+https://blog.csdn.net/Dongguabai/article/details/80865599

@@ -240,7 +240,7 @@ public static void main(String[] args) {
 
 **main() 属于非守护线程**。
 
-在线程启动之前使用 setDaemon() 方法可以将一个线程设置为守护线程。
+在**线程启动之前**使用 **setDaemon**() 方法可以将一个线程设置为守护线程。
 
 ```java
 public static void main(String[] args) {
@@ -251,7 +251,7 @@ public static void main(String[] args) {
 
 ### sleep()
 
-Thread.sleep(millisec) 方法会休眠当前正在执行的线程，millisec 单位为毫秒。
+Thread.sleep(millisec) 方法会休眠当前正在执行的线程，millisec 单位为**毫秒**。
 
 sleep() 可能会抛出 InterruptedException，因为**异常不能跨线程传播回 main() 中**，因此必须在本地进行处理。线程中抛出的其它异常也同样需要在本地进行处理。
 
@@ -1873,7 +1873,7 @@ RejectedExecutionHandler提供了四种方式来处理任务拒绝策略
 
 3、抛**异常**(AbortPolicy)
 
-4、将任务分给调用线程来执行(CallerRunsPolicy)。
+4、**将任务分给调用线程来执行**(CallerRunsPolicy)。
 
 ## 自定义线程池
 

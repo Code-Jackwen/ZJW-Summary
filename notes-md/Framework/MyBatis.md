@@ -6,6 +6,8 @@
 
 其中为 sql ⽚段标签，通过<include>标签引⼊ sql ⽚段，<selectKey>为不⽀持⾃增的主键⽣成策略标签。
 
+otherwise ：除此以外、否则。
+
 ## 动态 sql 标签、原理
 
 动态 sql 的 9个标签，trim | **where** | set | **foreach** | **if** | choose | **when** | otherwise | bind等。
@@ -34,9 +36,9 @@ com.mybatis3.mappers.StudentDao下⾯id = findStudentById的MappedStatement。
 
 Dao 接⼝⾥的⽅法，是**不能重载的**，**因为是全限名+⽅法名的保存和寻找策略**。
 
-Dao 接⼝的⼯作原理是 **JDK 动态代理**，Mybatis 运⾏时会使⽤ JDK 动态代理**为 Dao 接⼝⽣成代理 proxy 对象**
+**Dao 接⼝的⼯作原理**：
 
-，代理对象 proxy 会拦截接⼝⽅法，转⽽执⾏MappedStatement所代表的 sql，然后将 sql 执⾏结果返回。
+**JDK 动态代理，Mybatis 运⾏时会使⽤ JDK 动态代理为 Dao 接⼝⽣成代理 proxy 对象，代理对象 proxy 会拦截接⼝⽅法，转⽽执⾏MappedStatement所代表的 sql，然后将 sql 执⾏结果返回。**
 
 ## Mybatis 是如何将 sql 执⾏结果封装为⽬标对象，有哪些映射形式？
 
@@ -64,8 +66,6 @@ Mybatis 仅⽀持 association 关联对象和 collection 关联集合对象的�
 
 在 Mybatis **配置⽂件**中，可以配置是否启⽤延迟加载lazyLoadingEnabled=true|false
 
-
-
 原理：
 
 使⽤**CGLIB创建⽬标对象的代理对象**，当调⽤⽬标⽅法时，进⼊拦截器⽅法，⽐如调⽤
@@ -75,8 +75,6 @@ a.getB().getName()，拦截器invoke()⽅法发现a.getB()是 null 值，那么�
 象的 sql，把 B 查询上来，然后调⽤ a.setB(b)，于是 a 的对象 b 属性就有值了，接着完成a.getB().getName()⽅法
 
 的调⽤。这就是延迟加载的基本原理。
-
-
 
 ## 不同的 Xml 映射⽂件，id 是否可以重复？
 
@@ -94,23 +92,23 @@ a.getB().getName()，拦截器invoke()⽅法发现a.getB()是 null 值，那么�
 
 
 
-SimpleExecutor：每执⾏⼀次 update 或 select，就开启⼀个 Statement 对象，⽤完⽴刻关闭Statement 对象。
+SimpleExecutor：**每执⾏⼀次 update 或 select，就开启⼀个 Statement 对象，⽤完⽴刻关闭Statement 对象。**
 
 
 
-`ReuseExecutor：执⾏ update 或 select，以 sql 作为 key 查找 Statement 对象，存在就使⽤，不存在就创建，⽤完后，不关闭 Statement 对象，⽽是放置于 Map<String, Statement>内，供下⼀次使⽤。简⾔之，就是重复使⽤ Statement 对象。
+`ReuseExecutor：**执⾏ update 或 select，以 sql 作为 key 查找 Statement 对象，存在就使⽤，不存在就创建，⽤完后，不关闭 Statement 对象，⽽是放置于 Map<String, Statement>内，供下⼀次使⽤。简⾔之，就是重复使⽤ Statement 对象。**
 
 
 
-BatchExecutor：执⾏ update（没有 select，JDBC 批处理不⽀持 select），将所有 sql 都添加到批处理中（addBatch()），等待统⼀执⾏（executeBatch()），它缓存了多个 Statement 对象，每个 Statement 对象都是 addBatch()完毕后，等待逐⼀执⾏ executeBatch()批处理。与JDBC 批处理相同。
+BatchExecutor：**执⾏ update（没有 select，JDBC 批处理不⽀持 select），将所有 sql 都添加到批处理中（addBatch()），等待统⼀执⾏（executeBatch()），它缓存了多个 Statement 对象**，每个 Statement 对象都是 addBatch()完毕后，等待逐⼀执⾏ executeBatch()批处理。与JDBC 批处理相同。
 
 
 
-作⽤范围：Executor 的这些特点，都严格限制在 SqlSession ⽣命周期范围内。
+作⽤范围：**Executor 的这些特点，都严格限制在 SqlSession ⽣命周期范围内。**
 
 ##  Mybatis 中如何指定使⽤哪⼀种 Executor 执⾏器？
 
-**配置⽂件**中，可以指定默认的 **ExecutorType 执⾏器类型**，也可以⼿动给DefaultSqlSessionFactory的**创建 SqlSession 的⽅法传递 ExecutorType 类型参数**。
+**配置⽂件**中，可以指定默认的 ExecutorType 执⾏器类型，也可以⼿动给DefaultSqlSessionFactory的**创建 SqlSession 的⽅法传递 ExecutorType 类型参数。**
 
 ## Mybatis 是否可以映射 Enum 枚举类？
 
@@ -141,8 +139,6 @@ Mybatis 将所有 **Xml 配置信息**都封装到 All-In-One 重量级对象 **
 ## todo
 
 MyBatis执行一个Select查询的流程？
-
-有哪些Executor
 
 插件原理
 

@@ -1,3 +1,7 @@
+
+
+
+
 Leetcode 题解 - 动态规划
 
 * [最长递增子序列](#最长递增子序列)
@@ -79,7 +83,6 @@ Leetcode 题解 - 动态规划
 进阶：
 你可以设计时间复杂度为 O(n2) 的解决方案吗？
 你能将算法的时间复杂度降低到 #O(nlog(n)) 吗?
-
 ```
 
 1
@@ -88,13 +91,11 @@ Leetcode 题解 - 动态规划
 
 2
 
-<img src="../../assets/1618458978179.png" alt="1618458978179" style="zoom:50%;" />![1618459007406](../../assets/1618459007406.png)
+<img src="../../assets/1618458978179.png" alt="1618458978179" style="zoom: 50%;" />
 
 3
 
 <img src="../../assets/1618459007406.png" alt="1618459007406" style="zoom:50%;" />
-
-
 
 4
 
@@ -104,8 +105,9 @@ Leetcode 题解 - 动态规划
 
 <img src="../../assets/1618459073368.png" alt="1618459073368" style="zoom:50%;" />
 
+- **转移方程：** `dp[i] = max(dp[i], dp[j] + 1) for j in [0, i)`。
+
 ```java
-// Dynamic programming.
 // 时间O(N*N) 空间O(N)
 class Solution {
     public int lengthOfLIS(int[] nums) {
@@ -119,12 +121,17 @@ class Solution {
             }						    //dp[j] + 1是在比自己小的那位的比自己小的个数+1
             res = Math.max(res, dp[i]);
         }
-        return res;
+        return res;//
     }
 }
-//作者：jyd
-//链接：https://leetcode-cn.com/problems/longest-increasing-subsequence/solution/zui-chang-shang-sheng-zi-xu-lie-dong-tai-gui-hua-2/
+```
 
+```
+res = Math.max(res, dp[i]); 处理如下
+
+输入：[1,3,6,7,9,4,10,5,6]
+
+输出：[1, 2, 3, 4, 5, 3, 6, 4, 5]
 ```
 
 其他题解
@@ -382,7 +389,6 @@ class Solution {
         return ret;
     }
 }
-
 ```
 
 dp参考：
@@ -521,9 +527,9 @@ class Solution {
         int[][] dp = new int[n1 + 1][n2 + 1];
         for (int i = 1; i <= n1; i++) {
             for (int j = 1; j <= n2; j++) {
-                if (str1.charAt(i - 1) == str2.charAt(j - 1)) {
+                if (str1.charAt(i - 1) == str2.charAt(j - 1)) {//相等了延续左上角加1
                     dp[i][j] = dp[i - 1][j - 1] + 1;
-                } else {
+                } else {									   //不相等延续左和上的最值
                     dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
                 }
             }
@@ -531,7 +537,6 @@ class Solution {
         return dp[n1][n2];
     }
 }
-
 ```
 
 ## 0-1 背包

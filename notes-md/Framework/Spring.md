@@ -429,13 +429,13 @@ public class OrderServiceImpl implements OrderService {
 
 ## Spring解决循环依赖
 
-对于“prototype”作用域bean, Spring 容器无法完成依赖注入，因为Spring 容器不进行缓 存“prototype”作用域的bean ，因此无法提前暴露一个创建中的bean 。 
+**对于“prototype”作用域bean, Spring 容器无法完成依赖注入，因为Spring 容器不进行缓 存“prototype”作用域的bean ，因此无法提前暴露一个创建中的bean 。** 
 
 对于单例：
 
- 一个完整的对象包含两部分 ：当前对象实例化和对象属性的实例化。 
+ **一个完整的对象包含两部分 ：当前对象实例化和对象属性的实例化。** 
 
- Spring中，对象的实例化是通过反射实现的， 而对象的属性则是在对象实例化之后通过一定的方式设置的。 
+ **Spring中，对象的实例化是通过反射**实现的， 而对象的属性则是在对象实例化之后通过一定的方式设置的。 
 
 ![1613538148971](../../assets/1613538148971.png)
 
@@ -443,21 +443,21 @@ public class OrderServiceImpl implements OrderService {
 
 spring对循环依赖的处理有三种情况：
 
-①构造器的循环依赖：这种依赖spring是处理不了的，直 接抛出BeanCurrentlylnCreationException异常。
+①**构造器的循环依赖：这种依赖spring是处理不了的**，直 接抛出BeanCurrentlylnCreationException异常。
 
 ②单例模式下的**setter循环依赖**：通过“三级缓存”处理循环依赖。 
 
-③非单例循环依赖：无法处理。
+**③非单例循环依赖：无法处理。**
 
 
 
 spring单例对象的初始化大略分为三步：
 
-1、createBeanInstance：**实例化**，其实也就是调用对象的构造方法实例化对象
+1、createBeanInstance：**实例化**，其实也就是调用对象的**构造方法实例化对象**
 
-2、populateBean：**填充属性**，这一步主要是多bean的依赖属性进行填充
+2、populateBean：**填充属性**，这一步主要是**多bean的依赖属性进行填充**
 
-3、initializeBean：调用spring xml中的init 方法。
+**3、initializeBean：调用spring xml中的init 方法。**
 
 
 
@@ -548,32 +548,32 @@ SpringIoC容器**通过Bean后置注解处理器解析Bean内部的注解。**
 
 参考：作者：秦子轩，链接：https://www.zhihu.com/question/39356740/answer/1297401530
 
-1、处理这2个注解的BeanPostProcessor不一样CommonAnnotationBeanPostProcessor是处理
+1、处理这2个注解的**BeanPostProcessor**不一样CommonAnnotationBeanPostProcessor是处理
 
 @ReSource注解的AutoWiredAnnotationBeanPostProcessor是处理@AutoWired注解的
 
-2、@Autowired只按照byType 注入；@Resource默认按byName自动注入，也提供按照byType 注入；
+**2、@Autowired只按照byType 注入；@Resource默认按byName自动注入，也提供按照byType 注入；**
 
 3、属性：
 
-@Autowired按类型装配依赖对象，默认情况下它要求依赖对象必须存在，如果允许null值，可以设置它required属性为false。如果我们想使用按名称装配，可以结合@Qualifier注解一起使用。
+@Autowired**按类型**装配依赖对象，默认情况下它**要求依赖对象必须存在**，如果**允许null**值，可以设置它**required**属性为false。如果我们想使用按**名称装配**，可以结合@**Qualifier**注解一起使用。
 
-@Resource有两个中重要的属性：name和type。
+@Resource有两个中重要的属性：**name和type。**
 
-name属性指定byName，如果没有指定name属性，当注解标注在字段上，即默认取字段的名称作为bean名称寻找依赖对象，当注解标注在属性的setter方法上，即默认取属性名作为bean名称寻找依赖对象。
+name属性指定byName，如果没有指定name属性，当注解标注在字段上，即**默认取字段的名称作为bean名称寻找**依赖对象，当注解标注在属性的**setter方法**上，即**默认取属性名**作为bean名称寻找依赖对象。
 
-需要注意的是，@Resource如果没有指定name属性，并且按照默认的名称仍然找不到依赖对象时， @Resource注解会回退到按类型装配。但**一旦指定了name属性，就只能按名称装配了**。
+需要注意的是，@Resource如果没有指定name属性，并且按照默认的名称仍然找不到依赖对象时， @Resource注解会**回退**到按类型装配。但**一旦指定了name属性，就只能按名称装配了**。
 
 @Resource装配顺序：
-1、如果同时指定了name和type，则从Spring上下文中找到唯一匹配的bean进行装配，找不到则抛出异常　
+1、如果同时指定了**name和type**，则从Spring上下文中找到唯一匹配的bean进行装配，**找不到则抛出异常**　
 
-2、如果指定了name，则从上下文中查找名称（id）匹配的bean进行装配，找不到则抛出异常　　
+2、如果指定了**name**，则从上下文中查找名称（id）匹配的bean进行装配，**找不到则抛出异常**
 
-3、如果指定了type，则从上下文中找到类型匹配的唯一bean进行装配，找不到或者找到多个，都会抛出异常
+3、如果指定了**type**，则从上下文中找到类型匹配的唯一bean进行装配，**找不到或者找到多个，都会抛出异常**
 
-4、如果既没有指定name，又没有指定type，则自动按照byName方式进行装配；如果没有匹配，则回退为一个原始类型进行匹配，如果匹配则自动装配；
+4、如果**既没有指定name，又没有指定type**，则自动按照**byName**方式进行装配；如果没有匹配，则**回退**为一个原始类型进行匹配，如果匹配则自动装配；
 
-推荐使用@Resource注解在字段上，这样就不用写setter方法了.并且这个注解是属于J2EE的，减少了与Spring的耦合,这样代码看起就比较优雅 。
+推荐使用**@Resource注解在字段上，这样就不用写setter方法了**.并且这个注解是属于J2EE的，减少了与Spring的耦合,这样代码看起就比较优雅 。
 
 
 
