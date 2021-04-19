@@ -314,7 +314,7 @@ default
 
 为什么switch的效率比iflelse高？
 
-![1617093258021](../../assets/1617093258021.png)
+<img src="../../assets/1617093258021.png" alt="1617093258021" style="zoom: 67%;" />
 
  **一般能够用switch表示的逻辑结构，都可以使用ifelse进行表示。但是如果判断的条件分支比较多的时候，建议多使用switch，因为switch的执行效率高，这源于switch在被编译的时候，其跳转指令会被编译为一个数组，从而使用查表法 二分法查找等高效的方式进行指令的跳转。** 
 
@@ -328,7 +328,7 @@ Java switch 条件语句用法详解：http://www.51gjie.com/java/631.html
 
 #### JDK 14 Switch表达式示例
 
-Switch的新特性，早在JDK 12就以预览功能被引入了，最终在JDK 14成为了正式版本的功能。
+Switch的新特性，早在JDK 12就以预览功能被引入了，最终在 JDK 14 成为了正式版本的功能。
 
 JEP 361: Switch Expressions (Standard)。
 

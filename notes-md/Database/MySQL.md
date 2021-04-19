@@ -180,15 +180,15 @@ InnoDB 的 B+Tree 索引分为**主索引**和**辅助索引**。**主索引的�
 
 ## 聚簇索引
 
-聚簇索引（Clustered Index）就是按照每张表的主键构造一棵B+树，同时叶子节点中存放的即为整张表的行记录数据。 
+**聚簇索引（Clustered Index）就是按照每张表的主键构造一棵B+树**，同时叶子节点中存放的即为整张表的行记录数据。 
 
 举个例子：
 
-![1612583732653](../../../../../项目/Git-md/ZJW-Summary/assets/1612583732653.png)
+<img src="../../../../../项目/Git-md/ZJW-Summary/assets/1612583732653.png" alt="1612583732653" style="zoom: 50%;" />
 
 《MySQL技术内幕》的作者通过分析工具得到聚簇索引树的大致构造如下：
 
-![1612583795616](../../../../../项目/Git-md/ZJW-Summary/assets/1612583795616.png)
+<img src="../../../../../项目/Git-md/ZJW-Summary/assets/1612583795616.png" alt="1612583795616" style="zoom:50%;" />
 
 
 
@@ -196,7 +196,7 @@ InnoDB 的 B+Tree 索引分为**主索引**和**辅助索引**。**主索引的�
 
 1、聚簇索引的叶子节点称为**数据页**，每个数据页通过一个双向链表来进行链接，而且数据页按照主键的顺序进行排列。
 
-2、如图所示，每个数据页上存放的是完整的行记录，而在非数据页的索引页中，存放的仅仅是键值及指向数据页的偏移量，而不是一个完整的行记录。
+2、如图所示，每个数据页上存放的是完整的行记录，而在非数据页的索引页中，存放的仅仅是键值及指向数据页的偏移量，而不是一个完整的行记录。 
 
 #### 创建
 
@@ -214,11 +214,11 @@ InnoDB 的 B+Tree 索引分为**主索引**和**辅助索引**。**主索引的�
 
 ## 非聚簇索引
 
-辅助索引(Secondary Index)， 也叫非聚簇索引、普通索引。
+**辅助索引**(Secondary Index)， 也叫**非聚簇索引**、**普通索引**。
 
-和聚簇索引相比，叶子节点中并不包含行记录的全部数据。
+和聚簇索引相比，**叶子节点中并不包含行记录的全部数据。**
 
-叶子节点简单记忆为存了当前索引的键值和主键索引。详细说是除了包含键值以外，每个叶子节点的索引行还包含了一个书签（bookmark），该书签用来告诉InnoDB哪里可以找到与索引相对应的行数据。 
+**叶子节点简单记忆为存了当前索引的键值**和主键索引。详细说是除了包含键值以外，每个叶子节点的索引行还包含了一个书签（bookmark），该书签用来告诉InnoDB哪里可以找到与索引相对应的**行数据**。 
 
 ##### 区别
 
@@ -280,7 +280,7 @@ CREATE TABLE student (
 
 执行explain命令：  key和Extra显示使用了idx_name这个辅助索引。 
 
-![1612584615812](../../../../../项目/Git-md/ZJW-Summary/assets/1612584615812.png)
+<img src="../../../../../项目/Git-md/ZJW-Summary/assets/1612584615812.png" alt="1612584615812" style="zoom:67%;" />
 
 
 
@@ -296,7 +296,7 @@ CREATE TABLE student (
 
 优化器会选择这个联合索引： 
 
-![1612584714591](../../../../../项目/Git-md/ZJW-Summary/assets/1612584714591.png)
+<img src="../../../../../项目/Git-md/ZJW-Summary/assets/1612584714591.png" alt="1612584714591" style="zoom:67%;" />
 
 ## 联合索引
 
@@ -306,13 +306,13 @@ CREATE TABLE student (
 
 以下为创建联合索引idx_a_b的示例： 
 
-![1612584770022](../../../../../项目/Git-md/ZJW-Summary/assets/1612584770022.png)
+<img src="../../../../../项目/Git-md/ZJW-Summary/assets/1612584770022.png" alt="1612584770022" style="zoom: 50%;" />
 
 
 
  联合索引的内部结构： 
 
-![1612584786166](../../../../../项目/Git-md/ZJW-Summary/assets/1612584786166.png)
+<img src="../../../../../项目/Git-md/ZJW-Summary/assets/1612584786166.png" alt="1612584786166" style="zoom:50%;" />
 
 1、联合索引也是一棵B+树，其键值数量大于等于2。
 
@@ -503,12 +503,6 @@ InnoDB行锁是通过**索引**上的索引项来实现的，这一点ＭySQL与
 - 即当一个事务要操作一个资源时，这个资源已经被其它事务先锁定使用，那么后者事务只能等待上一个事务执行完毕释放资源使用权后才能继续操作，而这个等待的过程就是锁等待；
 - 如果等待时间过长，超过配置项中的设定的时间，则会报错（锁等待错误）
 
-原因
-
-- 都使用表锁
-- 一个使用行锁，一个使用表锁
-- 都是用行锁
-
 参考
 
 面试问题之Mysql InnoDB引擎 行锁变表锁：https://www.codenong.com/cs106864142/
@@ -516,6 +510,10 @@ InnoDB行锁是通过**索引**上的索引项来实现的，这一点ＭySQL与
 mysql innodb引擎什么时候表锁什么时候行锁？：https://blog.csdn.net/Frankltf/article/details/82976493
 
 InnoDB行锁的实现方式：http://www.soolco.com/post/63208_1_1.html
+
+## 死锁案例
+
+https://juejin.cn/post/6844903481833160711#heading-1
 
 **加锁**
 
@@ -552,38 +550,33 @@ MySQL死锁及解决方案：https://www.cnblogs.com/uestc2007/p/11978172.html
  MySQL有两种死锁处理方式： 
 
 - 等待，直到超时（innodb_lock_wait_timeout=50s）。
-- 发起死锁检测，主动回滚一条事务，让其他事务继续执行（innodb_deadlock_detect=on）。detect（发现）
+- 发起**死锁检测，主动回滚一条事务**，让其他事务继续执行（innodb_deadlock_detect=on）。**detect**（发现）
 
 **死锁检测**
 
-死锁检测的原理是构建一个以事务为顶点、锁为边的有向图，判断有向图是否存在环，存在即有死锁。
+死锁检测的原理是构建一个**以事务为顶点**、**锁为边的有向图**，判断**有向图**是否**存在环**，存在即有死锁。
 
-检测到死锁之后，选择插入更新或者删除的行数最少的事务回滚，基于 INFORMATION_SCHEMA.INNODB_TRX 表中的 trx_weight 字段来判断。 
+检测到死锁之后，**选择插入更新或者删除的行数最少的事务回滚**，基于 INFORMATION_SCHEMA.INNODB_TRX 表中的 trx_weight 字段来判断。 
 
 ## 如何避免发生死锁
 
 **收集死锁信息**：
 
-- 利用命令 SHOW ENGINE INNODB STATUS查看死锁原因。
-- 调试阶段开启 innodb_print_all_deadlocks，收集所有死锁日志。
+- 利用命令 SHOW ENGINE INNODB STATUS，查看死锁原因。
+
+- 调试阶段开启 innodb_print_all_deadlocks，**收集所有死锁日志。**
+
+select * from information_schema.innodb_lock 
+
+<img src="../../assets/1618739566659.png" alt="1618739566659" style="zoom: 50%;" />
 
 **减少死锁：**
 
-- 保证没有长事务，减少事务的长度。
+- 保证没有长事务，**减少事务的长度。**
 - 操作完之后立即提交事务，特别是在交互式命令行中。
 - 如果在用 (SELECT … FOR UPDATE or SELECT … LOCK IN SHARE MODE)，尝试降低隔离级别。
 - 最好不要用 (SELECT … FOR UPDATE or SELECT … LOCK IN SHARE MODE)。
 - 如果上述都无法解决问题，那么**尝试使用 lock tables t1, t2, t3 锁多张表**
-
-## InnoDB 行锁与表级锁加锁时机
-
-InnoDB是基于索引来完成行锁
-
-例: select * from tab_with_index where id = 1 for update;
-
-**for update** 可以**根据条件来完成行锁锁定**，并且 **id 是有索引键的列**，**如果 id 不是索引键那么InnoDB将完成表锁**，并发将无从谈起。
-
-
 
 参考
 
@@ -697,16 +690,27 @@ SELECT * FROM post WHERE post.id IN (123,456,567,9098,8904);
 ### 比较
 
 - 事务：InnoDB 是事务型的，可以使用 Commit 和 Rollback 语句。
-
 - 并发：MyISAM 只支持表级锁，而 InnoDB 还支持行级锁。
-
 - 外键：InnoDB 支持外键。
-
 - 备份：InnoDB 支持在线热备份。
-
-- 崩溃恢复：**MyISAM** 崩溃后发生损坏的概率比 InnoDB 高很多，而且**恢复的速度也更慢**。
-
+- 崩溃恢复：**MyISAM**  不支持崩溃后的安全恢复 ，崩溃后发生损坏的概率比 InnoDB 高很多，而且**恢复的速度也更慢**。
 - 其它特性：MyISAM 支持**压缩表和空间数据索引**。
+
+MyISAM， MySQL 5.1及之前版本的默认引擎 
+
+在表有读取查询的同时，MyISAM支持往表中插入新纪录。
+
+支持延迟更新索引，极大提升写入性能 
+
+对于不会进行修改的表，支持压缩表，极大减少磁盘空间占用 
+
+## myisam为什么适合读？
+
+InnoDB的MVCC 在查询时候维护费时，比较。
+
+数据块，INNODB 要缓存，MYISAM 只缓存索引块，  这中间还有换进换出的减少；
+
+innodb 寻址要映射到块，再到行，MYISAM 记录的直接是文件的 OFFSET，定位比 INNODB 要快
 
 ## 四、数据类型
 
@@ -805,7 +809,7 @@ MySQL 提供了 FROM_UNIXTIME() 函数把 UNIX 时间戳转换为日期，并提
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/master-slave.png" width=""> </div><br>
 **主从一致性校验**
 
-主从一致性校验有多种工具，例如**checksum**、mysqldiff、pt-table-checksum等 
+主从一致性校验有多种工具，例如**checksum**、**mysqldiff**、pt-table-checksum等 
 
 ### 读写分离
 
@@ -928,8 +932,7 @@ MySQL中有六种日志文件，分别是：
 　　innodb_log_file_size **重做日志文件的大小。**
 　　innodb_mirrored_log_groups 指定了日志镜像文件组的数量，默认1
 重做日志的写入：
-前面说了是在事物开始之后逐步写盘的。
-之所以说重做日志是在事务开始之后逐步写入重做日志文件，而不一定是事务提交才写入重做日志缓存，原因就是，**重做日志有一个缓存区Innodb_log_buffer**，Innodb_log_buffer的**默认大小为8M**(这里设置的16M),Innodb存储引擎先将重做日志写入innodb_log_buffer中。
+前面说了是在事物开始之后逐步写盘的。不一定是事务提交才写入重做日志缓存，原因就是，**重做日志有一个缓存区Innodb_log_buffer**，Innodb_log_buffer的**默认大小为8M**(这里设置的16M)
 
 　　![img](../../assets/380271-20180128095300756-752816619.png)
 
@@ -1001,7 +1004,23 @@ binlog的默认是**保持时间**由参数expire_logs_days配置，也就是说
 
 一般不建议启动该参数，因为**性能影响**。支持将日志记录写入文件，也支持将日志记录写入数据库表。 
 
-**日志分析工具**：mysql dump slow
+#### **日志分析工具**：mysql dump slow
+
+得到返回记录集最多的10个SQL。
+
+mysqldumpslow -s r -t 10 /database/mysql/mysql06_slow.log
+
+得到访问次数最多的10个SQL
+
+mysqldumpslow -s c -t 10 /database/mysql/mysql06_slow.log
+
+得到按照时间排序的前10条里面含有左连接的查询语句。
+
+mysqldumpslow -s t -t 10 -g “left join” /database/mysql/mysql06_slow.log
+
+另外建议在使用这些命令时结合 | 和more 使用 ，否则有可能出现刷屏的情况。
+
+mysqldumpslow -s r -t 20 /mysqldata/mysql/mysql06-slow.log | more
 
 参考：https://www.cnblogs.com/kerrycode/p/5593204.html
 
@@ -1112,7 +1131,7 @@ Mysql官方给的幻读解释是：只要在一个事务中，第二次select多
 
 ##### 1、**违反最左前缀法则**
 
-对a、b、c列建立联合索引，where里是b and c 不走、where里是b 不走。
+对a、b、c列建立联合索引，**where里是b and c 不走、where里是b 不走。**
 
 而where里是a、c 的话走只 a 的那一段索引长度。
 
@@ -1132,7 +1151,7 @@ Mysql官方给的幻读解释是：只要在一个事务中，第二次select多
 
 如果or前的条件中的列有索引，而后面的列中没有索引，那么涉及的索引都不会被用到。
 
-比如：a or b	a有索引，b没有建索引，不加其他sql关键字的话sql整体不走索引。
+比如：**a or b	a有索引，b没有建索引，不加其他sql关键字的话sql整体不走索引。**
 
 ##### 5、**模糊查询**
 
@@ -1163,6 +1182,8 @@ Mysql官方给的幻读解释是：只要在一个事务中，第二次select多
 这篇也不错，联合索引ABC的几种索引利用情况：https://blog.csdn.net/houmenghu/article/details/109580196
 
 # SQL优化
+
+好文，未看完： [(2条消息) MySQL优化---常见的性能瓶颈以及Explain详解_sout-CSDN博客_mysql性能瓶颈](https://blog.csdn.net/m2606707610/article/details/103671315) 
 
 ##### Explain 结果含义
 
@@ -1291,6 +1312,8 @@ mysql 中的 **in 语句是把外表和内表作 hash 连接**，而 **exists �
 如果查询的两个表大小相当，那么用 in 和 exists 差别不大。
 **如果两个表中一个较小，一个是大表，则子查询表大的用 exists，子查询表小的用 in。**
 
+
+
 **not in 和 not exists： 如果查询语句使用了 not in，那么内外表都进行全表扫描，没有用到索引；**
 
 **而 not extsts 的子查询依然能用到表上的索引。所以无论那个表大，用 not exists 都比 not in 要快。**
@@ -1306,7 +1329,13 @@ mysql 中的 **in 语句是把外表和内表作 hash 连接**，而 **exists �
 
 ## count()
 
- 使用count（列名）当某列出现null值的时候，count（*）仍然会计算，但是count(列名)不会。 
+使用count（列名）当某列出现null值的时候，count（*）仍然会计算，但是count(列名)不会。 
+
+## avg()包含null的计算么？
+
+实际avg()就是sum(comm) /count(comm) 
+
+sum遇见null当0算，count(comm) 不算为null的行。
 
 ## having 和 where
 
@@ -1551,15 +1580,21 @@ https://www.cnblogs.com/aspirant/p/6747238.html
 
 ## MySQL两千万数据的大表优化
 
-方案一详细说明：优化现有mysql数据库
+方案一：优化现有mysql数据库。优点：不影响现有业务，源程序不需要修改代码，成本最低。缺点：有优化瓶颈，数据量过亿就玩完了。
 
-- 1.数据库设计和表创建时就要考虑性能
+- 1.表、索引
 - 2.sql的编写需要注意优化
-- 3.分区
+- 3.分区： 最多只能有1024个分区 、null值会使分区过滤无效、所有分区必须使用相同的存储引擎 
 - 4.分表
 - 5.分库
 
-参考：https://database.51cto.com/art/201902/592522.htm
+ 方案二：升级数据库类型，换一种100%兼容mysql的数据库。优点：不影响现有业务，源程序不需要修改代码，几乎不需要做任何操作就能提升数据库性能，缺点：多花钱
+
+ 方案三：一步到位，大数据解决方案，更换newsql/nosql数据库。优点：没有数据容量瓶颈，缺点：需要修改源程序代码，影响业务，总成本最高。
+
+
+
+参考： [(6 封私信 / 25 条消息) MySQL 对于千万级的大表要怎么优化？ - 知乎 (zhihu.com)](https://www.zhihu.com/question/19719997) 
 
 # 数据类型：
 

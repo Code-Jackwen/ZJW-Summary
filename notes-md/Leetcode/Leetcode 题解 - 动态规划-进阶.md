@@ -109,6 +109,7 @@ Leetcode 题解 - 动态规划
 
 ```java
 // 时间O(N*N) 空间O(N)
+// 73ms,62%
 class Solution {
     public int lengthOfLIS(int[] nums) {
         if(nums.length == 0) return 0;

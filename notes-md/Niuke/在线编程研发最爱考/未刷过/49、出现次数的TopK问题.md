@@ -1,3 +1,5 @@
+## 牛客
+
 牛客：https://www.nowcoder.com/practice/fd711bdfa0e840b381d7e1b82183b3ee?tpId=117&&tqId=35559&rp=1&ru=/activity/oj&qru=/ta/job-code-high/question-ranking
 
 
@@ -8,13 +10,13 @@
 
 示例1
 
-## 输入
+输入
 
 ```
 ["1","2","3","4"],2
 ```
 
-## 返回值
+返回值
 
 ```
 [
@@ -31,13 +33,13 @@
 
 示例2
 
-## 输入
+输入
 
 ```
 ["1","1","2","3"],2
 ```
 
-## 返回值
+返回值
 
 ```
 [
@@ -59,10 +61,6 @@
 
 
 力扣中等：[347. 前 K 个高频元素](https://leetcode-cn.com/problems/top-k-frequent-elements/)
-
-
-
-
 
 
 
@@ -174,55 +172,52 @@ class Solution {
 
 
 
-
-
-
-
-相似题目：
+## 力扣
 
 [692. 前K个高频单词](https://leetcode-cn.com/problems/top-k-frequent-words/)
 
-不同点是，输入的字符串，字符串的TOP K
+难度中等236
 
-
-
-
-
-给一非空的单词列表，返回前 k 个出现次数最多的单词。
+给一非空的单词列表，返回前 *k* 个出现次数最多的单词。
 
 返回的答案应该按单词出现频率由高到低排序。如果不同的单词有相同出现频率，按字母顺序排序。
 
-示例 1：
+**示例 1：**
 
+```js
 输入: ["i", "love", "leetcode", "i", "love", "coding"], k = 2
 输出: ["i", "love"]
 解析: "i" 和 "love" 为出现次数最多的两个单词，均为2次。
     注意，按字母顺序 "i" 在 "love" 之前。
+```
 
 
-示例 2：
 
+**示例 2：**
+
+```js
 输入: ["the", "day", "is", "sunny", "the", "the", "the", "sunny", "is", "is"], k = 4
 输出: ["the", "is", "sunny", "day"]
 解析: "the", "is", "sunny" 和 "day" 是出现次数最多的四个单词，
     出现次数依次为 4, 3, 2 和 1 次。
+```
+
+ 
+
+**注意：**
+
+1. 假定 *k* 总为有效值， 1 ≤ *k* ≤ 集合元素数。
+2. 输入的单词均由小写字母组成。
+
+ 
+
+**扩展练习：**
+
+1. 尝试以 *O*(*n* log *k*) 时间复杂度和 *O*(*n*) 空间复杂度解决。
 
 
-注意：
 
-假定 k 总为有效值， 1 ≤ k ≤ 集合元素数。
-输入的单词均由小写字母组成。
-
-
-扩展练习：
-
-尝试以 O(n log k) 时间复杂度和 O(n) 空间复杂度解决。
-
-来源：力扣（LeetCode）
-链接：https://leetcode-cn.com/problems/top-k-frequent-words
-著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
-
-
+## 
 
 ## 方法一：排序
 
@@ -232,22 +227,23 @@ class Solution {
 空间复杂度：O(N)O(N)，用来存放候答案的地方
 
 ````java
-class Solution {
+public class Solution {
+
     public List<String> topKFrequent(String[] words, int k) {
-        Map<String, Integer> count = new HashMap();
-        for (String word: words) {
-            count.put(word, count.getOrDefault(word, 0) + 1);
+        Map<String, Integer> map = new HashMap<>();// key：字符串，value：出现的次数
+        for (String w : words) {
+            map.put(w, map.getOrDefault(w, 0) + 1);
         }
-        List<String> ret = new ArrayList(count.keySet());
-        Collections.sort(ret, (w1, w2) -> count.get(w1).equals(count.get(w2)) ?
-                w1.compareTo(w2) : count.get(w2) - count.get(w1));
-        return ret.subList(0, k);
+       
+        // 传入 map.keySet() 对列表初始化
+        List<String> list = new ArrayList<>(map.keySet());
+        // 优先频率大小、其次是字母序列的排序，写表达式的时候直接写第二个条件然后 ? 用三元表达式
+        // 字符串的compareTo方法默认是字典序排列
+        list.sort((o1, o2) -> map.get(o1).equals(map.get(o2)) ? 
+                  						o1.compareTo(o2) : map.get(o2) - map.get(o1));
+        return list.subList(0, k);//List的方法可以直接截取，比数组方便
     }
 }
-作者：LeetCode
-链接：https://leetcode-cn.com/problems/top-k-frequent-words/solution/qian-kge-gao-pin-dan-ci-by-leetcode/
-来源：力扣（LeetCode）
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 ````
 
 
@@ -264,30 +260,28 @@ class Solution {
 ````java
 class Solution {
     public List<String> topKFrequent(String[] words, int k) {
-        Map<String, Integer> count = new HashMap();
-        for (String word: words) {
-            count.put(word, count.getOrDefault(word, 0) + 1);
+        Map<String, Integer> map = new HashMap();
+        for (String s: words) {
+            map.put(s, map.getOrDefault(s, 0) + 1);
         }
-        PriorityQueue<String> heap = new PriorityQueue<String>(
-                (w1, w2) -> count.get(w1).equals(count.get(w2)) ?
-                w2.compareTo(w1) : count.get(w1) - count.get(w2) );
-
-        for (String word: count.keySet()) {
-            heap.offer(word);
-            if (heap.size() > k) heap.poll();
+        PriorityQueue<String> heap = new PriorityQueue<>( //小根堆
+         (o1, o2) -> map.get(o1).equals(map.get(o2)) ?
+          			o2.compareTo(o1) : map.get(o1) - map.get(o2) );
+		//排序讲究，和排序解法是相反的，先是map.get(o1) - map.get(o2)再是o2.compareTo(o1) 
+        
+        for (String s: map.keySet()) {
+            heap.offer(s);                   //存储完后，结果是1234频次的字符串
+            if (heap.size() > k) heap.poll();//如果是大根堆，直接把频率最大的弹出去了
         }
 
-        List<String> ans = new ArrayList();
-        while (!heap.isEmpty()) ans.add(heap.poll());
-        Collections.reverse(ans);
-        return ans;
+        List<String> list = new ArrayList();
+        while (!heap.isEmpty()){
+            list.add(heap.poll());
+        }
+        Collections.reverse(list);          //需要反转一下
+        return list;
     }
 }
-
-作者：LeetCode
-链接：https://leetcode-cn.com/problems/top-k-frequent-words/solution/qian-kge-gao-pin-dan-ci-by-leetcode/
-来源：力扣（LeetCode）
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 ````
 
 
