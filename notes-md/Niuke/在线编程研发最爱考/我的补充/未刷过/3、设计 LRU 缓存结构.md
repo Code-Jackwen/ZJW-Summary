@@ -62,7 +62,7 @@ LinkHashMap面试中如果明确不给用。 使用队列和HashMap 可以，或
 
 使用 LinkedHashMap ， 当然可以直接重写 removeEldestEntry() 方法，这里暂忽略此写法。
 
-需要有顺序的键值对，也就是 LinkedHashMap ，
+**需要有顺序的键值对**，也就是 LinkedHashMap ，或者是HashMap+自维护顺序的链表。
 
 ````java
 public class LRUCache{
