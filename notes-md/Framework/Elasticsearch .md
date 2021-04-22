@@ -1,4 +1,12 @@
-Elasticsearch 与传统数据库界限：https://cloud.tencent.com/developer/article/1554951
+## ES
+
+参考：（好文）https://crossoverjie.top/2020/08/24/elasticsearch/ElasticSearch%20VS%20MySQL/
+
+## todo： 字典树 	 Trie树 
+
+## Elasticsearch 与传统数据库界限
+
+参考：https://cloud.tencent.com/developer/article/1554951
 
 一个是数据库，一个是搜索引擎。
 
@@ -102,7 +110,7 @@ Mysq 的**分词词典**（term dictionary）是**以 b-tree 排序的方式存�
 
 ## LSM-Tree 
 
-参考：https://cloud.tencent.com/developer/article/1441835
+参考：(好文)https://cloud.tencent.com/developer/article/1441835
 
 LSM-Tree全称是（Log Structured Merge Tree），**日志结构化组织合并树**，是一种分层，有序，面向磁盘的数据结构，其核心思想是充分了利用了，磁盘批量的顺序写要远比随机写性能高出很多。
 
