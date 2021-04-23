@@ -34,7 +34,7 @@
 
 104\. Maximum Depth of Binary Tree (Easy)
 
-[Leetcode](https://leetcode.com/problems/maximum-depth-of-binary-tree/description/) / [力扣](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/description/)
+[Leetcode](https://leetcode.com/problems/maximum-depth-of-binary-tree/description/) / [104. 二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
 ```java
 public int maxDepth(TreeNode root) {
@@ -47,7 +47,7 @@ public int maxDepth(TreeNode root) {
 
 110\. Balanced Binary Tree (Easy)
 
-[Leetcode](https://leetcode.com/problems/balanced-binary-tree/description/) / [力扣](https://leetcode-cn.com/problems/balanced-binary-tree/description/)
+[Leetcode](https://leetcode.com/problems/balanced-binary-tree/description/) / [110. 平衡二叉树](https://leetcode-cn.com/problems/balanced-binary-tree/)
 
 ```html
     3
@@ -60,19 +60,21 @@ public int maxDepth(TreeNode root) {
 平衡树左右子树高度差都小于等于 1
 
 ```java
-private boolean result = true;
+class Solution {
+    private boolean b = true;					//初始为true
 
-public boolean isBalanced(TreeNode root) {
-    maxDepth(root);
-    return result;
-}
+    public boolean isBalanced(TreeNode root) {
+        maxDepth(root);
+        return b;
+    }
 
-public int maxDepth(TreeNode root) {
-    if (root == null) return 0;
-    int l = maxDepth(root.left);
-    int r = maxDepth(root.right);
-    if (Math.abs(l - r) > 1) result = false;
-    return 1 + Math.max(l, r);
+    public int maxDepth(TreeNode root) {
+        if (root == null) return 0;
+        int l = maxDepth(root.left);
+        int r = maxDepth(root.right);
+        if (Math.abs(l - r) > 1) b = false;		//额外判下，差值是否大于1
+        return 1 + Math.max(l, r);
+    }
 }
 ```
 
@@ -80,42 +82,36 @@ public int maxDepth(TreeNode root) {
 
 543\. Diameter of Binary Tree (Easy)
 
-[543. 二叉树的直径](https://leetcode-cn.com/problems/diameter-of-binary-tree/)
-
-[Leetcode](https://leetcode.com/problems/diameter-of-binary-tree/description/) / [力扣](https://leetcode-cn.com/problems/diameter-of-binary-tree/description/)
+[Leetcode](https://leetcode.com/problems/diameter-of-binary-tree/description/) / [543. 二叉树的直径](https://leetcode-cn.com/problems/diameter-of-binary-tree/)
 
 给定一棵二叉树，你需要计算它的直径长度。一棵二叉树的直径长度是任意两个结点路径长度中的最大值。
 
 这条路径可能穿过也可能不穿过根结点。
 
-```html
-Input:
-
-         1
-        / \
-       2  3
-      / \
-     4   5
-
-Return 3, which is the length of the path [4,2,1,3] or [5,2,1,3].
-返回 3, 它的长度是路径 [4,2,1,3] 或者 [5,2,1,3]。
-注意：两结点之间的路径长度是以它们之间边的数目表示。
+```js
+示例 :
+          1
+         / \
+        2   3
+       / \     
+      4   5    
+返回 3, 它的长度是路径 [4,2,1,3] 或者 [5,2,1,3]。注意：两结点之间的路径长度是以它们之间#边的数目。
 ```
 
 ```java
 private int max = 0;
 
 public int diameterOfBinaryTree(TreeNode root) {
-    depth(root);
+    dep(root);
     return max;
 }
 
-private int depth(TreeNode root) {
+private int dep(TreeNode root) {
     if (root == null) return 0;
-    int leftDepth = depth(root.left);
-    int rightDepth = depth(root.right);
-    max = Math.max(max, leftDepth + rightDepth);
-    return Math.max(leftDepth, rightDepth) + 1;
+    int l = dep(root.left);
+    int r = dep(root.right);
+    max = Math.max(max, l + r);
+    return Math.max(l, r) + 1;
 }
 ```
 
@@ -123,7 +119,9 @@ private int depth(TreeNode root) {
 
 226\. Invert Binary Tree (Easy)
 
-[Leetcode](https://leetcode.com/problems/invert-binary-tree/description/) / [力扣](https://leetcode-cn.com/problems/invert-binary-tree/description/)
+[Leetcode](https://leetcode.com/problems/invert-binary-tree/description/) / [226. 翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)
+
+缓存交换
 
 ```java
 public TreeNode invertTree(TreeNode root) {
@@ -135,17 +133,32 @@ public TreeNode invertTree(TreeNode root) {
 }
 ```
 
+先序交换
+
+```java
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null) return null;
+        swap(root);
+        invertTree(root.left);
+        invertTree(root.right);
+        return root;
+    }
+    private void swap(TreeNode root) {
+        TreeNode t = root.left;
+        root.left = root.right;
+        root.right = t;
+    }
+}
+```
+
 ### 5. 归并两棵树
 
 617\. Merge Two Binary Trees (Easy)
 
-[Leetcode](https://leetcode.com/problems/merge-two-binary-trees/description/) / [力扣](https://leetcode-cn.com/problems/merge-two-binary-trees/description/)
+[Leetcode](https://leetcode.com/problems/merge-two-binary-trees/description/) / [617. 合并二叉树](https://leetcode-cn.com/problems/merge-two-binary-trees/)
 
-原题：https://leetcode-cn.com/problems/merge-two-binary-trees/solution/
-
-题解：https://leetcode-cn.com/problems/merge-two-binary-trees/solution/he-bing-er-cha-shu-by-leetcode-solution/
-
-```html
+```js
 Input:
        Tree 1                     Tree 2
           1                         2
@@ -163,92 +176,69 @@ Output:
 ```
 
 ```java
-public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
-    if (t1 == null && t2 == null) return null;
-    if (t1 == null) return t2;
-    if (t2 == null) return t1;
-    TreeNode root = new TreeNode(t1.val + t2.val);
-    root.left = mergeTrees(t1.left, t2.left);
-    root.right = mergeTrees(t1.right, t2.right);
-    return root;
+class Solution {
+   public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+        if (t1 == null && t2 == null) return null;			//不写能跑通
+        if (t1 == null) return t2;
+        if (t2 == null) return t1;
+        TreeNode root = new TreeNode(t1.val + t2.val);		//递归构造树
+        root.left = mergeTrees(t1.left, t2.left);
+        root.right = mergeTrees(t1.right, t2.right);
+        return root;
+    }
 }
-//官解
-//dfs
-//时间：O(min(m,n))，只有当两个二叉树中的对应节点都不为空时才会对该节点进行显性合并操作，因此被访问到的节点数不会超过较小的二叉树的节点数。
+```
+
+BFS 图解： [动画演示 递归+迭代 617.合并二叉树 - 合并二叉树 - 力扣（LeetCode） (leetcode-cn.com)](https://leetcode-cn.com/problems/merge-two-binary-trees/solution/dong-hua-yan-shi-di-gui-die-dai-617he-bing-er-cha-/) 
+
+1 动图
+
+  <img src="../../assets/e252bdefa83701034a5c0551b960e6537650d42fd5acfdadcd58a417a985fe37-iterator.gif" alt="iterator.gif" style="zoom:25%;" />
+
+```java
+//时间：O(min(m,n))，只有当节点都不为空时才会合并，因此被访问到的节点数不会超过较小的二叉树的节点数。
 //空间：O(min(m,n))，递归的层数，不会超过树的最大高度，最坏，树为链表。
 class Solution {
     public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
-        if (t1 == null) {
-            return t2;
-        }
-        if (t2 == null) {
-            return t1;
-        }
-        TreeNode merged = new TreeNode(t1.val + t2.val);
-        merged.left = mergeTrees(t1.left, t2.left);
-        merged.right = mergeTrees(t1.right, t2.right);
-        return merged;
-    }
-}
-//bfs 代码量很大
-class Solution {
-    public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
-        if (t1 == null) return t2;
-        if (t2 == null) return t1;
-        TreeNode merged = new TreeNode(t1.val + t2.val); //初始化操作
-        Queue<TreeNode> queue =  new LinkedList<TreeNode>();
-        Queue<TreeNode> queue1 = new LinkedList<TreeNode>();
-        Queue<TreeNode> queue2 = new LinkedList<TreeNode>();
-        queue.offer(merged);
-        queue1.offer(t1);
-        queue2.offer(t2);
-        while (!queue1.isEmpty() && !queue2.isEmpty()) {
-            TreeNode node = queue.poll(), node1 = queue1.poll(), node2 = queue2.poll();
-            TreeNode left1 = node1.left; 
-            TreeNode left2 = node2.left; 
-            TreeNode right1 = node1.right;
-            TreeNode right2 = node2.right;
-            if (left1 != null || left2 != null) { //处理左子节点
-                if (left1 != null && left2 != null) {
-                    TreeNode left = new TreeNode(left1.val + left2.val);
-                    node.left = left;
-                    queue.offer(left);
-                    queue1.offer(left1);
-                    queue2.offer(left2);
-                } else if (left1 != null) {
-                    node.left = left1;
-                } else if (left2 != null) {
-                    node.left = left2;
-                }
+        if(t1==null || t2==null) return t1==null? t2 : t1;
+        LinkedList<TreeNode> q = new LinkedList<>();
+        q.add(t1);					
+        q.add(t2);
+        while(!q.isEmpty()) {
+            TreeNode r1 = q.remove();
+            TreeNode r2 = q.remove();
+            r1.val += r2.val;							//把树合并到t1上
+            //如果r1和r2的左子树都不为空，就放到队列中
+            //如果r1的左子树为空，就把r2的左子树挂到r1的左子树上
+            if(r1.left!=null && r2.left!=null){			//和递归思路类似
+                q.add(r1.left);
+                q.add(r2.left);
             }
-            if (right1 != null || right2 != null) { //处理右子节点
-                if (right1 != null && right2 != null) {
-                    TreeNode right = new TreeNode(right1.val + right2.val);
-                    node.right = right;
-                    queue.offer(right);
-                    queue1.offer(right1);
-                    queue2.offer(right2);
-                } else if (right1 != null) {
-                    node.right = right1;
-                } else {
-                    node.right = right2;
-                }
+            else if(r1.left==null) {
+                r1.left = r2.left;
+            }
+            if(r1.right!=null && r2.right!=null) {      //对于右子树也是一样的
+                q.add(r1.right);
+                q.add(r2.right);
+            }
+            else if(r1.right==null) {
+                r1.right = r2.right;
             }
         }
-        return merged;
+        return t1;
     }
 }
+
 ```
 
 ### 6. 判断路径和是否等于一个数
 
 Leetcdoe : 112. Path Sum (Easy)
 
-[Leetcode](https://leetcode.com/problems/path-sum/description/) / [力扣](https://leetcode-cn.com/problems/path-sum/description/)
+[Leetcode](https://leetcode.com/problems/path-sum/description/) / [112. 路径总和](https://leetcode-cn.com/problems/path-sum/)
 
-```html
-Given the below binary tree and sum = 22,
-
+```js
+输入：sum = 22
               5
              / \
             4   8
@@ -256,9 +246,7 @@ Given the below binary tree and sum = 22,
           11  13  4
          /  \      \
         7    2      1
-
-return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.
-//这个路径是根节点到叶子节点。
+输出：true 解释：5->4->11->2 ，sum：22	//这个路径是根节点到叶子节点。
 ```
 
 路径和定义为从 root 到 leaf 的所有节点的和。
@@ -267,20 +255,24 @@ return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.
 //展开版本
 public boolean hasPathSum(TreeNode root, int sum) {
     if (root == null) return false;
-    if (root.left == null && root.right == null && root.val == sum) return true;
+    if (root.left == null && root.right == null //到底了
+        && root.val == sum) return true;		//和diff一样了
     
     int diff = sum - root.val; //Difference 差值。 remainder 剩余，余数。
     
     boolean l = hasPathSum(root.left, diff);
     boolean r = hasPathSum(root.right,diff);
-    return l || r;
+    return l || r;								//其中一个true就可以
 }
+```
 
+```java
 //浓缩
 public boolean hasPathSum(TreeNode root, int sum) {
     if (root == null) return false;
     if (root.left == null && root.right == null && root.val == sum) return true;
-    return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
+    return hasPathSum(root.left, sum - root.val) || 
+           hasPathSum(root.right, sum - root.val);
 }
 ```
 
@@ -338,11 +330,10 @@ class Solution {
 
 437\. Path Sum III (Easy)
 
-[Leetcode](https://leetcode.com/problems/path-sum-iii/description/) / [力扣](https://leetcode-cn.com/problems/path-sum-iii/description/)
+[Leetcode](https://leetcode.com/problems/path-sum-iii/description/) / [437. 路径总和 III](https://leetcode-cn.com/problems/path-sum-iii/)
 
 ```html
 root = [10,5,-3,3,2,null,11,3,-2,null,1], sum = 8
-
       10
      /  \
     5   -3
@@ -350,105 +341,212 @@ root = [10,5,-3,3,2,null,11,3,-2,null,1], sum = 8
   3   2   11
  / \   \
 3  -2   1
-
 Return 3. The paths that sum to 8 are:
-
 1.  5 -> 3
 2.  5 -> 2 -> 1
 3. -3 -> 11
 ```
 
-路径不一定以 root 开头，也不一定以 leaf 结尾，但是必须连续。
-
-这种需要三重递归。
+- 本题可以用**前缀和**，路径不一定以 root 开头，不一定以 leaf 结尾，但是必须连续向下。这种需要三重递归。
 
 ```java
-public int pathSum(TreeNode root, int sum) {
-    if (root == null) return 0;
-    int ret = pathSumStartWithRoot(root, sum) + 
-        	  pathSum(root.left, sum) + 
-              pathSum(root.right, sum);
-    return ret;
+//31ms、45%
+class Solution {
+    public int pathSum(TreeNode root, int sum) {
+        if (root == null) return 0;
+        int ret = dfs(root, sum);   		 //以父节点为起始
+        int l = pathSum(root.left, sum);     //以左儿子为起始
+        int r = pathSum(root.right, sum);    //以右儿子为起始
+        return ret + l + r;     			 //结果是三个起点的和
+    }
+    int dfs(TreeNode root, int sum) {
+        if (root == null) return 0;
+        int cnt = root.val == sum ? 1 : 0;
+        int diff = sum - root.val;
+        return cnt + dfs(root.left, diff) + dfs(root.right, diff);
+    }
 }
+```
 
-private int pathSumStartWithRoot(TreeNode root, int sum) {
-    if (root == null) return 0;
+一样的思路，青睐下边这个写法。
 
-    int cnt = 0;
-    if (root.val == sum) cnt++;
-
-    int diff = sum - root.val;
-
-    cnt = cnt + pathSumStartWithRoot(root.left, diff) + 		                               			 pathSumStartWithRoot(root.right, diff);
-    return cnt;
+```java
+class Solution {
+    public int pathSum(TreeNode root, int sum) {
+        if (root == null) return 0;
+        int ret = dfs(root, sum);
+        int l = pathSum(root.left, sum);
+        int r = pathSum(root.right, sum);
+        return ret + l + r;
+    }
+    public int dfs(TreeNode root, int sum) {
+        if (root == null) return 0;
+        sum = sum - root.val;
+        int cnt = sum == 0 ? 1 : 0;
+        return cnt + dfs(root.left, sum) + dfs(root.right, sum);
+    }
 }
+```
+
+前缀和 
+
+[对前缀和解法的一点解释 - 路径总和 III - 力扣（LeetCode） (leetcode-cn.com)](https://leetcode-cn.com/problems/path-sum-iii/solution/dui-qian-zhui-he-jie-fa-de-yi-dian-jie-s-dey6/) 
+
+**前缀和定义**
+
+一个节点的前缀和就是该节点到根之间的路径和。 
+
+          1					
+         /  \
+        2    3
+       / \    \
+      4   5    6
+     / \   \
+    7   8   9
+    
+    节点4的前缀和为：1 + 2 + 4 = 7
+    节点8的前缀和：1 + 2 + 4 + 8 = 15
+    节点9的前缀和：1 + 2 + 5 + 9 = 17
+假如题目给定数值为 5
+
+```js
+ 					 1
+                    / 
+                   2    
+                  / 
+                 3   
+                / 
+               4  
+```
+
+节点1的前缀和为: 1
+节点3的前缀和为: 1 + 2 + 3 = 6
+
+prefix(3) - prefix(1) == 5
+所以 节点1 到 节点3 之间有一条符合要求的路径( 2 --> 3 )
+
+prefix(3) - prefix(1) == 5 转化为：ret += map.getOrDefault(curSum - tar, 0);
+
+意思是，遍历到当前层我们判断有没有 prefix(3) - 5 等于 prefix(1) 的，prefix(1)在前面遍历的时，要加入map的
+
+思路：
+
+遍历整颗树一次，**记录每个节点的前缀和**，查询该节点的祖先节点中符合条件的个数，将个数量加到最终结果上。
+
+**HashMap存的是什么**
+
+HashMap的key是前缀和， value是该前缀和的节点数量，记录数量是因为有出现复数路径的可能。 
+
+比如说：下图树中，前缀和为1的节点有两个: 1, 0，所以路径和为2的路径数就有两条: 0 --> 2, 2
+
+
+```js
+      1
+     / 
+    0
+   /
+  2
+```
+**恢复状态的意义**
+
+由于题目要求：路径方向必须是向下的（只能从父节点到子节点）
+
+当我们讨论两个节点的前缀和差值时，有一个前提：一个节点必须是另一个节点的祖先节点，换句话说，当我们把一个节点的前缀和信息更新到map里时，它应当只对其子节点们有效。
+
+举个例子，下图中有两个值为2的节点（A, B)。
+
+
+```js
+      0
+     /  \
+    A:2  B:2
+   / \    \
+  4   5    6
+ / \   \
+7   8   9
+```
+当我们遍历到最右方的节点6时，对于它来说，此时的前缀和为2的节点只该有B, 因为从A向下到不了节点6(A并不是节点6的祖先节点)。
+
+如果我们不做状态恢复，当遍历右子树时，左子树中A的信息仍会保留在map中，那此时节点6就会认为A, B都是可追溯到的节点，从而产生错误。
+
+状态恢复代码的作用就是： 在遍历完一个节点的所有子节点后，将其从map中除去。
+
+```java
+//3ms、99%
+class Solution {
+    public int pathSum(TreeNode root, int sum) {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);			   	   // 前缀和为0的一条路径
+        return dfs(root, map, sum, 0); // 前缀和的递归回溯思路
+    }
+
+    int dfs(TreeNode root,final Map<Integer, Integer> map,final int tar, int curSum) {
+        if (root == null) return 0;
+        int ret = 0;
+        curSum += root.val; 		
+        ret += map.getOrDefault(curSum - tar, 0);
+        map.put(curSum, map.getOrDefault(curSum, 0) + 1);	
+        int l = dfs(root.left, map, tar, curSum);			//也可以写成ret累加
+        int r = dfs(root.right, map, tar, curSum);			
+        ret = ret + l + r;
+        map.put(curSum, map.get(curSum) - 1);
+        return ret;
+    }
+}
+```
+
+```js
+如果没有这个初始化，map.put(0, 1);	
+输入：22
+      5
+	 /  \
+   	4    8
+   /    / \
+  11   13   4
+ /  \	   / \
+7    2    5   1
+输出：1
+预期：3
 ```
 
 ### 8. 子树
 
 572\. Subtree of Another Tree (Easy)
 
-[Leetcode](https://leetcode.com/problems/subtree-of-another-tree/description/) / [力扣](https://leetcode-cn.com/problems/subtree-of-another-tree/description/)
+[Leetcode](https://leetcode.com/problems/subtree-of-another-tree/description/) / [572. 另一个树的子树](https://leetcode-cn.com/problems/subtree-of-another-tree/)
 
-```html
-Given tree s:
-     3
-    / \
-   4   5
-  / \
+```js
+Given tree s:	 	 Given tree t:
+     3				 	   4
+    / \	                  / \
+   4   5                 1   2
+  / \			
  1   2
-
-Given tree t:
-   4
-  / \
- 1   2
-
 Return true, because t has the same structure and node values with a subtree of s.
 
-Given tree s:
-
-     3
-    / \
-   4   5
+Given tree s:		Given tree t:
+     3					 4
+    / \					/ \
+   4   5			   1   2
   / \
  1   2
     /
    0
-
-Given tree t:
-   4
-  / \
- 1   2
-
-Return false.
+Return false. #因为 null 也得匹配，准确来说，树t 的 1、2节点还有两个4个null值需要匹配！
 ```
 
 ```java
-public boolean isSubtree(TreeNode s, TreeNode t) {
-    if (s == null) return false;
-    return isSubtreeWithRoot(s, t) || isSubtree(s.left, t) || isSubtree(s.right, t);
-}
-
-private boolean isSubtreeWithRoot(TreeNode s, TreeNode t) {
-    if (t == null && s == null) return true;
-    if (t == null || s == null) return false;
-    if (t.val != s.val) return false;
-    return isSubtreeWithRoot(s.left, t.left) && isSubtreeWithRoot(s.right, t.right);
-}
-
-//改了变量名
+//7ms、80%
 public class Solution {
-    public boolean isSubStructure(TreeNode A, TreeNode B) {
-        if (A == null || B == null)
-            return false;
-        return verify(A, B) || 
-            isSubStructure(A.left, B) || 
-            isSubStructure(A.right, B);
+    boolean isSubtree(TreeNode rootA, TreeNode rootB) {
+        if (rootA == null || rootA == null) return false;
+        return verify(rootA, rootB) || 
+            	isSubtree(rootA.left, rootB) || 
+            	isSubtree(rootA.right, rootB);
     }
-    private boolean verify(TreeNode A, TreeNode B) {
-        if (B == null) return true;
-        if (A == null) return false;
-        if (A.val != B.val) return false;
+    boolean verify(TreeNode A, TreeNode B) {
+        if (A == null && B == null) return true;
+        if (B == null || A == null || A.val != B.val) return false;
         return verify(A.left, B.left) && verify(A.right, B.right);
     }
 }
@@ -458,9 +556,9 @@ public class Solution {
 
 101\. Symmetric Tree (Easy)
 
-[Leetcode](https://leetcode.com/problems/symmetric-tree/description/) / [力扣](https://leetcode-cn.com/problems/symmetric-tree/description/)
+[Leetcode](https://leetcode.com/problems/symmetric-tree/description/) / [101. 对称二叉树](https://leetcode-cn.com/problems/symmetric-tree/)
 
-```html
+```js
     1
    / \
   2   2
@@ -469,16 +567,17 @@ public class Solution {
 ```
 
 ```java
-public boolean isSymmetric(TreeNode root) {
-    if (root == null) return true;
-    return isSymmetric(root.left, root.right);
-}
-
-private boolean isSymmetric(TreeNode t1, TreeNode t2) {
-    if (t1 == null && t2 == null) return true;
-    if (t1 == null || t2 == null) return false;
-    if (t1.val != t2.val) return false;
-    return isSymmetric(t1.left, t2.right) && isSymmetric(t1.right, t2.left);
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) return true;
+        return isSymmetric(root.left, root.right);
+    }
+    boolean isSymmetric(TreeNode t1, TreeNode t2) {
+        if (t1 == null && t2 == null) return true;
+        if (t1 == null || t2 == null) return false;
+        if (t1.val != t2.val) return false;
+        return isSymmetric(t1.left, t2.right) && isSymmetric(t1.right, t2.left);
+    }
 }
 ```
 
