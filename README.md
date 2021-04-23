@@ -22,9 +22,9 @@
 
 - [Java 基础知识 ](notes-md/Java/Java%20基础.md) | [Java 集合](notes-md/Java/Java%20容器.md) | [Java 虚拟机](notes-md/Java/Java%20虚拟机.md)| [Java IO](notes-md/Java/Java%20IO.md) | [Java 并发](notes-md/Java/Java%20并发.md) | [JDK 特性](notes-md/Java/Jdk%20特性.md)
 
-## 📝  算法
+## 📝  数据结构
 
-- [数据结构与算法](notes-md/Algorithm/数据结构%20-%20目录.md) | [剑指 Offer 题解](notes-md/To%20offer/剑指%20Offer%20-%20目录.md) | [Leetcode 精选题解](notes-md/Leetcode/Leetcode%20题解%20-%20目录.md) | [牛客面试高频](notes-md/Niuke)
+- [数据结构与算法](notes-md/Algorithm/数据结构%20-%20目录.md) 
 
 ## :date:  数据库 
 
