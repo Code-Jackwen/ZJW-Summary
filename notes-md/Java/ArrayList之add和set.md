@@ -2,7 +2,7 @@
 
 一般使用List集合，估计都是使用这个ArrayList，很少使用到add(int index, E element)和set(int index, E element)两个方法。
 
-陷阱代码：
+陷阱代码： 
 
 ````java
 public static void main(String[] args) {
