@@ -23,7 +23,7 @@ public class Config {
 
 注意：这里有个要注意的地方，**@AspectJ 注解只能作用于Spring Bean 上面**，所以你用 @Aspect 修饰的类要么是用 **@Component注解修饰**，要么是在 XML中配置过的。 
 
-3、配置 Pointcut (增强的切入点)
+3、配置 Pointcut (增强的切入点) 
 
 ```java
 // 指定的方法
