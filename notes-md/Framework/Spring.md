@@ -15,7 +15,7 @@ public class Config {
 }
 ````
 
-2、写AOP配置类 
+2、写AOP配置类  
 
  `@AspectJ` 
 
