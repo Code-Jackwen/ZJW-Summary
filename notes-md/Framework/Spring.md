@@ -17,7 +17,7 @@ public class Config {
 
 2、写AOP配置类   
 
- `@AspectJ` 
+ `@AspectJ`  
 
 开启了上述配置之后，所有**在容器中**，**被`@AspectJ`注解的 bean** 都会被 Spring 当做是 **AOP 配置类**，称为一个 Aspect。 
 
