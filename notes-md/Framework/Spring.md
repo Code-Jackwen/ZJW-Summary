@@ -4,7 +4,7 @@ JCSprout：https://github.com/crossoverJie/JCSprout/blob/master/MD/SpringAOP.md
 
 ## Spring AOP 注解
 
- 1、开启注解模式
+ 1、开启注解模式 
 
 使用`@EnableAspectJAutoProxy`注解，开启注解AOP模式。
 
