@@ -450,7 +450,7 @@ https://www.cnblogs.com/studyzy/p/4310653.html
 
 **mysql innodb引擎什么时候表锁什么时候行锁？**
 
-**1、InnoDB基于索引的行锁**
+**1、InnoDB基于索引的行锁** 
 
 InnoDB行锁是通过**索引**上的索引项来实现的，这一点ＭySQL与Oracle不同，后者是通过在数据中对相应**数据行**加锁来实现的。
 
