@@ -354,7 +354,7 @@ alter table buy_log add key(userid, buy_date);
 
 如果把key（userid,buy_date）删除掉，再执行：  select * from buy_log where user_id = 2 order by buy_date desc;  优化器会选择key（userid），但是对查询出来的结果会进行一次filesort，即按照buy_date重新排下序。所以联合索引的好处在于可以避免filesort排序。 
 
-### 索引优化
+### 索引优化  
 
 #### 1. 独立的列
 
