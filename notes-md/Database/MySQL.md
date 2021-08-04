@@ -462,7 +462,7 @@ InnoDB行锁是通过**索引**上的索引项来实现的，这一点ＭySQL与
 
 **如果一条语句操作了非主键索引，MySQL会先锁定该非主键索引，再锁定相关的主键索引。** 
 
-在UPDATE、DELETE操作时，MySQL不仅锁定WHERE条件扫描过的所有索引记录，而且会**锁定相邻的键值**，即所谓的next-key locking。
+在UPDATE、DELETE操作时，MySQL不仅锁定WHERE条件扫描过的所有索引记录，而且会**锁定相邻的键值**，即所谓的next-key locking。 
 
 **2、innodb行锁和表锁的情况**
 
