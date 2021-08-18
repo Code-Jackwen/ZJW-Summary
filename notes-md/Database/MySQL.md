@@ -145,7 +145,7 @@ b+树，是b树的一种变体，查询性能更好。m阶的b+树的特征：
 InnoDB 的 B+Tree 索引分为**主索引**和**辅助索引**。**主索引的叶子节点 data 域**记录着**完整的数据记录**，这种索引方式被称为**聚簇索引**。因为无法把数据行存放在两个不同的地方，所以一个表只能有一个聚簇索引。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/45016e98-6879-4709-8569-262b2d6d60b9.png" width="350px"> </div><br>
-**辅助索引的叶子节点的 data 域记录着主键的值**，因此在使用辅助索引进行查找时，需要先查找到主键值，然后再到主索引中进行查找。
+**辅助索引的叶子节点的 data 域记录着主键的值**，因此在使用辅助索引进行查找时，需要先查找到主键值，然后再到主索引中进行查找。   
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/7c349b91-050b-4d72-a7f8-ec86320307ea.png" width="350px"> </div><br>
 #### 2. 哈希索引
