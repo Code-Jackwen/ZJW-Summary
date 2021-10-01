@@ -181,7 +181,7 @@ InnoDB 的 B+Tree 索引分为**主索引**和**辅助索引**。**主索引的�
 
 举个例子： 
 
-<img src="../../../../../项目/Git-md/ZJW-Summary/assets/1612583732653.png" alt="1612583732653" style="zoom: 50%;" />
+<img src="../../../../../项目/Git-md/ZJW-Summary/assets/1612583732653.png" alt="1612583732653" style="zoom: 50%;" />   
 
 《MySQL技术内幕》的作者通过分析工具得到聚簇索引树的大致构造如下： 
 
