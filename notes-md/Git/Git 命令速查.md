@@ -1,8 +1,20 @@
-# 一、Git 常用命令速查 
+# 一、Git 常用
 
-![img](../../assets/20180620113451746-1610956241122.png) 
+删除分支
 
-# 二、Git 常用命令速查 
+git branch -a 查看所有分支 
+
+git push origin --delete Chapater6    可以删除远程分支Chapater6   
+
+git branch -d Chapater8 可以删除本地分支（在主分支中） 
+
+git checkout master ， 切换到master分支， 使用 git branch -d Chapater8 可以删除Chapater8分支。 
+
+
+
+
+
+# 二、Git 命令速查 
 
 git branch 查看本地所有分支
 git status 查看当前状态 
@@ -58,7 +70,7 @@ git branch -m branch_0.1 branch_1.0 将branch_0.1重命名为branch_1.0
 git checkout branch_1.0/master 切换到branch_1.0/master分支
 du -hs
 
-git branch 删除远程branch
+git branch 删除远程branch		？？？
 git push origin :branch_remote_name
 git branch -r -d branch_remote_name
 \-----------------------------------------------------------
