@@ -269,7 +269,7 @@ CREATE TABLE student (
 
 例1：
 
-执行： select count(*) from student 
+执行： select count(*) from student  
 
 优化器会怎么处理？
 
