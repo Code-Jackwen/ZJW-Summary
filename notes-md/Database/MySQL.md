@@ -275,7 +275,7 @@ CREATE TABLE student (
 
 遍历聚簇索引和辅助索引都可以统计出结果，但辅助索引要远小于聚簇索引，所以优化器会选择辅助索引来统计。
 
-执行explain命令：  key和Extra显示使用了idx_name这个辅助索引。 
+执行explain命令：  key和Extra显示使用了idx_name这个辅助索引。  
 
 <img src="../../../../../项目/Git-md/ZJW-Summary/assets/1612584615812.png" alt="1612584615812" style="zoom:67%;" />
 
