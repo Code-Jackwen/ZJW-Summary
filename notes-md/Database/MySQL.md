@@ -283,7 +283,7 @@ CREATE TABLE student (
 
 例2：
 
-执行： select *  from student where age   >   10 and age < 15 
+执行： select *  from student where age   >   10 and age < 15  
 
 因为联合索引idx_school_age的字段顺序是先school再age，按照age做条件查询，结果通常不走索引： 
 
