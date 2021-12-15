@@ -289,7 +289,7 @@ CREATE TABLE student (
 
 但是，如果保持条件不变，查询所有字段改为查询条目数：  
 
-执行： select count(*) from student where age   >   10 and age < 15   
+执行： select count(*) from student where age   >   10 and age < 15    
 
 优化器会选择这个联合索引： 
 
