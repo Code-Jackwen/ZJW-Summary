@@ -287,7 +287,7 @@ CREATE TABLE student (
 
 因为联合索引idx_school_age的字段顺序是先school再age，按照age做条件查询，结果通常不走索引： 
 
-但是，如果保持条件不变，查询所有字段改为查询条目数：    
+但是，如果保持条件不变，查询所有字段改为查询条目数：
 
 执行： select count(*) from student where age   >   10 and age < 15    
 
