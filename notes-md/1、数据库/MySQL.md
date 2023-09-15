@@ -1319,6 +1319,12 @@ mysql 中的 **in 语句是把外表和内表作 hash 连接**，而 **exists �
 
 [精选 36 道 SQL 练习题解析 from（原 50 道 SQL 练习题）](https://blog.csdn.net/artificial_idiots/article/details/106420397)
 
+## 优化连接查询
+
+https://mp.weixin.qq.com/s/Ykxvv87XqIeW9AsYUDqMXQ
+
+
+
 ## Union 和 Union ALL的区别
 
 - 如果使用 UNION ALL，不会合并重复的记录行，二Union相当于自带去重。
